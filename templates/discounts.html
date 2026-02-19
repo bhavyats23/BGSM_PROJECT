@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discounts & Offers - Grocery Manager</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #4caf50;
+        --primary-dark: #45a049;
+        --light-bg: #f8f9fa;
+        --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      }
+      body {
+        background-color: var(--light-bg);
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      .header {
+        background-color: var(--primary);
+        color: white;
+      }
+      .page-container {
+        max-width: 960px;
+        margin: 2.5rem auto;
+        padding: 0 1rem;
+      }
+      .card-custom {
+        background: white;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(76, 175, 80, 0.12);
+      }
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.15);
+      }
+      .btn-primary-custom {
+        background: var(--primary);
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s;
+        width: 100%;
+      }
+      .btn-primary-custom:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        color: white;
+      }
+      .table thead th {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        font-weight: 600;
+        border-bottom: 2px solid #a5d6a7;
+      }
+      .table tbody tr:hover {
+        background-color: #f1f8e9;
+      }
+      .badge-active {
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .badge-inactive {
+        background: #ffebee;
+        color: #c62828;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .badge-percent {
+        background: #e3f2fd;
+        color: #1565c0;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .badge-flat {
+        background: #fff3e0;
+        color: #e65100;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .icon-lg {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .search-box {
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        padding: 0.6rem 1rem;
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      .search-box:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .btn-delete {
+        background: #ffebee;
+        color: #c62828;
+        border: none;
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 13px;
+        transition: all 0.2s;
+      }
+      .btn-delete:hover {
+        background: #c62828;
+        color: white;
+      }
+      .btn-toggle {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: none;
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 13px;
+        transition: all 0.2s;
+      }
+      .btn-toggle:hover {
+        background: #2e7d32;
+        color: white;
+      }
+      .coupon-card {
+        border: 2px dashed #a5d6a7;
+        border-radius: 16px;
+        padding: 1.2rem 1.5rem;
+        background: #f9fff9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        transition: all 0.2s;
+      }
+      .coupon-card:hover {
+        border-color: var(--primary);
+        background: #f0fff4;
+      }
+      .coupon-code {
+        font-family: "Courier New", monospace;
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a6b3c;
+        letter-spacing: 2px;
+        background: #e8f5e9;
+        padding: 6px 14px;
+        border-radius: 8px;
+      }
+      .coupon-value {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--primary);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #aaa;
+      }
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header py-3 shadow-sm">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <a href="{{ url_for('dashboard') }}" class="text-white fs-4">
+            <i class="bi bi-arrow-left-circle-fill"></i>
+          </a>
+          <h4 class="mb-0 fw-bold">Discounts & Offers</h4>
+          <button
+            class="btn text-white fs-4"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebar"
+          >
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show">
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- Stats -->
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-md-3">
+          <div class="card-custom text-center py-3">
+            <div class="text-success fw-bold fs-2">{{ discounts|length }}</div>
+            <div class="text-muted small">Total Offers</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card-custom text-center py-3">
+            <div class="text-success fw-bold fs-2">
+              {{ discounts|selectattr('is_active')|list|length }}
+            </div>
+            <div class="text-muted small">Active</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card-custom text-center py-3">
+            <div class="text-warning fw-bold fs-2">
+              {{ discounts|rejectattr('is_active')|list|length }}
+            </div>
+            <div class="text-muted small">Inactive</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card-custom text-center py-3">
+            <div class="text-primary fw-bold fs-2">
+              {{ discounts|selectattr('discount_type', 'equalto',
+              'percentage')|list|length }}
+            </div>
+            <div class="text-muted small">% Discounts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Discount Form -->
+      <div class="card-custom">
+        <div class="text-center mb-4">
+          <i class="bi bi-tag-fill text-success icon-lg"></i>
+          <h5 class="fw-bold mb-1">Create New Offer</h5>
+          <p class="text-muted small">Set up a discount code or offer</p>
+        </div>
+        <form method="POST" action="/discounts">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"
+                >Coupon Code <span class="text-danger">*</span></label
+              >
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-upc"></i></span>
+                <input
+                  type="text"
+                  name="code"
+                  class="form-control text-uppercase"
+                  placeholder="e.g. SAVE20"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Description</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-chat-text"></i
+                ></span>
+                <input
+                  type="text"
+                  name="description"
+                  class="form-control"
+                  placeholder="e.g. 20% off on all items"
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"
+                >Discount Type <span class="text-danger">*</span></label
+              >
+              <select name="discount_type" class="form-select" required>
+                <option value="percentage">Percentage (%)</option>
+                <option value="flat">Flat Amount (Rs)</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"
+                >Discount Value <span class="text-danger">*</span></label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-percent"></i
+                ></span>
+                <input
+                  type="number"
+                  name="discount_value"
+                  class="form-control"
+                  placeholder="e.g. 20"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Min Order Value (Rs)</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-currency-rupee"></i
+                ></span>
+                <input
+                  type="number"
+                  name="min_order_value"
+                  class="form-control"
+                  placeholder="e.g. 200"
+                  min="0"
+                  step="0.01"
+                  value="0"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"
+                >Expiry Date (optional)</label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-calendar"></i
+                ></span>
+                <input type="date" name="expires_at" class="form-control" />
+              </div>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary-custom">
+                <i class="bi bi-plus-circle me-2"></i> Create Offer
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Active Coupons Visual -->
+      {% set active = discounts|selectattr('is_active')|list %} {% if active %}
+      <div class="card-custom">
+        <h5 class="fw-bold text-success mb-4">
+          <i class="bi bi-lightning-fill me-2"></i>Active Offers
+        </h5>
+        {% for d in active %}
+        <div class="coupon-card">
+          <div>
+            <div class="coupon-code mb-1">{{ d.code }}</div>
+            <div class="text-muted small">
+              {{ d.description or 'No description' }}
+            </div>
+            {% if d.min_order_value and d.min_order_value > 0 %}
+            <div class="text-muted small">
+              Min order: Rs{{ d.min_order_value }}
+            </div>
+            {% endif %}
+          </div>
+          <div class="text-end">
+            <div class="coupon-value">
+              {% if d.discount_type == 'percentage' %}{{ d.discount_value }}%
+              OFF {% else %}Rs{{ d.discount_value }} OFF{% endif %}
+            </div>
+            {% if d.expires_at %}
+            <div class="text-muted small">Expires: {{ d.expires_at[:10] }}</div>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- All Discounts Table -->
+      <div class="card-custom">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold text-success mb-0">
+            <i class="bi bi-table me-2"></i>All Discounts
+          </h5>
+          <span class="badge-active">{{ discounts|length }} total</span>
+        </div>
+        <input
+          type="text"
+          class="search-box"
+          id="searchBox"
+          placeholder="Search by code or description..."
+        />
+        <div class="table-responsive">
+          <table class="table table-hover align-middle" id="discountTable">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Type</th>
+                <th>Value</th>
+                <th>Min Order</th>
+                <th>Expires</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for d in discounts %}
+              <tr>
+                <td>
+                  <span class="fw-bold" style="font-family: monospace"
+                    >{{ d.code }}</span
+                  >
+                </td>
+                <td>
+                  {% if d.discount_type == 'percentage' %}
+                  <span class="badge-percent">% Percent</span>
+                  {% else %}
+                  <span class="badge-flat">Rs Flat</span>
+                  {% endif %}
+                </td>
+                <td class="fw-bold text-success">
+                  {% if d.discount_type == 'percentage' %}{{ d.discount_value
+                  }}% {% else %}Rs{{ d.discount_value }}{% endif %}
+                </td>
+                <td>Rs{{ d.min_order_value or 0 }}</td>
+                <td class="text-muted small">
+                  {{ d.expires_at[:10] if d.expires_at else 'No expiry' }}
+                </td>
+                <td>
+                  {% if d.is_active %}
+                  <span class="badge-active">Active</span>
+                  {% else %}
+                  <span class="badge-inactive">Inactive</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <button
+                    class="btn-toggle me-1"
+                    onclick="toggleDiscount({{ d.id }}, {{ 'false' if d.is_active else 'true' }})"
+                  >
+                    <i
+                      class="bi bi-toggle-{{ 'on' if d.is_active else 'off' }}"
+                    ></i>
+                  </button>
+                  <button
+                    class="btn-delete"
+                    onclick="deleteDiscount({{ d.id }})"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              {% endfor %} {% if not discounts %}
+              <tr>
+                <td colspan="7">
+                  <div class="empty-state">
+                    <i class="bi bi-tag text-muted"></i>
+                    No discounts yet. Create your first offer above!
+                  </div>
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+      <div class="offcanvas-header bg-success text-white">
+        <h5 class="offcanvas-title fw-bold">Navigation Menu</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0">
+        <div class="list-group list-group-flush">
+          <a href="/" class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-speedometer2 me-2"></i> Dashboard</a
+          >
+          <a
+            href="/add-product"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-plus-circle me-2"></i> Add Product</a
+          >
+          <a
+            href="/inventory"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-boxes me-2"></i> Inventory</a
+          >
+          <a href="/sales" class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-receipt me-2"></i> Sales</a
+          >
+          <a
+            href="/customers"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-people me-2"></i> Customers</a
+          >
+          <a
+            href="/discounts"
+            class="list-group-item list-group-item-action py-3 active text-success"
+            ><i class="bi bi-tag me-2"></i> Discounts</a
+          >
+          <a
+            href="/invoice/preview"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-file-earmark-text me-2"></i> Invoice</a
+          >
+          <a
+            href="/logout"
+            class="list-group-item list-group-item-action py-3 text-danger"
+            ><i class="bi bi-box-arrow-right me-2"></i> Logout</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Toasts -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="successToast" class="toast bg-success text-white">
+        <div class="toast-body d-flex justify-content-between">
+          <span id="toast-msg">Done!</span>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+      <div id="errorToast" class="toast bg-danger text-white">
+        <div class="toast-body d-flex justify-content-between">
+          <span id="error-msg">Something went wrong!</span>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Live Search
+      document
+        .getElementById("searchBox")
+        .addEventListener("input", function () {
+          const q = this.value.toLowerCase();
+          document
+            .querySelectorAll("#discountTable tbody tr")
+            .forEach((row) => {
+              row.style.display = row.innerText.toLowerCase().includes(q)
+                ? ""
+                : "none";
+            });
+        });
+
+      function showToast(msg, success = true) {
+        const id = success ? "successToast" : "errorToast";
+        document.getElementById(success ? "toast-msg" : "error-msg").innerText =
+          msg;
+        new bootstrap.Toast(document.getElementById(id)).show();
+      }
+
+      function deleteDiscount(id) {
+        if (!confirm("Delete this discount?")) return;
+        fetch("/discounts/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: id }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success) {
+              showToast("Discount deleted!");
+              setTimeout(() => location.reload(), 1000);
+            } else showToast(data.error, false);
+          });
+      }
+
+      function toggleDiscount(id, newStatus) {
+        fetch("/discounts/toggle", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: id, is_active: newStatus === "true" }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success) {
+              showToast("Status updated!");
+              setTimeout(() => location.reload(), 800);
+            } else showToast(data.error, false);
+          });
+      }
+
+      // Auto uppercase coupon code
+      document
+        .querySelector('input[name="code"]')
+        .addEventListener("input", function () {
+          this.value = this.value.toUpperCase();
+        });
+    </script>
+  </body>
+</html>

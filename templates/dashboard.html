@@ -1,138 +1,246 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard - Grocery Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
     <style>
-        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .header { background-color: #4CAF50; color: white; }
-        .hero { height: 30vh; background-size: cover; background-position: center; position: relative; }
-        .hero-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
-        .hero h1 { font-size: 2.5rem; font-weight: bold; text-shadow: 2px 2px 8px rgba(0,0,0,0.5); color: white; }
-        
-        /* Metric Card Styling */
-        .stat-card { border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.2s; border: none; }
-        .stat-card:hover { transform: translateY(-5px); cursor: pointer; opacity: 0.9; }
-        .metric-link { text-decoration: none; display: block; }
-        
-        .alert-low-stock { background-color: #fff3cd; border-left: 5px solid #ffc107; color: #664d03; padding: 15px; border-radius: 8px; }
-        .featured-card { border-radius: 15px; overflow: hidden; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+      body {
+        background-color: #f4f6f9;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .header {
+        background-color: #4caf50;
+        color: white;
+      }
+      .hero {
+        height: 30vh;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+      }
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .hero h1 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        color: white;
+      }
+      .stat-card {
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        border: none;
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+        cursor: pointer;
+        opacity: 0.9;
+      }
+      .metric-link {
+        text-decoration: none;
+        display: block;
+      }
+      .alert-low-stock {
+        background-color: #fff3cd;
+        border-left: 5px solid #ffc107;
+        color: #664d03;
+        padding: 15px;
+        border-radius: 8px;
+      }
+      .featured-card {
+        border-radius: 15px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <header class="header py-3 shadow">
-        <div class="container d-flex justify-content-between align-items-center">
-            <button class="btn text-white" data-bs-toggle="offcanvas" data-bs-target="#sidebar">
-                <i class="bi bi-list fs-3"></i>
-            </button>
-            <h4 class="mb-0">Grocery Store Manager</h4>
-            <a href="/logout" class="text-white"><i class="bi bi-box-arrow-right fs-3"></i></a>
-        </div>
+      <div class="container d-flex justify-content-between align-items-center">
+        <button
+          class="btn text-white"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#sidebar"
+        >
+          <i class="bi bi-list fs-3"></i>
+        </button>
+        <h4 class="mb-0">Grocery Store Manager</h4>
+        <a href="/logout" class="text-white"
+          ><i class="bi bi-box-arrow-right fs-3"></i
+        ></a>
+      </div>
     </header>
 
-    <div class="hero" style="background-image: url('{{ url_for('static', filename='images/hero1.jpg') }}');">
-        <div class="hero-overlay">
-            <h1>Store Overview</h1>
-        </div>
+    <div
+      class="hero"
+      style="background-image: url('{{ url_for('static', filename='images/hero1.jpg') }}');"
+    >
+      <div class="hero-overlay">
+        <h1>Store Overview</h1>
+      </div>
     </div>
 
     <div class="container my-5">
-        <h5 class="mb-4 text-center fw-bold text-uppercase">Key Business Metrics</h5>
-        <div class="row g-4">
-            <div class="col-md-3">
-                <a href="/inventory" class="metric-link">
-                    <div class="stat-card card bg-primary text-white text-center p-4">
-                        <i class="bi bi-box-seam fs-1 mb-2"></i>
-                        <h3>{{ total_products }}</h3>
-                        <p class="mb-0">Total Products</p>
-                    </div>
-                </a>
+      <h5 class="mb-4 text-center fw-bold text-uppercase">
+        Key Business Metrics
+      </h5>
+      <div class="row g-4">
+        <div class="col-md-3">
+          <a href="/inventory" class="metric-link">
+            <div class="stat-card card bg-primary text-white text-center p-4">
+              <i class="bi bi-box-seam fs-1 mb-2"></i>
+              <h3>{{ total_products }}</h3>
+              <p class="mb-0">Total Products</p>
             </div>
-            <div class="col-md-3">
-                <a href="/inventory" class="metric-link">
-                    <div class="stat-card card bg-success text-white text-center p-4">
-                        <i class="bi bi-currency-rupee fs-1 mb-2"></i>
-                        <h3>₹{{ total_stock_value }}</h3>
-                        <p class="mb-0">Stock Value</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3">
-                <a href="/inventory" class="metric-link">
-                    <div class="stat-card card bg-warning text-dark text-center p-4">
-                        <i class="bi bi-exclamation-triangle-fill fs-1 mb-2"></i>
-                        <h3>{{ low_stock_count }}</h3>
-                        <p class="mb-0">Low Stock Items</p>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-3">
-                <a href="/sales" class="metric-link">
-                    <div class="stat-card card bg-info text-white text-center p-4">
-                        <i class="bi bi-graph-up-arrow fs-1 mb-2"></i>
-                        <h3>₹{{ today_sales }}</h3>
-                        <p class="mb-0">Today's Sales</p>
-                    </div>
-                </a>
-            </div>
+          </a>
         </div>
+        <div class="col-md-3">
+          <a href="/inventory?filter=stock-value" class="metric-link">
+            <div class="stat-card card bg-success text-white text-center p-4">
+              <i class="bi bi-currency-rupee fs-1 mb-2"></i>
+              <h3>₹{{ total_stock_value }}</h3>
+              <p class="mb-0">Stock Value</p>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-3">
+          <!-- LOW STOCK CARD - now links to filtered inventory -->
+          <a href="/inventory?filter=low-stock" class="metric-link">
+            <div class="stat-card card bg-warning text-dark text-center p-4">
+              <i class="bi bi-exclamation-triangle-fill fs-1 mb-2"></i>
+              <h3>{{ low_stock_count }}</h3>
+              <p class="mb-0">Low Stock Items</p>
+            </div>
+          </a>
+        </div>
+        <div class="col-md-3">
+          <a href="/sales?filter=today" class="metric-link">
+            <div class="stat-card card bg-info text-white text-center p-4">
+              <i class="bi bi-graph-up-arrow fs-1 mb-2"></i>
+              <h3>₹{{ today_sales }}</h3>
+              <p class="mb-0">Today's Sales</p>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
 
     <div class="container mb-5">
-        <div class="card p-4 shadow-sm border-0">
-            <h5 class="mb-4 fw-bold text-danger"><i class="bi bi-bell-fill me-2"></i>Critical Low Stock Alerts</h5>
-            {% if low_stock_items %}
-            <div class="alert-low-stock">
-                <div class="row">
-                    {% for item in low_stock_items %}
-                    <div class="col-md-4 mb-2">
-                        <div class="p-2 border-bottom">
-                            <strong>{{ item.name }}</strong> 
-                            <span class="badge bg-danger float-end">Stock: {{ item.stock }}</span>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
+      <div class="card p-4 shadow-sm border-0">
+        <h5 class="mb-4 fw-bold text-danger">
+          <i class="bi bi-bell-fill me-2"></i>Critical Low Stock Alerts
+        </h5>
+        {% if low_stock_items %}
+        <div class="alert-low-stock">
+          <div class="row">
+            {% for item in low_stock_items %}
+            <div class="col-md-4 mb-2">
+              <div class="p-2 border-bottom">
+                <strong>{{ item.name }}</strong>
+                <span class="badge bg-danger float-end"
+                  >Stock: {{ item.stock }}</span
+                >
+              </div>
             </div>
-            {% else %}
-            <div class="text-center py-3">
-                <i class="bi bi-check-circle-fill text-success fs-1"></i>
-                <p class="text-muted mt-2">All items are sufficiently stocked.</p>
-            </div>
-            {% endif %}
+            {% endfor %}
+          </div>
         </div>
+        {% else %}
+        <div class="text-center py-3">
+          <i class="bi bi-check-circle-fill text-success fs-1"></i>
+          <p class="text-muted mt-2">All items are sufficiently stocked.</p>
+        </div>
+        {% endif %}
+      </div>
     </div>
 
+    <!-- Sidebar -->
     <div class="offcanvas offcanvas-start" id="sidebar">
-        <div class="offcanvas-header bg-success text-white">
-            <h5 class="offcanvas-title">Navigation Menu</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+      <div class="offcanvas-header bg-success text-white">
+        <h5 class="offcanvas-title">Navigation Menu</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0">
+        <div class="list-group list-group-flush">
+          <a href="/" class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-speedometer2 me-2"></i> Dashboard</a
+          >
+          <a
+            href="/add-product"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-plus-circle me-2"></i> Add New Product</a
+          >
+          <a
+            href="/inventory"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-boxes me-2"></i> Manage Inventory</a
+          >
+          <a href="/sales" class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-receipt me-2"></i> Sales Records</a
+          >
+          <a
+            href="/customers"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-people me-2"></i> Customers</a
+          >
+          <a
+            href="/suppliers"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-truck me-2"></i> Suppliers</a
+          >
+          <a
+            href="/discounts"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-tag me-2"></i> Discounts</a
+          >
+          <a
+            href="/purchase-orders"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-cart me-2"></i> Purchase Orders</a
+          >
+          <a href="/returns" class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-arrow-return-left me-2"></i> Returns</a
+          >
+          <a
+            href="/expenses"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-wallet2 me-2"></i> Expenses</a
+          >
+          <a
+            href="/invoice/preview"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-file-earmark-text me-2"></i> Invoice</a
+          >
+          <a
+            href="/logout"
+            class="list-group-item list-group-item-action py-3 text-danger"
+            ><i class="bi bi-box-arrow-right me-2"></i> Logout</a
+          >
         </div>
-        <div class="offcanvas-body p-0">
-            <div class="list-group list-group-flush">
-                <a href="/" class="list-group-item list-group-item-action py-3">
-                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
-                </a>
-                <a href="/add-product" class="list-group-item list-group-item-action py-3">
-                    <i class="bi bi-plus-circle me-2"></i> Add New Product
-                </a>
-                <a href="/inventory" class="list-group-item list-group-item-action py-3">
-                    <i class="bi bi-boxes me-2"></i> Manage Inventory
-                </a>
-                <a href="/sales" class="list-group-item list-group-item-action py-3">
-                    <i class="bi bi-receipt me-2"></i> Sales Records
-                </a>
-                <a href="/logout" class="list-group-item list-group-item-action py-3 text-danger">
-                    <i class="bi bi-box-arrow-right me-2"></i> Logout
-                </a>
-            </div>
-        </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  </body>
 </html>

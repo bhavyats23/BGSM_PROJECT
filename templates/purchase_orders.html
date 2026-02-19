@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase Orders - Grocery Manager</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #4caf50;
+        --primary-dark: #45a049;
+        --light-bg: #f8f9fa;
+        --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      }
+      body {
+        background-color: var(--light-bg);
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      .header {
+        background-color: var(--primary);
+        color: white;
+      }
+      .page-container {
+        max-width: 1000px;
+        margin: 2.5rem auto;
+        padding: 0 1rem;
+      }
+      .card-custom {
+        background: white;
+        border-radius: 20px;
+        box-shadow: var(--card-shadow);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(76, 175, 80, 0.12);
+      }
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.15);
+      }
+      .btn-primary-custom {
+        background: var(--primary);
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s;
+        width: 100%;
+      }
+      .btn-primary-custom:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        color: white;
+      }
+      .table thead th {
+        background-color: #e8f5e9;
+        color: #2e7d32;
+        font-weight: 600;
+        border-bottom: 2px solid #a5d6a7;
+      }
+      .table tbody tr:hover {
+        background-color: #f1f8e9;
+      }
+      .icon-lg {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .search-box {
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        padding: 0.6rem 1rem;
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+      .search-box:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+      .badge-pending {
+        background: #fff3e0;
+        color: #e65100;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .badge-received {
+        background: #e8f5e9;
+        color: #2e7d32;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .badge-cancelled {
+        background: #ffebee;
+        color: #c62828;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .btn-action {
+        border: none;
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 13px;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .btn-receive {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+      .btn-receive:hover {
+        background: #2e7d32;
+        color: white;
+      }
+      .btn-cancel {
+        background: #fff3e0;
+        color: #e65100;
+      }
+      .btn-cancel:hover {
+        background: #e65100;
+        color: white;
+      }
+      .btn-delete {
+        background: #ffebee;
+        color: #c62828;
+      }
+      .btn-delete:hover {
+        background: #c62828;
+        color: white;
+      }
+      .stat-pill {
+        background: white;
+        border-radius: 16px;
+        box-shadow: var(--card-shadow);
+        padding: 1.2rem;
+        text-align: center;
+        border: 1px solid rgba(76, 175, 80, 0.12);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #aaa;
+      }
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header py-3 shadow-sm">
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+          <a href="{{ url_for('dashboard') }}" class="text-white fs-4">
+            <i class="bi bi-arrow-left-circle-fill"></i>
+          </a>
+          <h4 class="mb-0 fw-bold">Purchase Orders</h4>
+          <button
+            class="btn text-white fs-4"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sidebar"
+          >
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show">
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- Stats -->
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-md-3">
+          <div class="stat-pill">
+            <div class="text-success fw-bold fs-2">{{ orders|length }}</div>
+            <div class="text-muted small">Total Orders</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-pill">
+            <div class="text-warning fw-bold fs-2">
+              {{ orders|selectattr('status','equalto','Pending')|list|length }}
+            </div>
+            <div class="text-muted small">Pending</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-pill">
+            <div class="text-success fw-bold fs-2">
+              {{ orders|selectattr('status','equalto','Received')|list|length }}
+            </div>
+            <div class="text-muted small">Received</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="stat-pill">
+            <div class="text-danger fw-bold fs-2">
+              {{ orders|selectattr('status','equalto','Cancelled')|list|length
+              }}
+            </div>
+            <div class="text-muted small">Cancelled</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Order Form -->
+      <div class="card-custom">
+        <div class="text-center mb-4">
+          <i class="bi bi-cart-plus-fill text-success icon-lg"></i>
+          <h5 class="fw-bold mb-1">Create Purchase Order</h5>
+          <p class="text-muted small">Order stock from a supplier</p>
+        </div>
+        <form method="POST" action="/purchase-orders">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"
+                >Product <span class="text-danger">*</span></label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-box-seam"></i
+                ></span>
+                <select name="product_id" class="form-select" required>
+                  <option value="" disabled selected>
+                    Select a product...
+                  </option>
+                  {% for p in products %}
+                  <option value="{{ p.id }}">
+                    {{ p.name }} (Current stock: {{ p.stock }})
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold"
+                >Supplier <span class="text-danger">*</span></label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-truck"></i
+                ></span>
+                <select name="supplier_id" class="form-select" required>
+                  <option value="" disabled selected>
+                    Select a supplier...
+                  </option>
+                  {% for s in suppliers %}
+                  <option value="{{ s.id }}">{{ s.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              {% if not suppliers %}
+              <div class="text-warning small mt-1">
+                <i class="bi bi-exclamation-triangle me-1"></i>
+                No suppliers found.
+                <a href="/suppliers">Add a supplier first</a>.
+              </div>
+              {% endif %}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"
+                >Quantity <span class="text-danger">*</span></label
+              >
+              <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                <input
+                  type="number"
+                  name="quantity"
+                  class="form-control"
+                  placeholder="e.g. 50"
+                  min="1"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold"
+                >Unit Cost (Rs) <span class="text-danger">*</span></label
+              >
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-currency-rupee"></i
+                ></span>
+                <input
+                  type="number"
+                  name="unit_cost"
+                  class="form-control"
+                  placeholder="e.g. 30"
+                  min="0"
+                  step="0.01"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Order Date</label>
+              <div class="input-group">
+                <span class="input-group-text"
+                  ><i class="bi bi-calendar"></i
+                ></span>
+                <input
+                  type="date"
+                  name="order_date"
+                  class="form-control"
+                  value="{{ today }}"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary-custom">
+                <i class="bi bi-plus-circle me-2"></i> Place Order
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="card-custom">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="fw-bold text-success mb-0">
+            <i class="bi bi-clock-history me-2"></i>All Orders
+          </h5>
+        </div>
+        <input
+          type="text"
+          class="search-box"
+          id="searchBox"
+          placeholder="Search by product or supplier..."
+        />
+        <div class="table-responsive">
+          <table class="table table-hover align-middle" id="ordersTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th>Supplier</th>
+                <th>Qty</th>
+                <th>Unit Cost</th>
+                <th>Total Cost</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for o in orders %}
+              <tr>
+                <td class="text-muted small">{{ o.id }}</td>
+                <td class="fw-semibold">
+                  {{ o.product_name or '#' ~ o.product_id }}
+                </td>
+                <td class="text-muted">
+                  {{ o.supplier_name or '#' ~ o.supplier_id }}
+                </td>
+                <td>{{ o.quantity }}</td>
+                <td>Rs{{ o.unit_cost }}</td>
+                <td class="fw-bold text-success">Rs{{ o.total_cost }}</td>
+                <td class="text-muted small">{{ o.order_date or '—' }}</td>
+                <td>
+                  {% if o.status == 'Pending' %}<span class="badge-pending"
+                    >Pending</span
+                  >
+                  {% elif o.status == 'Received' %}<span class="badge-received"
+                    >Received</span
+                  >
+                  {% else %}<span class="badge-cancelled">Cancelled</span>{%
+                  endif %}
+                </td>
+                <td>
+                  {% if o.status == 'Pending' %}
+                  <button
+                    class="btn-action btn-receive me-1"
+                    onclick="updateStatus({{ o.id }}, 'Received')"
+                    title="Mark Received"
+                  >
+                    <i class="bi bi-check-lg"></i>
+                  </button>
+                  <button
+                    class="btn-action btn-cancel me-1"
+                    onclick="updateStatus({{ o.id }}, 'Cancelled')"
+                    title="Cancel"
+                  >
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                  {% endif %}
+                  <button
+                    class="btn-action btn-delete"
+                    onclick="deleteOrder({{ o.id }})"
+                    title="Delete"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+              </tr>
+              {% endfor %} {% if not orders %}
+              <tr>
+                <td colspan="9">
+                  <div class="empty-state">
+                    <i class="bi bi-cart text-muted"></i>
+                    No purchase orders yet. Create your first order above!
+                  </div>
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+      <div class="offcanvas-header bg-success text-white">
+        <h5 class="offcanvas-title fw-bold">Navigation Menu</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0">
+        <div class="list-group list-group-flush">
+          <a href="/" class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-speedometer2 me-2"></i> Dashboard</a
+          >
+          <a
+            href="/add-product"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-plus-circle me-2"></i> Add Product</a
+          >
+          <a
+            href="/inventory"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-boxes me-2"></i> Inventory</a
+          >
+          <a href="/sales" class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-receipt me-2"></i> Sales</a
+          >
+          <a
+            href="/customers"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-people me-2"></i> Customers</a
+          >
+          <a
+            href="/discounts"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-tag me-2"></i> Discounts</a
+          >
+          <a
+            href="/purchase-orders"
+            class="list-group-item list-group-item-action py-3 active text-success"
+            ><i class="bi bi-cart me-2"></i> Purchase Orders</a
+          >
+          <a
+            href="/invoice/preview"
+            class="list-group-item list-group-item-action py-3"
+            ><i class="bi bi-file-earmark-text me-2"></i> Invoice</a
+          >
+          <a
+            href="/logout"
+            class="list-group-item list-group-item-action py-3 text-danger"
+            ><i class="bi bi-box-arrow-right me-2"></i> Logout</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Toasts -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="successToast" class="toast bg-success text-white">
+        <div class="toast-body d-flex justify-content-between">
+          <span id="toast-msg">Done!</span>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document
+        .getElementById("searchBox")
+        .addEventListener("input", function () {
+          const q = this.value.toLowerCase();
+          document.querySelectorAll("#ordersTable tbody tr").forEach((row) => {
+            row.style.display = row.innerText.toLowerCase().includes(q)
+              ? ""
+              : "none";
+          });
+        });
+
+      function showToast(msg) {
+        document.getElementById("toast-msg").innerText = msg;
+        new bootstrap.Toast(document.getElementById("successToast")).show();
+      }
+
+      function updateStatus(id, status) {
+        const label = status === "Received" ? "mark as received" : "cancel";
+        if (!confirm("Are you sure you want to " + label + " this order?"))
+          return;
+        fetch("/purchase-orders/status", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: id, status: status }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success) {
+              showToast("Order " + status + "!");
+              setTimeout(() => location.reload(), 900);
+            } else alert("Error: " + data.error);
+          });
+      }
+
+      function deleteOrder(id) {
+        if (!confirm("Delete this order?")) return;
+        fetch("/purchase-orders/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: id }),
+        })
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.success) {
+              showToast("Order deleted!");
+              setTimeout(() => location.reload(), 900);
+            } else alert("Error: " + data.error);
+          });
+      }
+    </script>
+  </body>
+</html>

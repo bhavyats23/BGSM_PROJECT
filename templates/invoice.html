@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invoice {{ invoice.invoice_number }} – Bhavya's Grocery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --green: #1a6b3c;
+      --light-green: #e8f5ee;
+      --dark: #1a1a1a;
+      --mid: #555;
+      --border: #d4e8dc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f0f4f2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .action-bar { display: flex; gap: 12px; margin-bottom: 28px; }
+    .btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      padding: 10px 22px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .btn-print { background: var(--green); color: #fff; }
+    .btn-back  { background: #fff; color: var(--dark); border: 1px solid var(--border); }
+
+    .receipt {
+      background: #fff;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(26,107,60,0.12);
+    }
+
+    .receipt-header { background: var(--green); color: #fff; padding: 28px 32px 20px; }
+    .store-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .store-tagline { font-size: 12px; opacity: 0.75; margin-top: 2px; }
+    .receipt-meta {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 16px;
+      font-size: 12px;
+      opacity: 0.85;
+      font-family: 'Space Mono', monospace;
+    }
+
+    .dashed { border: none; border-top: 2px dashed var(--border); margin: 0; }
+
+    .receipt-body { padding: 24px 32px; }
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+
+    .items-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .items-table thead th {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--mid);
+      text-align: left;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .items-table thead th:last-child { text-align: right; }
+    .items-table tbody td {
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 14px;
+      color: var(--dark);
+    }
+    .items-table tbody tr:last-child td { border-bottom: none; }
+    .item-name  { font-weight: 600; }
+    .item-qty   { color: var(--mid); font-size: 13px; }
+    .item-price { text-align: right; font-family: 'Space Mono', monospace; font-size: 13px; }
+
+    .totals { margin-top: 16px; }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--mid);
+      padding: 5px 0;
+    }
+    .total-row.grand {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--dark);
+      padding-top: 12px;
+      margin-top: 8px;
+      border-top: 2px solid var(--dark);
+    }
+    .total-row.grand .amount { font-family: 'Space Mono', monospace; color: var(--green); }
+    .total-row .amount { font-family: 'Space Mono', monospace; }
+
+    .payment-info {
+      margin-top: 20px;
+      background: var(--light-green);
+      border-radius: 8px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .payment-label { font-size: 12px; color: var(--mid); }
+    .payment-value {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .receipt-footer { padding: 20px 32px 28px; text-align: center; }
+    .barcode {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+    .thank-you { font-size: 13px; color: var(--mid); }
+    .thank-you strong { color: var(--green); }
+
+    .tear {
+      height: 16px;
+      background: repeating-linear-gradient(
+        90deg, #f0f4f2 0px, #f0f4f2 8px, #fff 8px, #fff 16px
+      );
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .action-bar { display: none !important; }
+      .receipt { box-shadow: none; border-radius: 0; max-width: 100%; }
+      .tear { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="action-bar">
+    <button class="btn btn-print" onclick="window.print()">&#128424; Print Receipt</button>
+    <a href="{{ url_for('sales') }}" class="btn btn-back">&#8592; Back to Sales</a>
+  </div>
+
+  <div class="receipt">
+
+    <div class="receipt-header">
+      <div class="store-name">&#128722; Bhavya's Grocery</div>
+      <div class="store-tagline">Fresh. Local. Affordable.</div>
+      <div class="receipt-meta">
+        <span>{{ invoice.invoice_number }}</span>
+        <span>{{ invoice.datetime }}</span>
+      </div>
+    </div>
+
+    <hr class="dashed"/>
+
+    <div class="receipt-body">
+
+      <div class="section-label">Items Purchased</div>
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in invoice.sale_items %}
+          <tr>
+            <td class="item-name">{{ item.name }}</td>
+            <td class="item-qty">{{ item.qty }} {{ item.unit }}</td>
+            <td class="item-price">&#8377;{{ "%.2f"|format(item.rate) }}</td>
+            <td class="item-price">&#8377;{{ "%.2f"|format(item.total) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <hr class="dashed"/>
+
+      <div class="totals">
+        <div class="total-row">
+          <span>Subtotal</span>
+          <span class="amount">&#8377;{{ "%.2f"|format(invoice.subtotal) }}</span>
+        </div>
+        <div class="total-row">
+          <span>GST (5%)</span>
+          <span class="amount">&#8377;{{ "%.2f"|format(invoice.tax) }}</span>
+        </div>
+        <div class="total-row">
+          <span>Discount</span>
+          <span class="amount">- &#8377;{{ "%.2f"|format(invoice.discount) }}</span>
+        </div>
+        <div class="total-row grand">
+          <span>TOTAL</span>
+          <span class="amount">&#8377;{{ "%.2f"|format(invoice.grand) }}</span>
+        </div>
+      </div>
+
+      <div class="payment-info">
+        <div>
+          <div class="payment-label">Payment</div>
+          <div class="payment-value">{{ invoice.payment_method | upper }}</div>
+        </div>
+        <div>
+          <div class="payment-label">Amount Paid</div>
+          <div class="payment-value">&#8377;{{ "%.2f"|format(invoice.amount_paid) }}</div>
+        </div>
+        <div>
+          <div class="payment-label">Change</div>
+          <div class="payment-value">&#8377;{{ "%.2f"|format(invoice.change) }}</div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="dashed"/>
+    <div class="tear"></div>
+
+    <div class="receipt-footer">
+      <div class="barcode">* * * * * * * * * * * * * *</div>
+      <div class="thank-you">
+        Thank you for shopping at <strong>Bhavya's Grocery</strong>!<br/>Visit again &#127807;
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
