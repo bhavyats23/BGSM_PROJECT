@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sales & Billing - Grocery Manager</title>
+    <title>Sales - Bhavya's Grocery</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -13,405 +13,305 @@
       rel="stylesheet"
     />
     <style>
-      :root {
-        --primary: #4caf50;
-        --primary-dark: #45a049;
-        --light-bg: #f8f9fa;
-        --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-      }
       body {
-        background-color: var(--light-bg);
-        font-family:
-          system-ui,
-          -apple-system,
-          sans-serif;
+        background: #f8f9fa;
       }
-      .header {
-        background-color: var(--primary);
-        color: white;
+      .navbar {
+        background: #fff;
+        border-bottom: 1px solid #dee2e6;
       }
-      .sales-container {
-        max-width: 900px;
-        margin: 2.5rem auto;
-      }
-      .sales-form-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: var(--card-shadow);
-        padding: 2.5rem;
-        margin-bottom: 2.5rem;
-        border: 1px solid rgba(76, 175, 80, 0.12);
-      }
-      .form-label {
-        font-weight: 600;
-        color: #2c3e50;
-      }
-      .form-control,
-      .form-select {
-        border-radius: 12px;
-        padding: 0.75rem 1rem;
-        transition: all 0.25s ease;
-      }
-      .form-control:focus,
-      .form-select:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.15);
-      }
-      .btn-record {
-        background: var(--primary);
+      .card {
         border: none;
         border-radius: 12px;
-        padding: 0.85rem;
-        font-weight: 600;
-        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       }
-      .btn-record:hover {
-        background: var(--primary-dark);
-        transform: translateY(-2px);
+      .btn-primary {
+        background: #f97316;
+        border-color: #f97316;
       }
-      .table-container {
-        background: white;
-        border-radius: 20px;
-        box-shadow: var(--card-shadow);
-        padding: 1.5rem;
-        border: 1px solid rgba(76, 175, 80, 0.12);
+      .btn-primary:hover {
+        background: #ea580c;
+        border-color: #ea580c;
       }
       .table thead th {
-        background-color: #e8f5e9;
-        color: #2e7d32;
+        background: #f8f9fa;
+        font-size: 0.8rem;
         font-weight: 600;
-        border-bottom: 2px solid #a5d6a7;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
-      .table tbody tr:hover {
-        background-color: #f1f8e9;
+      .badge-custom {
+        background: #fff7ed;
+        color: #f97316;
+        border: 1px solid #fed7aa;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
       }
-      .toast-container {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 1050;
+      .total-display {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: #f97316;
       }
-      .icon-lg {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-      }
-      .total-badge {
-        background: #e8f5e9;
-        color: #2e7d32;
-        padding: 10px 20px;
-        border-radius: 10px;
-        font-weight: bold;
-        display: inline-block;
-      }
-      .btn-invoice {
-        background: #1a6b3c;
-        color: white;
-        border: none;
+      .flash-success {
+        background: #d1fae5;
+        border: 1px solid #6ee7b7;
+        color: #065f46;
         border-radius: 8px;
-        padding: 4px 12px;
-        font-size: 13px;
-        text-decoration: none;
-        transition: all 0.2s;
-      }
-      .btn-invoice:hover {
-        background: #145530;
-        color: white;
-        transform: translateY(-1px);
-      }
-      .filter-banner {
-        background: #e3f2fd;
-        border-left: 5px solid #1565c0;
         padding: 10px 16px;
-        border-radius: 8px;
         margin-bottom: 1rem;
-        color: #1565c0;
-        font-weight: 600;
+      }
+      .flash-danger {
+        background: #fee2e2;
+        border: 1px solid #fca5a5;
+        color: #991b1b;
+        border-radius: 8px;
+        padding: 10px 16px;
+        margin-bottom: 1rem;
       }
     </style>
   </head>
   <body>
-    <header class="header py-3 shadow-sm">
-      <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-          <a href="{{ url_for('dashboard') }}" class="text-white fs-4">
-            <i class="bi bi-arrow-left-circle-fill"></i>
-          </a>
-          <h4 class="mb-0 fw-bold">
-            {% if filter == 'today' %}Today's Sales{% else %}Sales & Billing{%
-            endif %}
-          </h4>
-          <button
-            class="btn text-white fs-4"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#sidebar"
-          >
-            <i class="bi bi-list"></i>
-          </button>
-        </div>
+    <nav class="navbar navbar-expand-lg px-4 py-3 mb-4">
+      <a class="navbar-brand fw-bold" href="/" style="color: #f97316"
+        >🛒 Bhavya's Grocery</a
+      >
+      <div class="ms-auto d-flex gap-2">
+        <a href="/sales?filter=today" class="btn btn-outline-warning btn-sm"
+          >📅 Today's Sales</a
+        >
+        <a href="/sales" class="btn btn-outline-secondary btn-sm">All Sales</a>
+        <a href="/" class="btn btn-outline-secondary btn-sm">← Dashboard</a>
       </div>
-    </header>
+    </nav>
 
-    <div class="sales-container container">
-      <!-- Hide new transaction form when viewing today's sales filter -->
-      {% if filter != 'today' %}
-      <div class="sales-form-card">
-        <div class="text-center mb-4">
-          <i class="bi bi-receipt-cutoff text-success icon-lg"></i>
-          <h4 class="fw-bold mb-1">New Transaction</h4>
-          <p class="text-muted small">Record customer purchase</p>
-        </div>
-        <form id="sellForm">
-          <div class="mb-4">
-            <label for="product_id" class="form-label">Select Product</label>
-            <div class="input-group">
-              <span class="input-group-text"><i class="bi bi-basket"></i></span>
-              <select class="form-select" id="product_id" required>
-                <option value="" disabled selected>Choose a product...</option>
-                {% for p in products %}
-                <option
-                  value="{{ p.id }}"
-                  data-price="{{ p.price }}"
-                  data-stock="{{ p.stock }}"
-                >
-                  {{ p.name }} (Stock: {{ p.stock }}) - Rs{{ p.price }}
-                </option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-          <div class="mb-4">
-            <label for="quantity" class="form-label">Quantity</label>
-            <div class="input-group">
-              <span class="input-group-text"
-                ><i class="bi bi-plus-lg"></i
-              ></span>
-              <input
-                type="number"
-                class="form-control"
-                id="quantity"
-                min="1"
-                required
-                placeholder="Enter quantity sold"
-              />
-            </div>
-          </div>
-          <div class="text-center mb-4">
-            <div class="total-badge">
-              Estimated Total: <span id="live-total">Rs0.00</span>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-record w-100 text-white fw-bold">
-            <i class="bi bi-check-circle me-2"></i> Complete Sale
-          </button>
-        </form>
-      </div>
-      {% endif %}
+    <div class="container-lg">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="flash-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
 
-      <div class="table-container">
-        {% if filter == 'today' %}
-        <div class="filter-banner mb-3">
-          <i class="bi bi-calendar-check me-2"></i>
-          Showing today's sales — {{ sales|length }} transaction(s)
-          <a
-            href="/sales"
-            class="ms-3 text-decoration-none fw-bold"
-            style="color: #1a6b3c"
-            >View All Sales</a
-          >
-        </div>
-        {% endif %}
-
-        <h5 class="mb-4 fw-bold text-success text-center">
-          <i class="bi bi-clock-history me-2"></i>
-          {% if filter == 'today' %}Today's Transactions{% else %}Recent
-          Transactions{% endif %}
-        </h5>
-
-        <!-- Today's total if filter is active -->
-        {% if filter == 'today' %}
-        <div class="text-center mb-3">
-          <div class="total-badge fs-5">
-            Today's Total: Rs{{ sales | sum(attribute='total_price') | round(2)
-            }}
-          </div>
-        </div>
-        {% endif %}
-
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Product ID</th>
-                <th>Qty</th>
-                <th>Total Amount</th>
-                <th>Invoice</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for s in sales %}
-              <tr>
-                <td>{{ s.created_at[:16] }}</td>
-                <td class="fw-medium text-muted">#{{ s.product_id }}</td>
-                <td>{{ s.quantity }}</td>
-                <td class="text-success fw-bold">Rs{{ s.total_price }}</td>
-                <td>
-                  <a
-                    href="/invoice/{{ s.id }}"
-                    target="_blank"
-                    class="btn-invoice"
+      <div class="row g-4">
+        <!-- Record Sale Form -->
+        {% if filter != 'today' %}
+        <div class="col-12">
+          <div class="card p-4">
+            <h5 class="fw-bold mb-3">🧾 Record New Sale</h5>
+            <div class="row g-3 align-items-end">
+              <div class="col-md-5">
+                <label class="form-label fw-semibold">Product *</label>
+                <select id="productSelect" class="form-select" required>
+                  <option value="" disabled selected>
+                    Select a product...
+                  </option>
+                  {% for p in products %}
+                  <option
+                    value="{{ p.id }}"
+                    data-price="{{ p.price }}"
+                    data-stock="{{ p.stock }}"
                   >
-                    <i class="bi bi-printer me-1"></i> Print
-                  </a>
-                </td>
-              </tr>
-              {% endfor %} {% if not sales %}
-              <tr>
-                <td colspan="5" class="text-center py-4 text-muted">
-                  {% if filter == 'today' %}No sales recorded today{% else %}No
-                  sales recorded yet{% endif %}
-                </td>
-              </tr>
+                    {{ p.name }} — Rs{{ p.price }} (Stock: {{ p.stock }})
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-semibold">Quantity *</label>
+                <input
+                  type="number"
+                  id="qtyInput"
+                  class="form-control"
+                  value="1"
+                  min="1"
+                />
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-semibold">Total</label>
+                <div class="total-display" id="totalDisplay">Rs 0</div>
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-primary w-100" onclick="recordSale()">
+                  <i class="bi bi-receipt me-1"></i> Record Sale
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Sales Table -->
+        <div class="col-12">
+          <div class="card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="fw-bold mb-0">
+                {% if filter == 'today' %}📅 Today's Sales{% else %}📋 All Sales
+                Records{% endif %}
+              </h5>
+              {% if filter == 'today' %}
+              <a href="/sales" class="btn btn-outline-secondary btn-sm"
+                >View All Sales</a
+              >
               {% endif %}
-            </tbody>
-          </table>
+            </div>
+
+            <input
+              type="text"
+              class="form-control mb-3"
+              id="searchBox"
+              placeholder="🔍 Search sales..."
+            />
+
+            <div class="table-responsive">
+              <table class="table table-hover" id="salesTable">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    <th>Product ID</th>
+                    <th>Qty</th>
+                    <th>Total Amount</th>
+                    <th>Invoice</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for s in sales %}
+                  <tr>
+                    <td class="text-muted">{{ loop.index }}</td>
+                    <td class="text-muted" style="font-size: 0.85rem">
+                      {{ s.created_at[:16] if s.created_at else '-' }}
+                    </td>
+                    <td>
+                      <span class="badge-custom">{{ s.product_id }}</span>
+                    </td>
+                    <td><strong>{{ s.quantity }}</strong></td>
+                    <td>
+                      <strong style="color: #f97316"
+                        >Rs {{ s.total_price }}</strong
+                      >
+                    </td>
+                    <td>
+                      <a
+                        href="/invoice/{{ s.id }}"
+                        class="btn btn-outline-primary btn-sm"
+                      >
+                        <i class="bi bi-file-earmark-text me-1"></i>View
+                      </a>
+                    </td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                    <td colspan="6" class="text-center text-muted py-4">
+                      <i
+                        class="bi bi-receipt"
+                        style="
+                          font-size: 2rem;
+                          display: block;
+                          margin-bottom: 0.5rem;
+                        "
+                      ></i>
+                      No sales recorded yet!
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Toasts -->
-    <div class="toast-container">
-      <div id="successToast" class="toast bg-success text-white" role="alert">
-        <div class="toast-body d-flex justify-content-between">
-          Sale recorded and stock updated!
+    <!-- Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+      <div
+        id="myToast"
+        class="toast align-items-center text-white border-0"
+        role="alert"
+      >
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg"></div>
           <button
             type="button"
-            class="btn-close btn-close-white"
+            class="btn-close btn-close-white me-2 m-auto"
             data-bs-dismiss="toast"
           ></button>
-        </div>
-      </div>
-      <div id="errorToast" class="toast bg-danger text-white" role="alert">
-        <div class="toast-body d-flex justify-content-between">
-          <span id="error-msg">Error recording sale. Check stock.</span>
-          <button
-            type="button"
-            class="btn-close btn-close-white"
-            data-bs-dismiss="toast"
-          ></button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
-      <div class="offcanvas-header bg-success text-white">
-        <h5 class="offcanvas-title fw-bold">Navigation Menu</h5>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          data-bs-dismiss="offcanvas"
-        ></button>
-      </div>
-      <div class="offcanvas-body p-0">
-        <div class="list-group list-group-flush">
-          <a href="/" class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-speedometer2 me-2"></i> Dashboard</a
-          >
-          <a
-            href="/add-product"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-plus-circle me-2"></i> Add Product</a
-          >
-          <a
-            href="/inventory"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-boxes me-2"></i> Inventory</a
-          >
-          <a
-            href="/sales"
-            class="list-group-item list-group-item-action py-3 active"
-            ><i class="bi bi-receipt me-2"></i> Sales</a
-          >
-          <a
-            href="/customers"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-people me-2"></i> Customers</a
-          >
-          <a
-            href="/suppliers"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-truck me-2"></i> Suppliers</a
-          >
-          <a
-            href="/discounts"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-tag me-2"></i> Discounts</a
-          >
-          <a
-            href="/purchase-orders"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-cart me-2"></i> Purchase Orders</a
-          >
-          <a href="/returns" class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-arrow-return-left me-2"></i> Returns</a
-          >
-          <a
-            href="/expenses"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-wallet2 me-2"></i> Expenses</a
-          >
-          <a
-            href="/invoice/preview"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-file-earmark-text me-2"></i> Invoice</a
-          >
-          <a
-            href="/logout"
-            class="list-group-item list-group-item-action py-3 text-danger"
-            ><i class="bi bi-box-arrow-right me-2"></i> Logout</a
-          >
         </div>
       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      {% if filter != 'today' %}
-      const productSelect = document.getElementById("product_id");
-      const quantityInput = document.getElementById("quantity");
-      const totalDisplay  = document.getElementById("live-total");
+      const sel = document.getElementById("productSelect");
+      const qty = document.getElementById("qtyInput");
+      const tot = document.getElementById("totalDisplay");
 
-      function updatePrice() {
-          const opt   = productSelect.options[productSelect.selectedIndex];
-          const price = opt.getAttribute("data-price") || 0;
-          const qty   = quantityInput.value || 0;
-          totalDisplay.innerText = `Rs${(price * qty).toFixed(2)}`;
+      function calcTotal() {
+        if (!sel || !qty || sel.selectedIndex <= 0) return;
+        const opt = sel.options[sel.selectedIndex];
+        const price = parseFloat(opt.dataset.price || 0);
+        tot.innerText = "Rs " + (price * parseInt(qty.value || 1)).toFixed(2);
       }
 
-      productSelect.addEventListener("change", updatePrice);
-      quantityInput.addEventListener("input", updatePrice);
+      if (sel) sel.addEventListener("change", calcTotal);
+      if (qty) qty.addEventListener("input", calcTotal);
 
-      document.getElementById("sellForm").addEventListener("submit", function(e) {
-          e.preventDefault();
-          fetch("/sales", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ product_id: productSelect.value, quantity: quantityInput.value })
-          })
-          .then(r => r.json())
-          .then(data => {
-              if (data.success) {
-                  new bootstrap.Toast(document.getElementById("successToast")).show();
-                  setTimeout(() => location.reload(), 1200);
-              } else {
-                  document.getElementById("error-msg").innerText = data.error || "Insufficient stock!";
-                  new bootstrap.Toast(document.getElementById("errorToast")).show();
-              }
-          })
-          .catch(() => alert("Connection error. Check if server is running."));
-      });
-      {% endif %}
+      function showToast(msg, type) {
+        const el = document.getElementById("myToast");
+        el.className = `toast align-items-center text-white border-0 bg-${type === "success" ? "success" : "danger"}`;
+        document.getElementById("toastMsg").innerText = msg;
+        new bootstrap.Toast(el).show();
+      }
+
+      async function recordSale() {
+        if (!sel) return;
+        const pid = sel.value;
+        const q = parseInt(qty.value);
+        if (!pid) {
+          showToast("Please select a product!", "error");
+          return;
+        }
+        if (!q || q < 1) {
+          showToast("Please enter a valid quantity!", "error");
+          return;
+        }
+
+        const opt = sel.options[sel.selectedIndex];
+        const stock = parseInt(opt.dataset.stock || 0);
+        if (q > stock) {
+          showToast(`Only ${stock} units in stock!`, "error");
+          return;
+        }
+
+        try {
+          const r = await fetch("/sales", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ product_id: pid, quantity: q }),
+          });
+          const d = await r.json();
+          if (d.success) {
+            showToast("✅ Sale recorded!", "success");
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            showToast("Error: " + (d.error || "Unknown error"), "error");
+          }
+        } catch (e) {
+          showToast("Network error!", "error");
+        }
+      }
+
+      // Search
+      document
+        .getElementById("searchBox")
+        .addEventListener("input", function () {
+          const q = this.value.toLowerCase();
+          document.querySelectorAll("#salesTable tbody tr").forEach((r) => {
+            r.style.display = r.innerText.toLowerCase().includes(q)
+              ? ""
+              : "none";
+          });
+        });
     </script>
   </body>
 </html>

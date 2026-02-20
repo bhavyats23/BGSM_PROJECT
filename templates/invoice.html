@@ -1,262 +1,698 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invoice {{ invoice.invoice_number }} – Bhavya's Grocery</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --green: #1a6b3c;
-      --light-green: #e8f5ee;
-      --dark: #1a1a1a;
-      --mid: #555;
-      --border: #d4e8dc;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales - Bhavya's Grocery</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --cream: #fffbf5;
+        --warm-gray: #f5f0eb;
+        --text-dark: #1a1a1a;
+        --text-mid: #6b7280;
+        --border: #f0ece6;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
+      }
+      .header {
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(249, 115, 22, 0.08);
+      }
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .brand span {
+        color: var(--orange);
+      }
+      .btn-icon {
+        background: var(--warm-gray);
+        border: none;
+        border-radius: 12px;
+        padding: 8px 14px;
+        color: var(--text-dark);
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+      }
+      .btn-icon:hover {
+        background: #f0ece6;
+        color: var(--orange);
+      }
+      .page-hero {
+        position: relative;
+        height: 220px;
+        background-image: url("https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1400&q=80");
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+      .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.88),
+          rgba(239, 68, 68, 0.75),
+          rgba(0, 0, 0, 0.5)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 2.5rem;
+      }
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 100px;
+        margin-bottom: 0.6rem;
+        width: fit-content;
+      }
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.5rem;
+        color: white;
+        letter-spacing: 3px;
+        line-height: 1;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+      }
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .card-white {
+        background: white;
+        border-radius: 20px;
+        padding: 1.8rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1.5rem;
+      }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+        margin-bottom: 1.2rem;
+      }
+      .stat-pill {
+        background: white;
+        border-radius: 16px;
+        padding: 1.2rem 1.5rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        text-align: center;
+      }
+      .stat-value {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        letter-spacing: 1px;
+        color: var(--text-dark);
+      }
+      .stat-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-mid);
+        margin-top: 2px;
+      }
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid var(--border);
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+      }
+      label.form-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+        margin-bottom: 0.4rem;
+      }
+      .btn-orange {
+        background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 700;
+        color: white;
+        width: 100%;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        cursor: pointer;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .btn-orange:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
+      }
+      .total-box {
+        background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+        color: white;
+        border-radius: 14px;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      .total-box .val {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+      }
+      .table thead th {
+        background: var(--warm-gray);
+        color: var(--text-dark);
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+        padding: 0.9rem 1rem;
+      }
+      .table tbody td {
+        padding: 0.85rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.88rem;
+      }
+      .table tbody tr:hover {
+        background: #fff7ed;
+      }
+      .btn-print {
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 5px 14px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .btn-print:hover {
+        background: #2563eb;
+        color: white;
+      }
+      .filter-banner {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 14px;
+        padding: 0.9rem 1.2rem;
+        margin-bottom: 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .filter-banner a {
+        color: var(--orange);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .search-input {
+        border-radius: 12px;
+        border: 1.5px solid var(--border);
+        padding: 0.65rem 1rem;
+        width: 100%;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        margin-bottom: 1rem;
+      }
+      .search-input:focus {
+        outline: none;
+        border-color: var(--orange);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-mid);
+      }
+      .empty-state i {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.8rem;
+        color: #d1d5db;
+      }
+      .offcanvas {
+        width: 280px !important;
+        background: white !important;
+        border-right: 1px solid var(--border) !important;
+      }
+      .sidebar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .sidebar-brand span {
+        color: var(--orange);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.75rem 1.5rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item i {
+        width: 18px;
+        font-size: 1rem;
+      }
+      .nav-item:hover {
+        color: var(--orange);
+        background: #fff7ed;
+        border-left-color: var(--orange);
+      }
+      .nav-item.danger {
+        color: #dc2626;
+      }
+      .nav-item.danger:hover {
+        background: #fef2f2;
+        border-left-color: #dc2626;
+      }
+      .nav-divider {
+        border-color: var(--border);
+        margin: 0.5rem 0;
+      }
+      .fade-in {
+        opacity: 0;
+        transform: translateY(18px);
+        animation: fadeIn 0.55s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .d1 {
+        animation-delay: 0.05s;
+      }
+      .d2 {
+        animation-delay: 0.15s;
+      }
+      .d3 {
+        animation-delay: 0.25s;
+      }
+      .d4 {
+        animation-delay: 0.35s;
+      }
+      .toast-box {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a href="{{ url_for('dashboard') }}" class="btn-icon"
+        ><i class="bi bi-arrow-left"></i
+      ></a>
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <button
+        class="btn-icon"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebar"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+    </header>
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: #f0f4f2;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-    }
-
-    .action-bar { display: flex; gap: 12px; margin-bottom: 28px; }
-    .btn {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      padding: 10px 22px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-    .btn-print { background: var(--green); color: #fff; }
-    .btn-back  { background: #fff; color: var(--dark); border: 1px solid var(--border); }
-
-    .receipt {
-      background: #fff;
-      width: 100%;
-      max-width: 480px;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 8px 40px rgba(26,107,60,0.12);
-    }
-
-    .receipt-header { background: var(--green); color: #fff; padding: 28px 32px 20px; }
-    .store-name {
-      font-family: 'Space Mono', monospace;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-    .store-tagline { font-size: 12px; opacity: 0.75; margin-top: 2px; }
-    .receipt-meta {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 16px;
-      font-size: 12px;
-      opacity: 0.85;
-      font-family: 'Space Mono', monospace;
-    }
-
-    .dashed { border: none; border-top: 2px dashed var(--border); margin: 0; }
-
-    .receipt-body { padding: 24px 32px; }
-    .section-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--green);
-      margin-bottom: 12px;
-    }
-
-    .items-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    .items-table thead th {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--mid);
-      text-align: left;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-    .items-table thead th:last-child { text-align: right; }
-    .items-table tbody td {
-      padding: 10px 0;
-      border-bottom: 1px solid #f0f0f0;
-      font-size: 14px;
-      color: var(--dark);
-    }
-    .items-table tbody tr:last-child td { border-bottom: none; }
-    .item-name  { font-weight: 600; }
-    .item-qty   { color: var(--mid); font-size: 13px; }
-    .item-price { text-align: right; font-family: 'Space Mono', monospace; font-size: 13px; }
-
-    .totals { margin-top: 16px; }
-    .total-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      color: var(--mid);
-      padding: 5px 0;
-    }
-    .total-row.grand {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--dark);
-      padding-top: 12px;
-      margin-top: 8px;
-      border-top: 2px solid var(--dark);
-    }
-    .total-row.grand .amount { font-family: 'Space Mono', monospace; color: var(--green); }
-    .total-row .amount { font-family: 'Space Mono', monospace; }
-
-    .payment-info {
-      margin-top: 20px;
-      background: var(--light-green);
-      border-radius: 8px;
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .payment-label { font-size: 12px; color: var(--mid); }
-    .payment-value {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--green);
-    }
-
-    .receipt-footer { padding: 20px 32px 28px; text-align: center; }
-    .barcode {
-      font-family: 'Space Mono', monospace;
-      font-size: 9px;
-      letter-spacing: 3px;
-      color: #aaa;
-      margin-bottom: 6px;
-    }
-    .thank-you { font-size: 13px; color: var(--mid); }
-    .thank-you strong { color: var(--green); }
-
-    .tear {
-      height: 16px;
-      background: repeating-linear-gradient(
-        90deg, #f0f4f2 0px, #f0f4f2 8px, #fff 8px, #fff 16px
-      );
-    }
-
-    @media print {
-      body { background: #fff; padding: 0; }
-      .action-bar { display: none !important; }
-      .receipt { box-shadow: none; border-radius: 0; max-width: 100%; }
-      .tear { display: none; }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="action-bar">
-    <button class="btn btn-print" onclick="window.print()">&#128424; Print Receipt</button>
-    <a href="{{ url_for('sales') }}" class="btn btn-back">&#8592; Back to Sales</a>
-  </div>
-
-  <div class="receipt">
-
-    <div class="receipt-header">
-      <div class="store-name">&#128722; Bhavya's Grocery</div>
-      <div class="store-tagline">Fresh. Local. Affordable.</div>
-      <div class="receipt-meta">
-        <span>{{ invoice.invoice_number }}</span>
-        <span>{{ invoice.datetime }}</span>
+    <div class="page-hero">
+      <div class="hero-content">
+        <div class="hero-tag">🧾 Billing & Transactions</div>
+        <div class="hero-title">
+          {% if filter == 'today' %}TODAY'S SALES{% else %}SALES & BILLING{%
+          endif %}
+        </div>
+        <div class="hero-sub">
+          {% if filter == 'today' %}Transactions recorded today · {{
+          sales|length }} sale(s){% else %}Record sales and view all
+          transactions{% endif %}
+        </div>
       </div>
     </div>
 
-    <hr class="dashed"/>
+    <div class="page">
+      {% if filter == 'today' %}
+      <div class="filter-banner fade-in d1">
+        <span style="font-weight: 600; font-size: 0.85rem; color: #9a3412"
+          ><i class="bi bi-calendar-check me-2"></i>Showing today's sales — {{
+          sales|length }} transaction(s)</span
+        >
+        <a href="/sales">View All Sales →</a>
+      </div>
+      {% endif %} {% if filter != 'today' %}
+      <!-- Record New Sale -->
+      <div class="card-white fade-in d1">
+        <div class="section-title">🧾 Record New Sale</div>
+        <form id="saleForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Product *</label>
+              <select id="productSelect" class="form-select" required>
+                <option value="" disabled selected>Select a product...</option>
+                {% for p in products %}
+                <option
+                  value="{{ p.id }}"
+                  data-price="{{ p.price }}"
+                  data-stock="{{ p.stock }}"
+                >
+                  {{ p.name }} — Rs{{ p.price }} (Stock: {{ p.stock }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Quantity *</label>
+              <input
+                type="number"
+                id="qtyInput"
+                class="form-control"
+                placeholder="e.g. 2"
+                min="1"
+                value="1"
+              />
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Total</label>
+              <div
+                style="
+                  background: var(--warm-gray);
+                  border-radius: 12px;
+                  padding: 0.75rem 1rem;
+                  font-family: &quot;Bebas Neue&quot;, sans-serif;
+                  font-size: 1.3rem;
+                  letter-spacing: 1px;
+                  color: var(--orange);
+                "
+                id="totalDisplay"
+              >
+                Rs 0
+              </div>
+            </div>
+            <div class="col-12">
+              <button type="button" class="btn-orange" onclick="recordSale()">
+                <i class="bi bi-receipt me-2"></i>Record Sale
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      {% endif %}
 
-    <div class="receipt-body">
-
-      <div class="section-label">Items Purchased</div>
-      <table class="items-table">
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Qty</th>
-            <th>Rate</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for item in invoice.sale_items %}
-          <tr>
-            <td class="item-name">{{ item.name }}</td>
-            <td class="item-qty">{{ item.qty }} {{ item.unit }}</td>
-            <td class="item-price">&#8377;{{ "%.2f"|format(item.rate) }}</td>
-            <td class="item-price">&#8377;{{ "%.2f"|format(item.total) }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
-      <hr class="dashed"/>
-
-      <div class="totals">
-        <div class="total-row">
-          <span>Subtotal</span>
-          <span class="amount">&#8377;{{ "%.2f"|format(invoice.subtotal) }}</span>
+      <!-- Sales List -->
+      <div class="card-white fade-in d2">
+        {% if filter == 'today' %}
+        <div class="total-box">
+          <div>
+            <div
+              style="
+                font-size: 0.7rem;
+                opacity: 0.75;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+              "
+            >
+              Today's Total Revenue
+            </div>
+            <div class="val">
+              Rs{{ sales | sum(attribute='total_price') | round(2) }}
+            </div>
+          </div>
+          <i
+            class="bi bi-graph-up-arrow"
+            style="font-size: 2.5rem; opacity: 0.4"
+          ></i>
         </div>
-        <div class="total-row">
-          <span>GST (5%)</span>
-          <span class="amount">&#8377;{{ "%.2f"|format(invoice.tax) }}</span>
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="section-title mb-0">
+            {% if filter == 'today' %}⏱ Today's Transactions{% else %}📋 All
+            Sales Records{% endif %}
+          </div>
         </div>
-        <div class="total-row">
-          <span>Discount</span>
-          <span class="amount">- &#8377;{{ "%.2f"|format(invoice.discount) }}</span>
-        </div>
-        <div class="total-row grand">
-          <span>TOTAL</span>
-          <span class="amount">&#8377;{{ "%.2f"|format(invoice.grand) }}</span>
+
+        <input
+          type="text"
+          class="search-input"
+          id="searchBox"
+          placeholder="Search sales..."
+        />
+
+        <div class="table-responsive">
+          <table class="table" id="salesTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Product ID</th>
+                <th>Qty</th>
+                <th>Total Amount</th>
+                <th>Invoice</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in sales %}
+              <tr>
+                <td class="text-muted">{{ s.id }}</td>
+                <td class="text-muted">
+                  {{ s.created_at[:16].replace('T',' ') if s.created_at else '-'
+                  }}
+                </td>
+                <td>
+                  <span
+                    style="
+                      font-family: &quot;Bebas Neue&quot;, sans-serif;
+                      letter-spacing: 1px;
+                    "
+                    >#{{ s.product_id }}</span
+                  >
+                </td>
+                <td>{{ s.quantity }}</td>
+                <td style="font-weight: 700; color: var(--orange)">
+                  Rs{{ s.total_price }}
+                </td>
+                <td>
+                  <a
+                    href="/invoice/{{ s.id }}"
+                    target="_blank"
+                    class="btn-print"
+                  >
+                    <i class="bi bi-printer"></i> Print
+                  </a>
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="6">
+                  <div class="empty-state">
+                    <i class="bi bi-receipt"></i>No sales recorded yet!
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
-
-      <div class="payment-info">
-        <div>
-          <div class="payment-label">Payment</div>
-          <div class="payment-value">{{ invoice.payment_method | upper }}</div>
-        </div>
-        <div>
-          <div class="payment-label">Amount Paid</div>
-          <div class="payment-value">&#8377;{{ "%.2f"|format(invoice.amount_paid) }}</div>
-        </div>
-        <div>
-          <div class="payment-label">Change</div>
-          <div class="payment-value">&#8377;{{ "%.2f"|format(invoice.change) }}</div>
-        </div>
-      </div>
-
     </div>
 
-    <hr class="dashed"/>
-    <div class="tear"></div>
-
-    <div class="receipt-footer">
-      <div class="barcode">* * * * * * * * * * * * * *</div>
-      <div class="thank-you">
-        Thank you for shopping at <strong>Bhavya's Grocery</strong>!<br/>Visit again &#127807;
+    <div class="toast-box">
+      <div id="myToast" class="toast align-items-center text-white border-0">
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
       </div>
     </div>
 
-  </div>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+      <div
+        class="offcanvas-header border-bottom"
+        style="border-color: #f0ece6 !important; padding: 1.2rem 1.5rem"
+      >
+        <div class="sidebar-brand">BHAVYA'S <span>GROCERY</span></div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0 pt-2">
+        <a href="/" class="nav-item"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+        <a href="/add-product" class="nav-item"
+          ><i class="bi bi-plus-circle"></i> Add New Product</a
+        >
+        <a href="/inventory" class="nav-item"
+          ><i class="bi bi-boxes"></i> Manage Inventory</a
+        >
+        <a href="/sales" class="nav-item"
+          ><i class="bi bi-receipt"></i> Sales Records</a
+        >
+        <a href="/customers" class="nav-item"
+          ><i class="bi bi-people"></i> Customers</a
+        >
+        <a href="/suppliers" class="nav-item"
+          ><i class="bi bi-truck"></i> Suppliers</a
+        >
+        <a href="/discounts" class="nav-item"
+          ><i class="bi bi-tag"></i> Discounts</a
+        >
+        <a href="/purchase-orders" class="nav-item"
+          ><i class="bi bi-cart"></i> Purchase Orders</a
+        >
+        <a href="/returns" class="nav-item"
+          ><i class="bi bi-arrow-return-left"></i> Returns</a
+        >
+        <a href="/expenses" class="nav-item"
+          ><i class="bi bi-wallet2"></i> Expenses</a
+        >
+        <a href="/invoice/preview" class="nav-item"
+          ><i class="bi bi-file-earmark-text"></i> Invoice</a
+        >
+        <hr class="nav-divider" />
+        <a href="/logout" class="nav-item danger"
+          ><i class="bi bi-box-arrow-right"></i> Logout</a
+        >
+      </div>
+    </div>
 
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function showToast(m, t) {
+        const e = document.getElementById("myToast");
+        e.className = `toast align-items-center text-white border-0 bg-${t === "success" ? "success" : "danger"}`;
+        document.getElementById("toastMsg").innerText = m;
+        new bootstrap.Toast(e).show();
+      }
+
+      const sel = document.getElementById("productSelect");
+      const qty = document.getElementById("qtyInput");
+      const tot = document.getElementById("totalDisplay");
+      function calcTotal() {
+        if (!sel || !qty) return;
+        const opt = sel.options[sel.selectedIndex];
+        const price = opt ? parseFloat(opt.dataset.price || 0) : 0;
+        tot.innerText = "Rs " + (price * parseInt(qty.value || 1)).toFixed(2);
+      }
+      if (sel) sel.addEventListener("change", calcTotal);
+      if (qty) qty.addEventListener("input", calcTotal);
+
+      async function recordSale() {
+        const pid = sel.value;
+        const q = parseInt(qty.value);
+        if (!pid) {
+          alert("Please select a product!");
+          return;
+        }
+        if (!q || q < 1) {
+          alert("Enter a valid quantity!");
+          return;
+        }
+        const r = await fetch("/sales", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ product_id: pid, quantity: q }),
+        });
+        const d = await r.json();
+        if (d.success) {
+          showToast("Sale recorded!", "success");
+          setTimeout(() => location.reload(), 900);
+        } else alert("Error: " + d.error);
+      }
+
+      document
+        .getElementById("searchBox")
+        .addEventListener("input", function () {
+          const q = this.value.toLowerCase();
+          document.querySelectorAll("#salesTable tbody tr").forEach((r) => {
+            r.style.display = r.innerText.toLowerCase().includes(q)
+              ? ""
+              : "none";
+          });
+        });
+    </script>
+  </body>
 </html>

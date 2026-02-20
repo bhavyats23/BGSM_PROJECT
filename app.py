@@ -184,7 +184,8 @@ def sales():
         sales_list = supabase.table('sales').select('*').gte('created_at', today_str).order('created_at', desc=True).execute().data or []
     else:
         sales_list = supabase.table('sales').select('*').order('created_at', desc=True).execute().data or []
-    return render_template('sales.html', products=products, sales=sales_list, filter=filter_type)
+    customers_list = supabase.table('customers').select('*').order('name').execute().data or []
+    return render_template('sales.html', products=products, sales=sales_list, filter=filter_type, customers=customers_list)
 
 
 @app.route('/invoice/preview')
