@@ -1,207 +1,613 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product - Grocery Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Product - Bhavya's Grocery</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --primary: #4CAF50;
-            --primary-dark: #45a049;
-            --light-bg: #f8f9fa;
-            --card-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      :root {
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --cream: #fffbf5;
+        --warm-gray: #f5f0eb;
+        --text-dark: #1a1a1a;
+        --text-mid: #6b7280;
+        --border: #f0ece6;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
+      }
+      .header {
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(249, 115, 22, 0.08);
+      }
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .brand span {
+        color: var(--orange);
+      }
+      .btn-icon {
+        background: var(--warm-gray);
+        border: none;
+        border-radius: 12px;
+        padding: 8px 14px;
+        color: var(--text-dark);
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+      }
+      .btn-icon:hover {
+        background: #f0ece6;
+        color: var(--orange);
+      }
+      .page-hero {
+        position: relative;
+        height: 200px;
+        background-image: url("https://images.unsplash.com/photo-1542838132-92c53300491e?w=1400&q=80");
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+      .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.88),
+          rgba(239, 68, 68, 0.75),
+          rgba(0, 0, 0, 0.5)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 2.5rem;
+      }
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 100px;
+        margin-bottom: 0.6rem;
+        width: fit-content;
+      }
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.5rem;
+        color: white;
+        letter-spacing: 3px;
+        line-height: 1;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+      }
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .card-white {
+        background: white;
+        border-radius: 20px;
+        padding: 1.8rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1.5rem;
+      }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+        margin-bottom: 1.2rem;
+      }
+      .stat-pill {
+        background: white;
+        border-radius: 16px;
+        padding: 1.2rem 1.5rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        text-align: center;
+      }
+      .stat-value {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        letter-spacing: 1px;
+        color: var(--text-dark);
+      }
+      .stat-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-mid);
+        margin-top: 2px;
+      }
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid var(--border);
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+      }
+      label.form-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+        margin-bottom: 0.4rem;
+      }
+      .btn-orange {
+        background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 700;
+        color: white;
+        width: 100%;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        cursor: pointer;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .btn-orange:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(249, 115, 22, 0.35);
+      }
+      .table thead th {
+        background: var(--warm-gray);
+        color: var(--text-dark);
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+        padding: 0.9rem 1rem;
+      }
+      .table tbody td {
+        padding: 0.85rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.88rem;
+      }
+      .table tbody tr:hover {
+        background: #fff7ed;
+      }
+      .badge-orange {
+        background: #fff7ed;
+        color: var(--orange);
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        border: 1px solid #fed7aa;
+      }
+      .badge-green {
+        background: #f0fdf4;
+        color: #16a34a;
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        border: 1px solid #bbf7d0;
+      }
+      .badge-red {
+        background: #fef2f2;
+        color: #dc2626;
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        border: 1px solid #fecaca;
+      }
+      .badge-blue {
+        background: #eff6ff;
+        color: #2563eb;
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        border: 1px solid #bfdbfe;
+      }
+      .btn-del {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-del:hover {
+        background: #dc2626;
+        color: white;
+      }
+      .btn-act {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-act:hover {
+        background: #16a34a;
+        color: white;
+      }
+      .btn-warn {
+        background: #fff7ed;
+        color: var(--orange);
+        border: 1px solid #fed7aa;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-warn:hover {
+        background: var(--orange);
+        color: white;
+      }
+      .search-input {
+        border-radius: 12px;
+        border: 1.5px solid var(--border);
+        padding: 0.65rem 1rem;
+        width: 100%;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        margin-bottom: 1rem;
+      }
+      .search-input:focus {
+        outline: none;
+        border-color: var(--orange);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-mid);
+      }
+      .empty-state i {
+        font-size: 2.5rem;
+        display: block;
+        margin-bottom: 0.8rem;
+        color: #d1d5db;
+      }
+      .offcanvas {
+        width: 280px !important;
+        background: white !important;
+        border-right: 1px solid var(--border) !important;
+      }
+      .sidebar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .sidebar-brand span {
+        color: var(--orange);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.75rem 1.5rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item i {
+        width: 18px;
+        font-size: 1rem;
+      }
+      .nav-item:hover {
+        color: var(--orange);
+        background: #fff7ed;
+        border-left-color: var(--orange);
+      }
+      .nav-item.danger {
+        color: #dc2626;
+      }
+      .nav-item.danger:hover {
+        background: #fef2f2;
+        border-left-color: #dc2626;
+      }
+      .nav-divider {
+        border-color: var(--border);
+        margin: 0.5rem 0;
+      }
+      .fade-in {
+        opacity: 0;
+        transform: translateY(18px);
+        animation: fadeIn 0.55s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-
-        body {
-            background-color: var(--light-bg);
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-
-        .header {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .header .btn-icon {
-            font-size: 1.6rem;
-        }
-
-        .form-container {
-            max-width: 520px;
-            margin: 2.5rem auto;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            padding: 2.5rem;
-            border: 1px solid rgba(76,175,80,0.15);
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-control, .form-select {
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            border: 1px solid #ced4da;
-            transition: all 0.25s ease;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.25rem rgba(76,175,80,0.15);
-        }
-
-        .input-group-text {
-            border-radius: 12px 0 0 12px;
-            background-color: #f1f3f5;
-        }
-
-        .btn-submit {
-            background: var(--primary);
-            border: none;
-            border-radius: 12px;
-            padding: 0.85rem;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-submit:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        .icon-lg {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .success-message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1050;
-            min-width: 300px;
-        }
+      }
+      .d1 {
+        animation-delay: 0.05s;
+      }
+      .d2 {
+        animation-delay: 0.15s;
+      }
+      .d3 {
+        animation-delay: 0.25s;
+      }
+      .toast-box {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+      }
     </style>
-</head>
-<body>
-
-    <!-- Header -->
-    <header class="header py-3 shadow-sm">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="{{ url_for('dashboard') }}" class="text-white btn-icon">
-                    <i class="bi bi-arrow-left-circle-fill"></i>
-                </a>
-                <h4 class="mb-0 fw-bold">Add New Product</h4>
-                <div></div>
-            </div>
-        </div>
+  </head>
+  <body>
+    <header class="header">
+      <a href="{{ url_for('dashboard') }}" class="btn-icon"
+        ><i class="bi bi-arrow-left"></i
+      ></a>
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <button
+        class="btn-icon"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebar"
+      >
+        <i class="bi bi-list"></i>
+      </button>
     </header>
-
-    <!-- Main Content -->
-    <div class="form-container">
-        <div class="form-card">
-            <div class="text-center mb-4">
-                <i class="bi bi-plus-circle-fill text-success icon-lg"></i>
-                <h4 class="fw-bold mb-1">Add Grocery Item</h4>
-                <p class="text-muted small">Fill in the details below</p>
-            </div>
-
-            <form method="post" id="addProductForm">
-                <div class="mb-4">
-                    <label for="name" class="form-label">Product Name</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-tag"></i></span>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="e.g. Fresh Blueberries" required autofocus>
-                    </div>
-                </div>
-
-                <div class="mb-4">
-                    <label for="category" class="form-label">Category</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-grid-3x3-gap"></i></span>
-                        <select class="form-select" id="category" name="category" required>
-                            {% for cat in categories %}
-                                <option value="{{ cat }}">{{ cat }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label for="price" class="form-label">Price (₹)</label>
-                        <div class="input-group">
-                            <span class="input-group-text">₹</span>
-                            <input type="number" step="0.01" class="form-control" id="price" name="price" placeholder="0.00" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="stock" class="form-label">Initial Stock</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
-                            <input type="number" class="form-control" id="stock" name="stock" placeholder="0" required>
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-submit w-100 text-white fw-bold">
-                    <i class="bi bi-plus-lg me-2"></i> Add Product
-                </button>
-            </form>
-        </div>
+    <div class="page-hero">
+      <div class="hero-content">
+        <div class="hero-tag">📦 Product Management</div>
+        <div class="hero-title">ADD NEW PRODUCT</div>
+        <div class="hero-sub">Add a new product to your inventory</div>
+      </div>
     </div>
-
-    <!-- Toast Notification (for success) -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="successToast" class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <strong class="me-auto">Success</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+    <div class="page">
+      {% with messages=get_flashed_messages(with_categories=true) %}{% if
+      messages %}{% for c,m in messages %}
+      <div class="alert alert-{{c}} alert-dismissible fade show">
+        {{m}}<button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+      {% endfor %}{% endif %}{% endwith %}
+      <div
+        class="card-white fade-in d1"
+        style="max-width: 600px; margin: 0 auto"
+      >
+        <div class="section-title">➕ Add New Product</div>
+        <form method="POST" action="/add-product">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Product Name *</label
+              ><input
+                type="text"
+                name="name"
+                class="form-control"
+                placeholder="e.g. Fresh Tomatoes"
+                required
+              />
             </div>
-            <div class="toast-body">
-                Product added successfully!
+            <div class="col-md-6">
+              <label class="form-label">Price (Rs) *</label
+              ><input
+                type="number"
+                name="price"
+                class="form-control"
+                placeholder="e.g. 45"
+                min="0"
+                step="0.01"
+                required
+              />
             </div>
-        </div>
+            <div class="col-md-6">
+              <label class="form-label">Stock Quantity *</label
+              ><input
+                type="number"
+                name="stock"
+                class="form-control"
+                placeholder="e.g. 100"
+                min="0"
+                required
+              />
+            </div>
+            <div class="col-12">
+              <label class="form-label">Category</label
+              ><select name="category" class="form-select">
+                <option value="">Select category...</option>
+                <option>Fruits</option>
+                <option>Vegetables</option>
+                <option>Dairy</option>
+                <option>Grains & Pulses</option>
+                <option>Snacks</option>
+                <option>Beverages</option>
+                <option>Spices</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn-orange">+ Add Product</button>
+            </div>
+            <div class="col-12 text-center">
+              <a
+                href="/inventory"
+                style="
+                  color: var(--orange);
+                  font-size: 0.85rem;
+                  text-decoration: none;
+                "
+                >← Back to Inventory</a
+              >
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-
-    <!-- Sidebar (same as dashboard) -->
+    <div class="toast-box">
+      <div id="myToast" class="toast align-items-center text-white border-0">
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title fw-bold">Grocery Manager</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><a href="{{ url_for('dashboard') }}" class="text-decoration-none">Dashboard</a></li>
-                <li class="list-group-item active"><a href="{{ url_for('add_product') }}" class="text-decoration-none">Add Product</a></li>
-                <li class="list-group-item"><a href="{{ url_for('inventory') }}" class="text-decoration-none">Inventory</a></li>
-                <li class="list-group-item"><a href="{{ url_for('sales') }}" class="text-decoration-none">Sales</a></li>
-                <li class="list-group-item mt-4"><a href="{{ url_for('logout') }}" class="text-danger text-decoration-none">Logout</a></li>
-            </ul>
-        </div>
+      <div
+        class="offcanvas-header border-bottom"
+        style="border-color: #f0ece6 !important; padding: 1.2rem 1.5rem"
+      >
+        <div class="sidebar-brand">BHAVYA'S <span>GROCERY</span></div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0 pt-2">
+        <a href="/" class="nav-item"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+        <a href="/add-product" class="nav-item"
+          ><i class="bi bi-plus-circle"></i> Add New Product</a
+        >
+        <a href="/inventory" class="nav-item"
+          ><i class="bi bi-boxes"></i> Manage Inventory</a
+        >
+        <a href="/sales" class="nav-item"
+          ><i class="bi bi-receipt"></i> Sales Records</a
+        >
+        <a href="/customers" class="nav-item"
+          ><i class="bi bi-people"></i> Customers</a
+        >
+        <a href="/suppliers" class="nav-item"
+          ><i class="bi bi-truck"></i> Suppliers</a
+        >
+        <a href="/discounts" class="nav-item"
+          ><i class="bi bi-tag"></i> Discounts</a
+        >
+        <a href="/purchase-orders" class="nav-item"
+          ><i class="bi bi-cart"></i> Purchase Orders</a
+        >
+        <a href="/returns" class="nav-item"
+          ><i class="bi bi-arrow-return-left"></i> Returns</a
+        >
+        <a href="/expenses" class="nav-item"
+          ><i class="bi bi-wallet2"></i> Expenses</a
+        >
+        <a href="/invoice/preview" class="nav-item"
+          ><i class="bi bi-file-earmark-text"></i> Invoice</a
+        >
+        <hr class="nav-divider" />
+        <a href="/logout" class="nav-item danger"
+          ><i class="bi bi-box-arrow-right"></i> Logout</a
+        >
+      </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Show success toast after form submit (you can improve this with AJAX later)
-        document.getElementById('addProductForm').addEventListener('submit', function(e) {
-            // For demo: show toast even if page reloads
-            setTimeout(() => {
-                const toastEl = document.getElementById('successToast');
-                const toast = new bootstrap.Toast(toastEl);
-                toast.show();
-            }, 300);
-        });
+      function showToast(m, t) {
+        const e = document.getElementById("myToast");
+        e.className = `toast align-items-center text-white border-0 bg-${t === "success" ? "success" : "danger"}`;
+        document.getElementById("toastMsg").innerText = m;
+        new bootstrap.Toast(e).show();
+      }
+      function delItem(id, url) {
+        if (!confirm("Delete?")) return;
+        fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        })
+          .then((r) => r.json())
+          .then((d) => {
+            if (d.success) {
+              showToast("Deleted!", "danger");
+              setTimeout(() => location.reload(), 800);
+            } else alert(d.error);
+          });
+      }
+      try {
+        document
+          .getElementById("searchBox")
+          .addEventListener("input", function () {
+            const q = this.value.toLowerCase();
+            document.querySelectorAll("table tbody tr").forEach((r) => {
+              r.style.display = r.innerText.toLowerCase().includes(q)
+                ? ""
+                : "none";
+            });
+          });
+      } catch (e) {}
     </script>
-</body>
+  </body>
 </html>

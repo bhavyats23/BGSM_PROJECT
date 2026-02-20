@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inventory - Grocery Manager</title>
+    <title>Inventory - Bhavya's Grocery</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -12,144 +12,423 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
-        --primary: #4caf50;
-        --light-bg: #f8f9fa;
-        --card-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --cream: #fffbf5;
+        --warm-gray: #f5f0eb;
+        --text-dark: #1a1a1a;
+        --text-mid: #6b7280;
+        --border: #f0ece6;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
       body {
-        background-color: var(--light-bg);
-        font-family:
-          system-ui,
-          -apple-system,
-          sans-serif;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
       }
       .header {
-        background-color: var(--primary);
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(249, 115, 22, 0.08);
+      }
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .brand span {
+        color: var(--orange);
+      }
+      .btn-icon {
+        background: var(--warm-gray);
+        border: none;
+        border-radius: 12px;
+        padding: 8px 14px;
+        color: var(--text-dark);
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+      }
+      .btn-icon:hover {
+        background: #f0ece6;
+        color: var(--orange);
+      }
+      .page-hero {
+        position: relative;
+        height: 200px;
+        background-image: url("https://images.unsplash.com/photo-1542838132-92c53300491e?w=1400&q=80");
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+      .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.88),
+          rgba(239, 68, 68, 0.75),
+          rgba(0, 0, 0, 0.5)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 2.5rem;
+      }
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 100px;
+        margin-bottom: 0.6rem;
+        width: fit-content;
       }
-      .inventory-container {
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.5rem;
+        color: white;
+        letter-spacing: 3px;
+        line-height: 1;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+      }
+      .page {
         max-width: 1100px;
-        margin: 2.5rem auto;
+        margin: 0 auto;
+        padding: 2rem;
       }
-      .inventory-card {
+      .card-white {
         background: white;
         border-radius: 20px;
-        box-shadow: var(--card-shadow);
-        overflow: hidden;
-        border: 1px solid rgba(76, 175, 80, 0.12);
+        padding: 1.8rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1.5rem;
+      }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+        margin-bottom: 1.2rem;
+      }
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid var(--border);
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+      }
+      label.form-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+        margin-bottom: 0.4rem;
       }
       .table thead th {
-        background-color: #e8f5e9;
-        color: #2e7d32;
-        font-weight: 600;
-        border-bottom: 2px solid #a5d6a7;
+        background: var(--warm-gray);
+        color: var(--text-dark);
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+        padding: 0.9rem 1rem;
       }
-      .low-stock-warning {
-        background-color: #fff3cd !important;
+      .table tbody td {
+        padding: 0.85rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.88rem;
+      }
+      .table tbody tr:hover {
+        background: #fff7ed;
+      }
+      .low-stock-row {
+        background: #fff7ed;
       }
       .stock-input {
-        width: 100px !important;
+        width: 90px;
         border-radius: 8px;
         text-align: center;
+        border: 1.5px solid var(--border);
+        padding: 0.4rem 0.6rem;
       }
-      .btn-action {
+      .btn-save {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
         border-radius: 8px;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
-        transition: 0.2s;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
       }
-      .toast-container {
+      .btn-save:hover {
+        background: #16a34a;
+        color: white;
+      }
+      .btn-del {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-del:hover {
+        background: #dc2626;
+        color: white;
+      }
+      .badge-warn {
+        background: #fff7ed;
+        color: var(--orange);
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border: 1px solid #fed7aa;
+      }
+      .alert-banner {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 14px;
+        padding: 0.9rem 1.2rem;
+        margin-bottom: 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .alert-banner a {
+        color: var(--orange);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .offcanvas {
+        width: 280px !important;
+        background: white !important;
+        border-right: 1px solid var(--border) !important;
+      }
+      .sidebar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .sidebar-brand span {
+        color: var(--orange);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.75rem 1.5rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item i {
+        width: 18px;
+        font-size: 1rem;
+      }
+      .nav-item:hover {
+        color: var(--orange);
+        background: #fff7ed;
+        border-left-color: var(--orange);
+      }
+      .nav-item.danger {
+        color: #dc2626;
+      }
+      .nav-item.danger:hover {
+        background: #fef2f2;
+        border-left-color: #dc2626;
+      }
+      .nav-divider {
+        border-color: var(--border);
+        margin: 0.5rem 0;
+      }
+      .fade-in {
+        opacity: 0;
+        transform: translateY(18px);
+        animation: fadeIn 0.55s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .d1 {
+        animation-delay: 0.05s;
+      }
+      .d2 {
+        animation-delay: 0.15s;
+      }
+      .d3 {
+        animation-delay: 0.25s;
+      }
+      .toast-box {
         position: fixed;
         bottom: 20px;
         right: 20px;
-        z-index: 2000;
-      }
-      .value-card {
-        background: linear-gradient(135deg, #1a6b3c, #4caf50);
-        color: white;
-        border-radius: 16px;
-        padding: 1.5rem 2rem;
-        margin-bottom: 1.5rem;
+        z-index: 9999;
       }
     </style>
   </head>
   <body>
-    <header class="header py-3 shadow-sm">
-      <div class="container d-flex justify-content-between align-items-center">
-        <a href="{{ url_for('dashboard') }}" class="text-white fs-3">
-          <i class="bi bi-arrow-left-circle-fill"></i>
-        </a>
-        <h4 class="mb-0 fw-bold">
-          {% if filter == 'low-stock' %}Low Stock Items {% elif filter ==
-          'stock-value' %}Stock Value {% else %}Total Products{% endif %}
-        </h4>
-        <button
-          class="btn text-white"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#sidebar"
-        >
-          <i class="bi bi-list fs-3"></i>
-        </button>
-      </div>
+    <header class="header">
+      <a href="{{ url_for('dashboard') }}" class="btn-icon"
+        ><i class="bi bi-arrow-left"></i
+      ></a>
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <button
+        class="btn-icon"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebar"
+      >
+        <i class="bi bi-list"></i>
+      </button>
     </header>
 
-    <div class="inventory-container container">
-      <!-- Stock Value Banner -->
+    <div class="page-hero">
+      <div class="hero-content">
+        <div class="hero-tag">📦 Stock Management</div>
+        <div class="hero-title">
+          {% if filter == 'low-stock' %}LOW STOCK ITEMS{% elif filter ==
+          'stock-value' %}STOCK VALUE{% else %}MANAGE INVENTORY{% endif %}
+        </div>
+        <div class="hero-sub">
+          {% if filter == 'low-stock' %}Items with stock 10 or below{% elif
+          filter == 'stock-value' %}Total inventory value breakdown{% else
+          %}Update and manage your product stock{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="page">
       {% if filter == 'stock-value' %}
-      <div class="value-card d-flex justify-content-between align-items-center">
-        <div>
-          <div class="small opacity-75">Total Inventory Value</div>
-          <div class="fw-bold fs-1">Rs{{ total_value }}</div>
-          <div class="small opacity-75">
-            Across {{ products|length }} products
-          </div>
-        </div>
-        <i
-          class="bi bi-currency-rupee"
-          style="font-size: 4rem; opacity: 0.3"
-        ></i>
-      </div>
-      {% endif %}
-
-      <!-- Low Stock Banner -->
-      {% if filter == 'low-stock' %}
       <div
-        class="alert alert-warning d-flex justify-content-between align-items-center mb-3"
+        class="card-white fade-in d1"
+        style="
+          background: linear-gradient(
+            135deg,
+            var(--orange),
+            var(--orange-dark)
+          );
+          color: white;
+          border: none;
+        "
       >
-        <div>
-          <i class="bi bi-exclamation-triangle-fill me-2"></i> Showing
-          <strong>{{ products|length }} low stock item(s)</strong> with stock 10
-          or below
-        </div>
-        <a href="/inventory" class="btn btn-sm btn-outline-success"
-          >View All Products</a
+        <div
+          style="
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            opacity: 0.75;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+          "
         >
+          Total Inventory Value
+        </div>
+        <div
+          style="
+            font-family: &quot;Bebas Neue&quot;, sans-serif;
+            font-size: 3rem;
+            letter-spacing: 2px;
+          "
+        >
+          Rs{{ total_value }}
+        </div>
+        <div style="opacity: 0.65; font-size: 0.8rem">
+          Across {{ products|length }} products
+        </div>
+      </div>
+      {% endif %} {% if filter == 'low-stock' %}
+      <div class="alert-banner fade-in d1">
+        <span style="font-weight: 600; font-size: 0.85rem; color: #9a3412"
+          ><i class="bi bi-exclamation-triangle-fill me-2"></i>Showing {{
+          products|length }} low stock item(s)</span
+        >
+        <a href="/inventory">View All Products →</a>
       </div>
       {% endif %}
 
-      <div class="inventory-card p-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h5 class="fw-bold text-success mb-0">
-            {% if filter == 'low-stock' %}
-            <i class="bi bi-exclamation-triangle me-2"></i> Low Stock Items ({{
-            products|length }}) {% elif filter == 'stock-value' %}
-            <i class="bi bi-currency-rupee me-2"></i> Stock Value Breakdown ({{
-            products|length }} items) {% else %}
-            <i class="bi bi-box-seam me-2"></i> All Products ({{ products|length
-            }}) {% endif %}
-          </h5>
+      <div class="card-white fade-in d2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="section-title mb-0">
+            {% if filter == 'low-stock' %}⚠ Low Stock Items ({{ products|length
+            }}) {% elif filter == 'stock-value' %}₹ Stock Value Breakdown {%
+            else %}📦 Product Stock List ({{ products|length }}){% endif %}
+          </div>
           <a
             href="{{ url_for('add_product') }}"
-            class="btn btn-outline-success btn-sm rounded-pill text-nowrap"
+            style="
+              background: var(--orange);
+              color: white;
+              border: none;
+              border-radius: 10px;
+              padding: 8px 16px;
+              font-size: 0.8rem;
+              font-weight: 700;
+              text-decoration: none;
+              letter-spacing: 0.5px;
+            "
+            >+ Add Product</a
           >
-            <i class="bi bi-plus-lg"></i> Add New Product
-          </a>
         </div>
-
         <div class="table-responsive">
-          <table class="table table-hover align-middle">
+          <table class="table">
             <thead>
               <tr>
                 <th>Product Name</th>
@@ -164,133 +443,62 @@
             <tbody>
               {% for p in products %}
               <tr
-                class="{% if p.stock <= 10 %}low-stock-warning{% endif %}"
+                class="{% if p.stock <= 10 %}low-stock-row{% endif %}"
                 id="row-{{ p.id }}"
               >
-                <td class="fw-bold">{{ p.name }}</td>
+                <td>
+                  <span style="font-weight: 600">{{ p.name }}</span>{% if
+                  p.stock <= 10 %} <span class="badge-warn ms-2">Low</span>{%
+                  endif %}
+                </td>
                 <td>Rs{{ p.price }}</td>
                 <td>
                   <input
                     type="number"
                     id="stock-{{ p.id }}"
                     value="{{ p.stock }}"
-                    class="form-control stock-input d-inline-block"
+                    class="stock-input"
                     min="0"
                   />
                 </td>
                 {% if filter == 'stock-value' %}
-                <td class="fw-bold text-success">
+                <td style="font-weight: 700; color: var(--orange)">
                   Rs{{ (p.price * p.stock)|round(2) }}
                 </td>
                 {% endif %}
                 <td class="text-center">
                   <button
-                    class="btn btn-success btn-action me-2"
+                    class="btn-save me-1"
                     onclick="updateStock('{{ p.id }}')"
                   >
-                    <i class="bi bi-save"></i> Update
+                    <i class="bi bi-save me-1"></i>Update
                   </button>
-                  <button
-                    class="btn btn-danger btn-action"
-                    onclick="deleteProduct('{{ p.id }}')"
-                  >
-                    <i class="bi bi-trash"></i> Delete
+                  <button class="btn-del" onclick="deleteProduct('{{ p.id }}')">
+                    <i class="bi bi-trash me-1"></i>Delete
                   </button>
                 </td>
               </tr>
-              {% endfor %}
+              {% endfor %} {% if not products %}
+              <tr>
+                <td colspan="5" class="text-center py-5 text-muted">
+                  No products found.
+                </td>
+              </tr>
+              {% endif %}
             </tbody>
           </table>
         </div>
-
-        {% if not products %}
-        <div class="text-center py-5 text-muted">
-          <i class="bi bi-box-seam fs-1 d-block mb-3"></i>
-          <p>No items found.</p>
-        </div>
-        {% endif %}
       </div>
     </div>
 
-    <!-- Sidebar -->
-    <div class="offcanvas offcanvas-start" id="sidebar">
-      <div class="offcanvas-header bg-success text-white">
-        <h5 class="offcanvas-title">Navigation</h5>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          data-bs-dismiss="offcanvas"
-        ></button>
-      </div>
-      <div class="offcanvas-body p-0">
-        <div class="list-group list-group-flush">
-          <a href="/" class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-speedometer2 me-2"></i> Dashboard</a
-          >
-          <a
-            href="/add-product"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-plus-circle me-2"></i> Add New Product</a
-          >
-          <a
-            href="/inventory"
-            class="list-group-item list-group-item-action py-3 active"
-            ><i class="bi bi-boxes me-2"></i> Inventory</a
-          >
-          <a href="/sales" class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-receipt me-2"></i> Sales Records</a
-          >
-          <a
-            href="/customers"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-people me-2"></i> Customers</a
-          >
-          <a
-            href="/suppliers"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-truck me-2"></i> Suppliers</a
-          >
-          <a
-            href="/discounts"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-tag me-2"></i> Discounts</a
-          >
-          <a
-            href="/purchase-orders"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-cart me-2"></i> Purchase Orders</a
-          >
-          <a href="/returns" class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-arrow-return-left me-2"></i> Returns</a
-          >
-          <a
-            href="/expenses"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-wallet2 me-2"></i> Expenses</a
-          >
-          <a
-            href="/invoice/preview"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-file-earmark-text me-2"></i> Invoice</a
-          >
-          <a
-            href="/logout"
-            class="list-group-item list-group-item-action py-3 text-danger"
-            ><i class="bi bi-box-arrow-right me-2"></i> Logout</a
-          >
-        </div>
-      </div>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast-container">
+    <div class="toast-box">
       <div
-        id="actionToast"
+        id="myToast"
         class="toast align-items-center text-white border-0"
         role="alert"
       >
         <div class="d-flex">
-          <div class="toast-body" id="toastMessage"></div>
+          <div class="toast-body" id="toastMsg"></div>
           <button
             type="button"
             class="btn-close btn-close-white me-2 m-auto"
@@ -300,52 +508,94 @@
       </div>
     </div>
 
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+      <div
+        class="offcanvas-header border-bottom"
+        style="border-color: #f0ece6 !important; padding: 1.2rem 1.5rem"
+      >
+        <div class="sidebar-brand">BHAVYA'S <span>GROCERY</span></div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0 pt-2">
+        <a href="/" class="nav-item"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+        <a href="/add-product" class="nav-item"
+          ><i class="bi bi-plus-circle"></i> Add New Product</a
+        >
+        <a href="/inventory" class="nav-item"
+          ><i class="bi bi-boxes"></i> Manage Inventory</a
+        >
+        <a href="/sales" class="nav-item"
+          ><i class="bi bi-receipt"></i> Sales Records</a
+        >
+        <a href="/customers" class="nav-item"
+          ><i class="bi bi-people"></i> Customers</a
+        >
+        <a href="/suppliers" class="nav-item"
+          ><i class="bi bi-truck"></i> Suppliers</a
+        >
+        <a href="/discounts" class="nav-item"
+          ><i class="bi bi-tag"></i> Discounts</a
+        >
+        <a href="/purchase-orders" class="nav-item"
+          ><i class="bi bi-cart"></i> Purchase Orders</a
+        >
+        <a href="/returns" class="nav-item"
+          ><i class="bi bi-arrow-return-left"></i> Returns</a
+        >
+        <a href="/expenses" class="nav-item"
+          ><i class="bi bi-wallet2"></i> Expenses</a
+        >
+        <a href="/invoice/preview" class="nav-item"
+          ><i class="bi bi-file-earmark-text"></i> Invoice</a
+        >
+        <hr class="nav-divider" />
+        <a href="/logout" class="nav-item danger"
+          ><i class="bi bi-box-arrow-right"></i> Logout</a
+        >
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      function showToast(message, type = "success") {
-        const toastEl = document.getElementById("actionToast");
-        toastEl.className = `toast align-items-center text-white border-0 bg-${type === "success" ? "success" : "danger"}`;
-        document.getElementById("toastMessage").innerText = message;
-        new bootstrap.Toast(toastEl).show();
+      function showToast(msg, type) {
+        const t = document.getElementById("myToast");
+        t.className = `toast align-items-center text-white border-0 bg-${type === "success" ? "success" : "danger"}`;
+        document.getElementById("toastMsg").innerText = msg;
+        new bootstrap.Toast(t).show();
       }
-
-      async function updateStock(productId) {
-        const stockVal = document.getElementById(`stock-${productId}`).value;
-        try {
-          const r = await fetch("/update-stock", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: productId, stock: stockVal }),
-          });
-          const result = await r.json();
-          if (result.success) {
-            showToast("Stock updated!");
-            const row = document.getElementById(`row-${productId}`);
-            if (parseInt(stockVal) <= 10)
-              row.classList.add("low-stock-warning");
-            else row.classList.remove("low-stock-warning");
-          } else alert("Error: " + result.error);
-        } catch (err) {
-          alert("Failed to connect to server.");
-        }
+      async function updateStock(id) {
+        const v = document.getElementById(`stock-${id}`).value;
+        const r = await fetch("/update-stock", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, stock: v }),
+        });
+        const d = await r.json();
+        if (d.success) {
+          showToast("Stock updated!", "success");
+          const row = document.getElementById(`row-${id}`);
+          if (parseInt(v) <= 10) row.classList.add("low-stock-row");
+          else row.classList.remove("low-stock-row");
+        } else alert("Error: " + d.error);
       }
-
-      async function deleteProduct(productId) {
+      async function deleteProduct(id) {
         if (!confirm("Delete this product?")) return;
-        try {
-          const r = await fetch("/delete-product", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ id: productId }),
-          });
-          const result = await r.json();
-          if (result.success) {
-            document.getElementById(`row-${productId}`).remove();
-            showToast("Product deleted!", "danger");
-          } else alert("Delete failed: " + result.error);
-        } catch (err) {
-          alert("Server error.");
-        }
+        const r = await fetch("/delete-product", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
+        const d = await r.json();
+        if (d.success) {
+          document.getElementById(`row-${id}`).remove();
+          showToast("Deleted!", "danger");
+        } else alert("Error: " + d.error);
       }
     </script>
   </body>

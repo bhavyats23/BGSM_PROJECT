@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - Grocery Manager</title>
+    <title>Dashboard - Bhavya's Grocery</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -12,232 +12,780 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      body {
-        background-color: #f4f6f9;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      :root {
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --red: #ef4444;
+        --pink: #ec4899;
+        --cream: #fffbf5;
+        --warm-gray: #f5f0eb;
+        --text-dark: #1a1a1a;
+        --text-mid: #6b7280;
       }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
+      }
+
+      /* Header */
       .header {
-        background-color: #4caf50;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid #f0ece6;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(249, 115, 22, 0.08);
+      }
+
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .brand span {
+        color: var(--orange);
+      }
+
+      .btn-menu {
+        background: var(--warm-gray);
+        border: none;
+        border-radius: 12px;
+        padding: 8px 14px;
+        color: var(--text-dark);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 1.2rem;
+      }
+      .btn-menu:hover {
+        background: #f0ece6;
+      }
+
+      .btn-logout {
+        background: #fff0eb;
+        border: 1px solid #fed7b0;
+        border-radius: 12px;
+        padding: 8px 14px;
+        color: var(--orange);
+        text-decoration: none;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+      }
+      .btn-logout:hover {
+        background: var(--orange);
         color: white;
       }
-      .hero {
-        height: 30vh;
+
+      /* HERO BANNER with background image */
+      .hero-banner {
+        position: relative;
+        height: 340px;
+        background-image: url("https://images.unsplash.com/photo-1519996529931-28324d5a630e?w=1400&q=80");
         background-size: cover;
         background-position: center;
-        position: relative;
+        overflow: hidden;
       }
-      .hero-overlay {
+
+      .hero-banner::before {
+        content: "";
         position: absolute;
         inset: 0;
-        background: rgba(0, 0, 0, 0.4);
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.85) 0%,
+          rgba(239, 68, 68, 0.7) 40%,
+          rgba(0, 0, 0, 0.5) 100%
+        );
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 2.5rem;
+      }
+
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 5px 16px;
+        border-radius: 100px;
+        margin-bottom: 0.8rem;
+        width: fit-content;
+      }
+
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        color: white;
+        letter-spacing: 3px;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .hero-revenue {
+        display: flex;
+        align-items: flex-end;
+        gap: 1rem;
+      }
+
+      .hero-rev-box {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 16px;
+        padding: 1rem 1.5rem;
+      }
+
+      .hero-rev-label {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.7);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+      .hero-rev-value {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        color: white;
+        letter-spacing: 2px;
+      }
+
+      .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: white;
+        color: var(--orange);
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 10px 20px;
+        border-radius: 100px;
+        text-decoration: none;
+        transition: all 0.2s;
+        letter-spacing: 0.5px;
+      }
+      .hero-cta:hover {
+        background: var(--orange);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      /* Page container */
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      /* Welcome */
+      .welcome-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+      .welcome-text h2 {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+      }
+      .welcome-text p {
+        color: var(--text-mid);
+        font-size: 0.85rem;
+      }
+      .date-pill {
+        background: white;
+        border: 1px solid #f0ece6;
+        border-radius: 100px;
+        padding: 8px 18px;
+        font-size: 0.8rem;
+        color: var(--text-mid);
+        font-weight: 500;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      }
+
+      /* Stat cards */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.2rem;
+        margin-bottom: 1.5rem;
+      }
+      @media (max-width: 900px) {
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (max-width: 576px) {
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.4rem;
+        text-decoration: none;
+        display: block;
+        border: 1px solid #f0ece6;
+        transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: 0 0 20px 20px;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-color: transparent;
+      }
+      .stat-card:hover::after {
+        opacity: 1;
+      }
+
+      .sc-orange::after {
+        background: linear-gradient(90deg, #f97316, #ea580c);
+      }
+      .sc-yellow::after {
+        background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      }
+      .sc-green::after {
+        background: linear-gradient(90deg, #34d399, #10b981);
+      }
+      .sc-blue::after {
+        background: linear-gradient(90deg, #60a5fa, #3b82f6);
+      }
+
+      .stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      .stat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 13px;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 1.2rem;
       }
-      .hero h1 {
-        font-size: 2.5rem;
-        font-weight: bold;
-        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+      .si-orange {
+        background: #fff7ed;
+        color: var(--orange);
+      }
+      .si-yellow {
+        background: #fef9c3;
+        color: #ca8a04;
+      }
+      .si-green {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+      .si-blue {
+        background: #dbeafe;
+        color: #2563eb;
+      }
+
+      .stat-arrow {
+        color: #d1d5db;
+        font-size: 1rem;
+        transition: all 0.3s;
+      }
+      .stat-card:hover .stat-arrow {
+        color: var(--orange);
+        transform: translate(3px, -3px);
+      }
+
+      .stat-value {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2rem;
+        letter-spacing: 1px;
+        color: var(--text-dark);
+        line-height: 1;
+        margin-bottom: 0.3rem;
+      }
+      .stat-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-mid);
+      }
+
+      /* Bottom grid */
+      .bottom-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+      }
+      @media (max-width: 768px) {
+        .bottom-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .section-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        border: 1px solid #f0ece6;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.2rem;
+      }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+      }
+      .view-link {
+        font-size: 0.75rem;
+        color: var(--orange);
+        text-decoration: none;
+        font-weight: 600;
+      }
+      .view-link:hover {
+        color: var(--orange-dark);
+      }
+
+      .stock-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.7rem 0.9rem;
+        border-radius: 12px;
+        margin-bottom: 0.5rem;
+        background: var(--warm-gray);
+        transition: all 0.2s;
+      }
+      .stock-row:hover {
+        background: #f0ece6;
+      }
+      .stock-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+      .stock-pill {
+        background: #fee2e2;
+        color: #dc2626;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 100px;
+      }
+
+      .all-good {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-mid);
+        font-size: 0.85rem;
+      }
+      .all-good i {
+        font-size: 2rem;
+        color: #34d399;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Quick actions */
+      .quick-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.7rem;
+      }
+      .qa-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.9rem 1rem;
+        border-radius: 14px;
+        text-decoration: none;
+        font-size: 0.82rem;
+        font-weight: 600;
+        transition: all 0.2s;
+        border: 1.5px solid transparent;
+      }
+
+      .qa-orange {
+        background: #fff7ed;
+        color: var(--orange);
+        border-color: #fed7aa;
+      }
+      .qa-orange:hover {
+        background: var(--orange);
         color: white;
       }
-      .stat-card {
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s;
-        border: none;
+      .qa-red {
+        background: #fef2f2;
+        color: #dc2626;
+        border-color: #fecaca;
       }
-      .stat-card:hover {
-        transform: translateY(-5px);
-        cursor: pointer;
-        opacity: 0.9;
+      .qa-red:hover {
+        background: #dc2626;
+        color: white;
       }
-      .metric-link {
+      .qa-blue {
+        background: #eff6ff;
+        color: #2563eb;
+        border-color: #bfdbfe;
+      }
+      .qa-blue:hover {
+        background: #2563eb;
+        color: white;
+      }
+      .qa-green {
+        background: #f0fdf4;
+        color: #16a34a;
+        border-color: #bbf7d0;
+      }
+      .qa-green:hover {
+        background: #16a34a;
+        color: white;
+      }
+      .qa-purple {
+        background: #faf5ff;
+        color: #7c3aed;
+        border-color: #ddd6fe;
+      }
+      .qa-purple:hover {
+        background: #7c3aed;
+        color: white;
+      }
+      .qa-pink {
+        background: #fdf2f8;
+        color: #db2777;
+        border-color: #fbcfe8;
+      }
+      .qa-pink:hover {
+        background: #db2777;
+        color: white;
+      }
+
+      /* Sidebar */
+      .offcanvas {
+        width: 280px !important;
+        background: white !important;
+        border-right: 1px solid #f0ece6 !important;
+      }
+      .sidebar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .sidebar-brand span {
+        color: var(--orange);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.75rem 1.5rem;
+        color: var(--text-mid);
         text-decoration: none;
-        display: block;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
       }
-      .alert-low-stock {
-        background-color: #fff3cd;
-        border-left: 5px solid #ffc107;
-        color: #664d03;
-        padding: 15px;
-        border-radius: 8px;
+      .nav-item i {
+        width: 18px;
+        font-size: 1rem;
       }
-      .featured-card {
-        border-radius: 15px;
-        overflow: hidden;
-        border: none;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      .nav-item:hover {
+        color: var(--orange);
+        background: #fff7ed;
+        border-left-color: var(--orange);
+      }
+      .nav-item.danger {
+        color: #dc2626;
+      }
+      .nav-item.danger:hover {
+        background: #fef2f2;
+        border-left-color: #dc2626;
+      }
+      .nav-divider {
+        border-color: #f0ece6;
+        margin: 0.5rem 0;
+      }
+
+      /* Animations */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.6s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .d1 {
+        animation-delay: 0.05s;
+      }
+      .d2 {
+        animation-delay: 0.15s;
+      }
+      .d3 {
+        animation-delay: 0.25s;
+      }
+      .d4 {
+        animation-delay: 0.35s;
+      }
+      .d5 {
+        animation-delay: 0.45s;
       }
     </style>
   </head>
   <body>
-    <header class="header py-3 shadow">
-      <div class="container d-flex justify-content-between align-items-center">
-        <button
-          class="btn text-white"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#sidebar"
-        >
-          <i class="bi bi-list fs-3"></i>
-        </button>
-        <h4 class="mb-0">Grocery Store Manager</h4>
-        <a href="/logout" class="text-white"
-          ><i class="bi bi-box-arrow-right fs-3"></i
-        ></a>
-      </div>
+    <!-- Header -->
+    <header class="header">
+      <button
+        class="btn-menu"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebar"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <a href="/logout" class="btn-logout"
+        ><i class="bi bi-box-arrow-right"></i
+      ></a>
     </header>
 
-    <div
-      class="hero"
-      style="background-image: url('{{ url_for('static', filename='images/hero1.jpg') }}');"
-    >
-      <div class="hero-overlay">
-        <h1>Store Overview</h1>
-      </div>
-    </div>
-
-    <div class="container my-5">
-      <h5 class="mb-4 text-center fw-bold text-uppercase">
-        Key Business Metrics
-      </h5>
-      <div class="row g-4">
-        <div class="col-md-3">
-          <a href="/inventory" class="metric-link">
-            <div class="stat-card card bg-primary text-white text-center p-4">
-              <i class="bi bi-box-seam fs-1 mb-2"></i>
-              <h3>{{ total_products }}</h3>
-              <p class="mb-0">Total Products</p>
-            </div>
-          </a>
+    <!-- Hero Banner with background image -->
+    <div class="hero-banner">
+      <div class="hero-content">
+        <div class="hero-tag">🛒 Store Dashboard</div>
+        <div class="hero-title">BHAVYA'S GROCERY<br />STORE OVERVIEW</div>
+        <div class="hero-sub">
+          Welcome back, Admin! Here's your store at a glance.
         </div>
-        <div class="col-md-3">
-          <a href="/inventory?filter=stock-value" class="metric-link">
-            <div class="stat-card card bg-success text-white text-center p-4">
-              <i class="bi bi-currency-rupee fs-1 mb-2"></i>
-              <h3>₹{{ total_stock_value }}</h3>
-              <p class="mb-0">Stock Value</p>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-3">
-          <!-- LOW STOCK CARD - now links to filtered inventory -->
-          <a href="/inventory?filter=low-stock" class="metric-link">
-            <div class="stat-card card bg-warning text-dark text-center p-4">
-              <i class="bi bi-exclamation-triangle-fill fs-1 mb-2"></i>
-              <h3>{{ low_stock_count }}</h3>
-              <p class="mb-0">Low Stock Items</p>
-            </div>
-          </a>
-        </div>
-        <div class="col-md-3">
-          <a href="/sales?filter=today" class="metric-link">
-            <div class="stat-card card bg-info text-white text-center p-4">
-              <i class="bi bi-graph-up-arrow fs-1 mb-2"></i>
-              <h3>₹{{ today_sales }}</h3>
-              <p class="mb-0">Today's Sales</p>
-            </div>
+        <div class="hero-revenue">
+          <div class="hero-rev-box">
+            <div class="hero-rev-label">Today's Revenue</div>
+            <div class="hero-rev-value">₹{{ today_sales }}</div>
+          </div>
+          <a href="/sales?filter=today" class="hero-cta">
+            <i class="bi bi-arrow-up-right"></i> View Sales
           </a>
         </div>
       </div>
     </div>
 
-    <div class="container mb-5">
-      <div class="card p-4 shadow-sm border-0">
-        <h5 class="mb-4 fw-bold text-danger">
-          <i class="bi bi-bell-fill me-2"></i>Critical Low Stock Alerts
-        </h5>
-        {% if low_stock_items %}
-        <div class="alert-low-stock">
-          <div class="row">
-            {% for item in low_stock_items %}
-            <div class="col-md-4 mb-2">
-              <div class="p-2 border-bottom">
-                <strong>{{ item.name }}</strong>
-                <span class="badge bg-danger float-end"
-                  >Stock: {{ item.stock }}</span
-                >
-              </div>
+    <div class="page">
+      <!-- Welcome -->
+      <div class="welcome-bar fade-in d1">
+        <div class="welcome-text">
+          <h2>GOOD DAY, ADMIN 👋</h2>
+          <p>Real-time metrics for your store</p>
+        </div>
+        <div class="date-pill"><i class="bi bi-calendar3 me-1"></i> Today</div>
+      </div>
+
+      <!-- 4 Stat Cards -->
+      <div class="stats-grid fade-in d2">
+        <a href="/inventory" class="stat-card sc-blue">
+          <div class="stat-top">
+            <div class="stat-icon si-blue"><i class="bi bi-box-seam"></i></div>
+            <i class="bi bi-arrow-up-right stat-arrow"></i>
+          </div>
+          <div class="stat-value">{{ total_products }}</div>
+          <div class="stat-label">Total Products</div>
+        </a>
+        <a href="/inventory?filter=stock-value" class="stat-card sc-green">
+          <div class="stat-top">
+            <div class="stat-icon si-green">
+              <i class="bi bi-currency-rupee"></i>
             </div>
-            {% endfor %}
+            <i class="bi bi-arrow-up-right stat-arrow"></i>
+          </div>
+          <div class="stat-value">₹{{ total_stock_value }}</div>
+          <div class="stat-label">Stock Value</div>
+        </a>
+        <a href="/inventory?filter=low-stock" class="stat-card sc-yellow">
+          <div class="stat-top">
+            <div class="stat-icon si-yellow">
+              <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <i class="bi bi-arrow-up-right stat-arrow"></i>
+          </div>
+          <div class="stat-value">{{ low_stock_count }}</div>
+          <div class="stat-label">Low Stock Items</div>
+        </a>
+        <a href="/sales?filter=today" class="stat-card sc-orange">
+          <div class="stat-top">
+            <div class="stat-icon si-orange">
+              <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <i class="bi bi-arrow-up-right stat-arrow"></i>
+          </div>
+          <div class="stat-value">₹{{ today_sales }}</div>
+          <div class="stat-label">Today's Sales</div>
+        </a>
+      </div>
+
+      <!-- Bottom -->
+      <div class="bottom-grid">
+        <div class="section-card fade-in d4">
+          <div class="section-header">
+            <div class="section-title">⚠ LOW STOCK ALERTS</div>
+            <a href="/inventory?filter=low-stock" class="view-link"
+              >View All →</a
+            >
+          </div>
+          {% if low_stock_items %} {% for item in low_stock_items %}
+          <div class="stock-row">
+            <span class="stock-name">{{ item.name }}</span>
+            <span class="stock-pill">Stock: {{ item.stock }}</span>
+          </div>
+          {% endfor %} {% else %}
+          <div class="all-good">
+            <i class="bi bi-check-circle-fill"></i>
+            All items sufficiently stocked!
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="section-card fade-in d5">
+          <div class="section-header">
+            <div class="section-title">⚡ QUICK ACTIONS</div>
+          </div>
+          <div class="quick-actions">
+            <a href="/add-product" class="qa-btn qa-orange"
+              ><i class="bi bi-plus-circle"></i> Add Product</a
+            >
+            <a href="/sales" class="qa-btn qa-red"
+              ><i class="bi bi-receipt"></i> Record Sale</a
+            >
+            <a href="/customers" class="qa-btn qa-blue"
+              ><i class="bi bi-people"></i> Customers</a
+            >
+            <a href="/suppliers" class="qa-btn qa-green"
+              ><i class="bi bi-truck"></i> Suppliers</a
+            >
+            <a href="/discounts" class="qa-btn qa-purple"
+              ><i class="bi bi-tag"></i> Discounts</a
+            >
+            <a href="/expenses" class="qa-btn qa-pink"
+              ><i class="bi bi-wallet2"></i> Expenses</a
+            >
           </div>
         </div>
-        {% else %}
-        <div class="text-center py-3">
-          <i class="bi bi-check-circle-fill text-success fs-1"></i>
-          <p class="text-muted mt-2">All items are sufficiently stocked.</p>
-        </div>
-        {% endif %}
       </div>
     </div>
 
     <!-- Sidebar -->
-    <div class="offcanvas offcanvas-start" id="sidebar">
-      <div class="offcanvas-header bg-success text-white">
-        <h5 class="offcanvas-title">Navigation Menu</h5>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+      <div
+        class="offcanvas-header border-bottom"
+        style="border-color: #f0ece6 !important"
+      >
+        <div class="sidebar-brand">BHAVYA'S <span>GROCERY</span></div>
         <button
           type="button"
-          class="btn-close btn-close-white"
+          class="btn-close"
           data-bs-dismiss="offcanvas"
         ></button>
       </div>
-      <div class="offcanvas-body p-0">
-        <div class="list-group list-group-flush">
-          <a href="/" class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-speedometer2 me-2"></i> Dashboard</a
-          >
-          <a
-            href="/add-product"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-plus-circle me-2"></i> Add New Product</a
-          >
-          <a
-            href="/inventory"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-boxes me-2"></i> Manage Inventory</a
-          >
-          <a href="/sales" class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-receipt me-2"></i> Sales Records</a
-          >
-          <a
-            href="/customers"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-people me-2"></i> Customers</a
-          >
-          <a
-            href="/suppliers"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-truck me-2"></i> Suppliers</a
-          >
-          <a
-            href="/discounts"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-tag me-2"></i> Discounts</a
-          >
-          <a
-            href="/purchase-orders"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-cart me-2"></i> Purchase Orders</a
-          >
-          <a href="/returns" class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-arrow-return-left me-2"></i> Returns</a
-          >
-          <a
-            href="/expenses"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-wallet2 me-2"></i> Expenses</a
-          >
-          <a
-            href="/invoice/preview"
-            class="list-group-item list-group-item-action py-3"
-            ><i class="bi bi-file-earmark-text me-2"></i> Invoice</a
-          >
-          <a
-            href="/logout"
-            class="list-group-item list-group-item-action py-3 text-danger"
-            ><i class="bi bi-box-arrow-right me-2"></i> Logout</a
-          >
-        </div>
+      <div class="offcanvas-body p-0 pt-2">
+        <a href="/" class="nav-item"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+        <a href="/add-product" class="nav-item"
+          ><i class="bi bi-plus-circle"></i> Add New Product</a
+        >
+        <a href="/inventory" class="nav-item"
+          ><i class="bi bi-boxes"></i> Manage Inventory</a
+        >
+        <a href="/sales" class="nav-item"
+          ><i class="bi bi-receipt"></i> Sales Records</a
+        >
+        <a href="/customers" class="nav-item"
+          ><i class="bi bi-people"></i> Customers</a
+        >
+        <a href="/suppliers" class="nav-item"
+          ><i class="bi bi-truck"></i> Suppliers</a
+        >
+        <a href="/discounts" class="nav-item"
+          ><i class="bi bi-tag"></i> Discounts</a
+        >
+        <a href="/purchase-orders" class="nav-item"
+          ><i class="bi bi-cart"></i> Purchase Orders</a
+        >
+        <a href="/returns" class="nav-item"
+          ><i class="bi bi-arrow-return-left"></i> Returns</a
+        >
+        <a href="/expenses" class="nav-item"
+          ><i class="bi bi-wallet2"></i> Expenses</a
+        >
+        <a href="/invoice/preview" class="nav-item"
+          ><i class="bi bi-file-earmark-text"></i> Invoice</a
+        >
+        <hr class="nav-divider" />
+        <a href="/logout" class="nav-item danger"
+          ><i class="bi bi-box-arrow-right"></i> Logout</a
+        >
       </div>
     </div>
 
