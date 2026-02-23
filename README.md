@@ -179,7 +179,7 @@ http://localhost:5000
 
 | Dashboard | Sales Page | Invoice |
 |-----------|-----------|---------|
-| ![dashboard](screenshots/dashboard.png) | ![sales](screenshots/sales.png) | ![invoice](screenshots/invoice.png) |
+| ![dashboard](screenshots/dashboard.png) | ![sales](screenshots/salespage.png) | ![invoice](screenshots/invoice.png) |
 
 ---
 
