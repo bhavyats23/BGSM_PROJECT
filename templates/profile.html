@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Store Profile - Bhavya's Grocery</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --cream: #fffbf5;
+        --warm-gray: #f5f0eb;
+        --text-dark: #1a1a1a;
+        --text-mid: #6b7280;
+        --border: #f0ece6;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
+      }
+
+      .header {
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(249, 115, 22, 0.08);
+      }
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .brand span {
+        color: var(--orange);
+      }
+      .btn-icon {
+        background: var(--warm-gray);
+        border: none;
+        border-radius: 12px;
+        padding: 8px 14px;
+        color: var(--text-dark);
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+      }
+      .btn-icon:hover {
+        background: #f0ece6;
+        color: var(--orange);
+      }
+
+      .page-hero {
+        position: relative;
+        height: 200px;
+        background-image: url("https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=1400&q=80");
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+      .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.88),
+          rgba(239, 68, 68, 0.75),
+          rgba(0, 0, 0, 0.5)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 2.5rem;
+      }
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 100px;
+        margin-bottom: 0.6rem;
+        width: fit-content;
+      }
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.5rem;
+        color: white;
+        letter-spacing: 3px;
+        line-height: 1;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+      }
+
+      .page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .card-white {
+        background: white;
+        border-radius: 20px;
+        padding: 1.8rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1.5rem;
+      }
+
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid var(--border);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.88rem;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+      }
+      label.form-label {
+        font-weight: 600;
+        font-size: 0.82rem;
+        color: var(--text-dark);
+        margin-bottom: 0.4rem;
+        letter-spacing: 0.3px;
+      }
+
+      .btn-save-profile {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 32px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.5px;
+      }
+      .btn-save-profile:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+      }
+
+      /* Profile preview card */
+      .profile-preview {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        border-radius: 20px;
+        padding: 2rem;
+        color: white;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .profile-preview::before {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -40px;
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+      }
+      .profile-preview::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        right: 40px;
+        width: 140px;
+        height: 140px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50%;
+      }
+      .store-avatar {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        overflow: hidden;
+      }
+      .store-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .preview-store-name {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+        margin-bottom: 4px;
+      }
+      .preview-owner {
+        font-size: 0.82rem;
+        opacity: 0.8;
+        margin-bottom: 2px;
+      }
+      .preview-gst {
+        font-size: 0.75rem;
+        opacity: 0.65;
+        font-family: monospace;
+        letter-spacing: 1px;
+      }
+      .preview-badges {
+        display: flex;
+        gap: 8px;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+      .preview-badge {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 100px;
+        padding: 4px 12px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* Logo upload area */
+      /* Logo Upload - Aesthetic */
+      .logo-drop-zone {
+        border: 2.5px dashed #fed7aa;
+        border-radius: 20px;
+        padding: 0;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #fffbf5, #fff7ed);
+        position: relative;
+        overflow: hidden;
+        min-height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .logo-drop-zone:hover {
+        border-color: var(--orange);
+        background: linear-gradient(135deg, #fff7ed, #ffedd5);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(249, 115, 22, 0.12);
+      }
+      .logo-drop-zone.dragover {
+        border-color: var(--orange);
+        background: #fff7ed;
+        transform: scale(1.01);
+      }
+      .logo-drop-inner {
+        padding: 2rem;
+        width: 100%;
+      }
+      .logo-drop-icon {
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.8rem;
+        color: white;
+        box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+        transition: all 0.3s;
+      }
+      .logo-drop-zone:hover .logo-drop-icon {
+        transform: scale(1.1) rotate(-5deg);
+        box-shadow: 0 12px 28px rgba(249, 115, 22, 0.4);
+      }
+      .logo-drop-title {
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: var(--text-dark);
+        margin-bottom: 4px;
+      }
+      .logo-drop-sub {
+        font-size: 0.75rem;
+        color: var(--text-mid);
+        margin-bottom: 0.8rem;
+      }
+      .logo-drop-formats {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .format-chip {
+        background: white;
+        border: 1px solid #fed7aa;
+        color: #ea580c;
+        border-radius: 100px;
+        padding: 3px 10px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+      /* Preview state */
+      .logo-preview-wrap {
+        position: relative;
+        display: none;
+      }
+      .logo-preview-img-big {
+        width: 120px;
+        height: 120px;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 3px solid white;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        margin: 0 auto 0.8rem;
+        display: block;
+      }
+      .logo-preview-name {
+        font-size: 0.78rem;
+        color: var(--text-mid);
+        margin-bottom: 0.5rem;
+      }
+      .logo-change-btn {
+        background: white;
+        border: 1.5px solid #fed7aa;
+        color: var(--orange);
+        border-radius: 100px;
+        padding: 5px 16px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .logo-change-btn:hover {
+        background: var(--orange);
+        color: white;
+      }
+      /* Size warning */
+      .size-warning {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-top: 0.8rem;
+        display: none;
+      }
+
+      .flash-success {
+        background: #d1fae5;
+        border: 1px solid #6ee7b7;
+        color: #065f46;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 0.88rem;
+      }
+      .flash-danger {
+        background: #fee2e2;
+        border: 1px solid #fca5a5;
+        color: #991b1b;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 0.88rem;
+      }
+
+      .input-icon-wrap {
+        position: relative;
+      }
+      .input-icon-wrap .input-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-mid);
+        font-size: 0.95rem;
+      }
+      .input-icon-wrap .form-control {
+        padding-left: 2.4rem;
+      }
+
+      .fade-in {
+        opacity: 0;
+        transform: translateY(18px);
+        animation: fadeIn 0.55s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .d1 {
+        animation-delay: 0.05s;
+      }
+      .d2 {
+        animation-delay: 0.15s;
+      }
+      .d3 {
+        animation-delay: 0.25s;
+      }
+
+      /* Sidebar */
+      .offcanvas {
+        width: 280px !important;
+        background: white !important;
+        border-right: 1px solid var(--border) !important;
+      }
+      .sidebar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .sidebar-brand span {
+        color: var(--orange);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.75rem 1.5rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item i {
+        width: 18px;
+        font-size: 1rem;
+      }
+      .nav-item:hover {
+        color: var(--orange);
+        background: #fff7ed;
+        border-left-color: var(--orange);
+      }
+      .nav-item.active {
+        color: var(--orange);
+        background: #fff7ed;
+        border-left-color: var(--orange);
+      }
+      .nav-item.danger {
+        color: #dc2626;
+      }
+      .nav-item.danger:hover {
+        background: #fef2f2;
+        border-left-color: #dc2626;
+      }
+      .nav-divider {
+        border-color: var(--border);
+        margin: 0.5rem 0;
+      }
+
+      .toast-box {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a href="{{ url_for('dashboard') }}" class="btn-icon"
+        ><i class="bi bi-arrow-left"></i
+      ></a>
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <button
+        class="btn-icon"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebar"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+    </header>
+
+    <div class="page-hero">
+      <div class="hero-content">
+        <div class="hero-tag">👤 Store Management</div>
+        <div class="hero-title">STORE PROFILE</div>
+        <div class="hero-sub">
+          Manage your store details, GST info and branding
+        </div>
+      </div>
+    </div>
+
+    <div class="page">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="flash-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- Live Preview Card -->
+      <div class="profile-preview fade-in d1">
+        <div class="store-avatar" id="avatarBox">
+          {% if settings and settings.logo_url %}
+          <img src="{{ settings.logo_url }}" id="logoPreviewImg" alt="Logo" />
+          {% else %}
+          <span id="avatarEmoji">🛒</span>
+          {% endif %}
+        </div>
+        <div class="preview-store-name" id="previewName">
+          {{ settings.store_name if settings and settings.store_name else
+          "Bhavya's Grocery" }}
+        </div>
+        <div class="preview-owner" id="previewOwner">
+          👤 {{ settings.owner_name if settings and settings.owner_name else
+          "Owner Name" }}
+        </div>
+        <div class="preview-gst" id="previewGst">
+          GST: {{ settings.gst_number if settings and settings.gst_number else
+          "Not set" }}
+        </div>
+        <div class="preview-badges">
+          <span class="preview-badge" id="previewPhone">
+            <i class="bi bi-phone"></i>
+            {{ settings.phone if settings and settings.phone else "Phone not
+            set" }}
+          </span>
+          <span class="preview-badge" id="previewAddr">
+            <i class="bi bi-geo-alt"></i>
+            {{ settings.address if settings and settings.address else "Address
+            not set" }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Settings Form -->
+      <form method="POST" action="/profile" enctype="multipart/form-data">
+        <!-- Store Info -->
+        <div class="card-white fade-in d2">
+          <div class="section-title">🏪 Store Information</div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Store Name *</label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-shop input-icon"></i>
+                <input
+                  type="text"
+                  name="store_name"
+                  class="form-control"
+                  placeholder="Bhavya's Grocery"
+                  value="{{ settings.store_name if settings and settings.store_name else '' }}"
+                  id="inp-store-name"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Owner Name *</label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-person input-icon"></i>
+                <input
+                  type="text"
+                  name="owner_name"
+                  class="form-control"
+                  placeholder="Bhavya Pallavi"
+                  value="{{ settings.owner_name if settings and settings.owner_name else '' }}"
+                  id="inp-owner-name"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone Number</label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-phone input-icon"></i>
+                <input
+                  type="text"
+                  name="phone"
+                  class="form-control"
+                  placeholder="+91 98765 43210"
+                  value="{{ settings.phone if settings and settings.phone else '' }}"
+                  id="inp-phone"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">GST Number</label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-file-earmark-text input-icon"></i>
+                <input
+                  type="text"
+                  name="gst_number"
+                  class="form-control"
+                  placeholder="27AABCU9603R1ZX"
+                  value="{{ settings.gst_number if settings and settings.gst_number else '' }}"
+                  id="inp-gst"
+                  style="font-family: monospace; letter-spacing: 1px"
+                />
+              </div>
+            </div>
+            <div class="col-12">
+              <label class="form-label">Store Address</label>
+              <div class="input-icon-wrap">
+                <i class="bi bi-geo-alt input-icon"></i>
+                <input
+                  type="text"
+                  name="address"
+                  class="form-control"
+                  placeholder="123, Market Road, Bengaluru - 560001"
+                  value="{{ settings.address if settings and settings.address else '' }}"
+                  id="inp-address"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Logo Upload - Aesthetic -->
+        <div class="card-white fade-in d3">
+          <div class="section-title">🖼️ Store Logo</div>
+          <div class="row g-4 align-items-center">
+            <!-- Drop Zone -->
+            <div class="col-md-6">
+              <div
+                class="logo-drop-zone"
+                id="dropZone"
+                onclick="document.getElementById('logoFile').click()"
+                ondragover="handleDragOver(event)"
+                ondragleave="handleDragLeave(event)"
+                ondrop="handleDrop(event)"
+              >
+                <!-- Default state -->
+                <div
+                  class="logo-drop-inner"
+                  id="dropDefault"
+                  style="{{ 'display:none' if settings and settings.logo_url else '' }}"
+                >
+                  <div class="logo-drop-icon">
+                    <i class="bi bi-image"></i>
+                  </div>
+                  <div class="logo-drop-title">Drop your logo here</div>
+                  <div class="logo-drop-sub">or click to browse files</div>
+                  <div class="logo-drop-formats">
+                    <span class="format-chip">PNG</span>
+                    <span class="format-chip">JPG</span>
+                    <span class="format-chip">JPEG</span>
+                    <span class="format-chip">Max 2MB</span>
+                  </div>
+                </div>
+
+                <!-- Preview state -->
+                <div
+                  class="logo-drop-inner logo-preview-wrap"
+                  id="previewWrap"
+                  style="{{ 'display:block' if settings and settings.logo_url else 'display:none' }}"
+                >
+                  <img
+                    class="logo-preview-img-big"
+                    id="logoPreview"
+                    src="{{ settings.logo_url if settings and settings.logo_url else '' }}"
+                  />
+                  <div class="logo-preview-name" id="logoFileName">
+                    {% if settings and settings.logo_url %}Logo uploaded ✅{%
+                    endif %}
+                  </div>
+                  <button
+                    type="button"
+                    class="logo-change-btn"
+                    onclick="
+                      event.stopPropagation();
+                      document.getElementById('logoFile').click();
+                    "
+                  >
+                    <i class="bi bi-arrow-repeat me-1"></i>Change Logo
+                  </button>
+                </div>
+
+                <input
+                  type="file"
+                  id="logoFile"
+                  name="logo"
+                  accept="image/png, image/jpeg, image/jpg"
+                  style="display: none"
+                  onchange="previewLogo(this)"
+                />
+              </div>
+              <div class="size-warning" id="sizeWarning">
+                ⚠️ File too large! Please choose an image under 2MB.
+              </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="col-md-6">
+              <div
+                style="
+                  background: linear-gradient(135deg, #fff7ed, #fffbf5);
+                  border-radius: 16px;
+                  padding: 1.5rem;
+                  border: 1px solid #fed7aa;
+                "
+              >
+                <div
+                  style="
+                    font-weight: 700;
+                    font-size: 0.88rem;
+                    color: #9a3412;
+                    margin-bottom: 1rem;
+                  "
+                >
+                  <i class="bi bi-info-circle me-2"></i>Your logo will appear
+                  on:
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px">
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 10px;
+                      background: white;
+                      border-radius: 10px;
+                      padding: 10px 14px;
+                      border: 1px solid #f0ece6;
+                    "
+                  >
+                    <span style="font-size: 1.2rem">🧾</span>
+                    <div>
+                      <div style="font-weight: 600; font-size: 0.82rem">
+                        Invoices & Bills
+                      </div>
+                      <div style="font-size: 0.72rem; color: var(--text-mid)">
+                        Printed on every customer receipt
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 10px;
+                      background: white;
+                      border-radius: 10px;
+                      padding: 10px 14px;
+                      border: 1px solid #f0ece6;
+                    "
+                  >
+                    <span style="font-size: 1.2rem">📊</span>
+                    <div>
+                      <div style="font-weight: 600; font-size: 0.82rem">
+                        Dashboard Header
+                      </div>
+                      <div style="font-size: 0.72rem; color: var(--text-mid)">
+                        Shows in the store brand area
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      display: flex;
+                      align-items: center;
+                      gap: 10px;
+                      background: white;
+                      border-radius: 10px;
+                      padding: 10px 14px;
+                      border: 1px solid #f0ece6;
+                    "
+                  >
+                    <span style="font-size: 1.2rem">🖨️</span>
+                    <div>
+                      <div style="font-weight: 600; font-size: 0.82rem">
+                        Printed Documents
+                      </div>
+                      <div style="font-size: 0.72rem; color: var(--text-mid)">
+                        Purchase orders & reports
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {% if settings and settings.logo_url %}
+                <button
+                  type="button"
+                  onclick="removeLogo()"
+                  style="
+                    background: #fee2e2;
+                    color: #dc2626;
+                    border: 1px solid #fecaca;
+                    border-radius: 10px;
+                    padding: 8px 16px;
+                    font-size: 0.78rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 1rem;
+                    width: 100%;
+                    transition: all 0.2s;
+                  "
+                  onmouseover="
+                    this.style.background = '#dc2626';
+                    this.style.color = 'white';
+                  "
+                  onmouseout="
+                    this.style.background = '#fee2e2';
+                    this.style.color = '#dc2626';
+                  "
+                >
+                  <i class="bi bi-trash me-1"></i>Remove Current Logo
+                </button>
+                <input
+                  type="hidden"
+                  name="remove_logo"
+                  id="removeLogoInput"
+                  value="0"
+                />
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="d-flex justify-content-between align-items-center">
+          <a
+            href="/"
+            style="
+              color: var(--text-mid);
+              font-size: 0.85rem;
+              text-decoration: none;
+            "
+          >
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+          </a>
+          <button type="submit" class="btn-save-profile">
+            <i class="bi bi-check-circle me-2"></i>Save Store Settings
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-box">
+      <div
+        id="myToast"
+        class="toast align-items-center text-white border-0"
+        role="alert"
+      >
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+      <div
+        class="offcanvas-header border-bottom"
+        style="border-color: #f0ece6 !important; padding: 1.2rem 1.5rem"
+      >
+        <div class="sidebar-brand">BHAVYA'S <span>GROCERY</span></div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0 pt-2">
+        <a href="/" class="nav-item"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+        <a href="/add-product" class="nav-item"
+          ><i class="bi bi-plus-circle"></i> Add New Product</a
+        >
+        <a href="/inventory" class="nav-item"
+          ><i class="bi bi-boxes"></i> Manage Inventory</a
+        >
+        <a href="/sales" class="nav-item"
+          ><i class="bi bi-receipt"></i> Sales Records</a
+        >
+        <a href="/customers" class="nav-item"
+          ><i class="bi bi-people"></i> Customers</a
+        >
+        <a href="/suppliers" class="nav-item"
+          ><i class="bi bi-truck"></i> Suppliers</a
+        >
+        <a href="/discounts" class="nav-item"
+          ><i class="bi bi-tag"></i> Discounts</a
+        >
+        <a href="/purchase-orders" class="nav-item"
+          ><i class="bi bi-cart"></i> Purchase Orders</a
+        >
+        <a href="/returns" class="nav-item"
+          ><i class="bi bi-arrow-return-left"></i> Returns</a
+        >
+        <a href="/expenses" class="nav-item"
+          ><i class="bi bi-wallet2"></i> Expenses</a
+        >
+        <a href="/invoice/preview" class="nav-item"
+          ><i class="bi bi-file-earmark-text"></i> Invoice</a
+        >
+        <a href="/profile" class="nav-item active"
+          ><i class="bi bi-person-circle"></i> Store Profile</a
+        >
+        <hr class="nav-divider" />
+        <a href="/logout" class="nav-item danger"
+          ><i class="bi bi-box-arrow-right"></i> Logout</a
+        >
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Live preview updates
+      document
+        .getElementById("inp-store-name")
+        .addEventListener("input", function () {
+          document.getElementById("previewName").textContent =
+            this.value || "Bhavya's Grocery";
+        });
+      document
+        .getElementById("inp-owner-name")
+        .addEventListener("input", function () {
+          document.getElementById("previewOwner").textContent =
+            "👤 " + (this.value || "Owner Name");
+        });
+      document.getElementById("inp-gst").addEventListener("input", function () {
+        document.getElementById("previewGst").textContent =
+          "GST: " + (this.value || "Not set");
+      });
+      document
+        .getElementById("inp-phone")
+        .addEventListener("input", function () {
+          document.getElementById("previewPhone").innerHTML =
+            '<i class="bi bi-phone"></i> ' + (this.value || "Phone not set");
+        });
+      document
+        .getElementById("inp-address")
+        .addEventListener("input", function () {
+          document.getElementById("previewAddr").innerHTML =
+            '<i class="bi bi-geo-alt"></i> ' +
+            (this.value || "Address not set");
+        });
+
+      // Logo preview
+      function previewLogo(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+
+        // Check file size (2MB max)
+        if (file.size > 2 * 1024 * 1024) {
+          document.getElementById("sizeWarning").style.display = "block";
+          input.value = "";
+          return;
+        }
+        document.getElementById("sizeWarning").style.display = "none";
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          // Show preview in drop zone
+          const img = document.getElementById("logoPreview");
+          img.src = e.target.result;
+          document.getElementById("dropDefault").style.display = "none";
+          document.getElementById("previewWrap").style.display = "block";
+          document.getElementById("logoFileName").textContent =
+            file.name + " ✅";
+
+          // Update avatar in preview card
+          const avatarBox = document.getElementById("avatarBox");
+          const emojiEl = document.getElementById("avatarEmoji");
+          if (emojiEl) emojiEl.style.display = "none";
+          let avatarImg = avatarBox.querySelector("img");
+          if (!avatarImg) {
+            avatarImg = document.createElement("img");
+            avatarImg.style.cssText =
+              "width:100%;height:100%;object-fit:cover;border-radius:inherit;";
+            avatarBox.appendChild(avatarImg);
+          }
+          avatarImg.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function removeLogo() {
+        const inp = document.getElementById("removeLogoInput");
+        if (inp) inp.value = "1";
+        document.getElementById("previewWrap").style.display = "none";
+        document.getElementById("dropDefault").style.display = "block";
+        document.getElementById("logoPreview").src = "";
+      }
+
+      // Drag and drop handlers
+      function handleDragOver(e) {
+        e.preventDefault();
+        document.getElementById("dropZone").classList.add("dragover");
+      }
+      function handleDragLeave(e) {
+        document.getElementById("dropZone").classList.remove("dragover");
+      }
+      function handleDrop(e) {
+        e.preventDefault();
+        document.getElementById("dropZone").classList.remove("dragover");
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          const input = document.getElementById("logoFile");
+          const dt = new DataTransfer();
+          dt.items.add(files[0]);
+          input.files = dt.files;
+          previewLogo(input);
+        }
+      }
+    </script>
+  </body>
+</html>

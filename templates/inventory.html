@@ -1,0 +1,1377 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inventory - Bhavya's Grocery</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --cream: #fffbf5;
+        --warm-gray: #f5f0eb;
+        --text-dark: #1a1a1a;
+        --text-mid: #6b7280;
+        --border: #f0ece6;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
+      }
+      .header {
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(249, 115, 22, 0.08);
+      }
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .brand span {
+        color: var(--orange);
+      }
+      .btn-icon {
+        background: var(--warm-gray);
+        border: none;
+        border-radius: 12px;
+        padding: 8px 14px;
+        color: var(--text-dark);
+        cursor: pointer;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+      }
+      .btn-icon:hover {
+        background: #f0ece6;
+        color: var(--orange);
+      }
+      .page-hero {
+        position: relative;
+        height: 200px;
+        background-image: url("https://images.unsplash.com/photo-1542838132-92c53300491e?w=1400&q=80");
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+      .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.88),
+          rgba(239, 68, 68, 0.75),
+          rgba(0, 0, 0, 0.5)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 2.5rem;
+      }
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 100px;
+        margin-bottom: 0.6rem;
+        width: fit-content;
+      }
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.5rem;
+        color: white;
+        letter-spacing: 3px;
+        line-height: 1;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+      }
+      .page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .card-white {
+        background: white;
+        border-radius: 20px;
+        padding: 1.8rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1.5rem;
+      }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+        margin-bottom: 1.2rem;
+      }
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid var(--border);
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+      }
+      label.form-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+        margin-bottom: 0.4rem;
+      }
+      .table thead th {
+        background: var(--warm-gray);
+        color: var(--text-dark);
+        font-weight: 700;
+        font-size: 0.78rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+        padding: 0.9rem 1rem;
+      }
+      .table tbody td {
+        padding: 0.85rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.88rem;
+      }
+      .table tbody tr:hover {
+        background: #fff7ed;
+      }
+      .low-stock-row {
+        background: #fff7ed;
+      }
+      .stock-input {
+        width: 90px;
+        border-radius: 8px;
+        text-align: center;
+        border: 1.5px solid var(--border);
+        padding: 0.4rem 0.6rem;
+      }
+      .btn-save {
+        background: #f0fdf4;
+        color: #16a34a;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-save:hover {
+        background: #16a34a;
+        color: white;
+      }
+      .btn-del {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-del:hover {
+        background: #dc2626;
+        color: white;
+      }
+      .badge-warn {
+        background: #fff7ed;
+        color: var(--orange);
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border: 1px solid #fed7aa;
+      }
+      .alert-banner {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 14px;
+        padding: 0.9rem 1.2rem;
+        margin-bottom: 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .alert-banner a {
+        color: var(--orange);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .offcanvas {
+        width: 280px !important;
+        background: white !important;
+        border-right: 1px solid var(--border) !important;
+      }
+      .sidebar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .sidebar-brand span {
+        color: var(--orange);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.75rem 1.5rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item i {
+        width: 18px;
+        font-size: 1rem;
+      }
+      .nav-item:hover {
+        color: var(--orange);
+        background: #fff7ed;
+        border-left-color: var(--orange);
+      }
+      .nav-item.danger {
+        color: #dc2626;
+      }
+      .nav-item.danger:hover {
+        background: #fef2f2;
+        border-left-color: #dc2626;
+      }
+      .nav-divider {
+        border-color: var(--border);
+        margin: 0.5rem 0;
+      }
+      .fade-in {
+        opacity: 0;
+        transform: translateY(18px);
+        animation: fadeIn 0.55s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .d1 {
+        animation-delay: 0.05s;
+      }
+      .d2 {
+        animation-delay: 0.15s;
+      }
+      .d3 {
+        animation-delay: 0.25s;
+      }
+      .toast-box {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+      }
+
+      /* ===== LOW STOCK ALERT STYLES ===== */
+      /* Top alert strip in header */
+      .stock-alert-strip {
+        background: linear-gradient(90deg, #ff6b00, #ea580c);
+        color: white;
+        text-align: center;
+        padding: 7px 16px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .stock-alert-strip:hover {
+        background: linear-gradient(90deg, #ea580c, #c2410c);
+      }
+      .stock-alert-strip .strip-count {
+        background: white;
+        color: #ea580c;
+        border-radius: 100px;
+        padding: 1px 8px;
+        font-weight: 800;
+        font-size: 0.78rem;
+      }
+
+      /* Floating bell button */
+      .alert-bell-btn {
+        position: fixed;
+        bottom: 30px;
+        left: 30px;
+        z-index: 999;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 54px;
+        height: 54px;
+        font-size: 1.3rem;
+        box-shadow: 0 4px 20px rgba(249, 115, 22, 0.5);
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .alert-bell-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 24px rgba(249, 115, 22, 0.6);
+      }
+      .alert-bell-btn .bell-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: #dc2626;
+        color: white;
+        border-radius: 100px;
+        font-size: 0.65rem;
+        font-weight: 800;
+        padding: 1px 5px;
+        border: 2px solid white;
+        min-width: 18px;
+        text-align: center;
+      }
+      .bell-ring {
+        animation: bellRing 1s ease infinite;
+      }
+      @keyframes bellRing {
+        0%,
+        100% {
+          transform: rotate(0deg);
+        }
+        15% {
+          transform: rotate(15deg);
+        }
+        30% {
+          transform: rotate(-15deg);
+        }
+        45% {
+          transform: rotate(10deg);
+        }
+        60% {
+          transform: rotate(-10deg);
+        }
+        75% {
+          transform: rotate(5deg);
+        }
+      }
+
+      /* Alert Drawer */
+      .alert-drawer {
+        position: fixed;
+        bottom: 95px;
+        left: 30px;
+        z-index: 998;
+        width: 310px;
+        background: white;
+        border-radius: 18px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
+        border: 1px solid #fed7aa;
+        overflow: hidden;
+        display: none;
+        animation: slideUp 0.25s ease;
+      }
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .alert-drawer.open {
+        display: block;
+      }
+      .drawer-header {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+        padding: 12px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .drawer-header .title {
+        font-weight: 700;
+        font-size: 0.88rem;
+      }
+      .drawer-header .close-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        border-radius: 8px;
+        padding: 2px 8px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      .drawer-body {
+        max-height: 280px;
+        overflow-y: auto;
+        padding: 8px 0;
+      }
+      .drawer-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px;
+        border-bottom: 1px solid #fff7ed;
+        transition: background 0.15s;
+      }
+      .drawer-item:hover {
+        background: #fff7ed;
+      }
+      .drawer-item:last-child {
+        border-bottom: none;
+      }
+      .item-name {
+        font-weight: 600;
+        font-size: 0.83rem;
+        color: #1a1a1a;
+      }
+      .item-stock {
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 100px;
+      }
+      .stock-critical {
+        background: #fef2f2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+      }
+      .stock-low {
+        background: #fff7ed;
+        color: #ea580c;
+        border: 1px solid #fed7aa;
+      }
+      .drawer-footer {
+        padding: 10px 16px;
+        background: #fffbf5;
+        border-top: 1px solid #f0ece6;
+        text-align: center;
+      }
+      .drawer-footer a {
+        color: var(--orange);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+
+      /* Popup notification (auto shows on page load) */
+      .stock-popup {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 9999;
+        width: 300px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid #f97316;
+        overflow: hidden;
+        transform: translateX(340px);
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .stock-popup.show {
+        transform: translateX(0);
+      }
+      .popup-header {
+        background: #fff7ed;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .popup-icon {
+        font-size: 1.4rem;
+      }
+      .popup-title {
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #9a3412;
+      }
+      .popup-subtitle {
+        font-size: 0.72rem;
+        color: #c2410c;
+      }
+      .popup-body {
+        padding: 10px 14px;
+        max-height: 160px;
+        overflow-y: auto;
+      }
+      .popup-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px solid #fff7ed;
+        font-size: 0.8rem;
+      }
+      .popup-row:last-child {
+        border-bottom: none;
+      }
+      .popup-row .pname {
+        font-weight: 600;
+        color: #1a1a1a;
+      }
+      .popup-row .pstock {
+        font-weight: 700;
+        color: #dc2626;
+      }
+      .popup-footer {
+        padding: 8px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #fffbf5;
+        border-top: 1px solid #f0ece6;
+      }
+      .popup-footer a {
+        color: var(--orange);
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .popup-close {
+        background: none;
+        border: none;
+        color: #9ca3af;
+        font-size: 1.1rem;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+      }
+
+      /* Barcode button */
+      .btn-barcode {
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-barcode:hover {
+        background: #2563eb;
+        color: white;
+      }
+      /* Barcode Modal */
+      .barcode-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      .barcode-modal-overlay.open {
+        display: flex;
+      }
+      .barcode-modal {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        width: 340px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        animation: bcPop 0.3s ease;
+      }
+      @keyframes bcPop {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .barcode-product-name {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+        color: #1a1a1a;
+        margin-bottom: 4px;
+      }
+      .barcode-price {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #f97316;
+        margin-bottom: 1rem;
+      }
+      #barcodeCanvas {
+        border: 1px solid #f0ece6;
+        border-radius: 8px;
+        padding: 8px;
+        background: white;
+        max-width: 100%;
+      }
+      .barcode-code-text {
+        font-family: monospace;
+        font-size: 0.78rem;
+        color: #6b7280;
+        margin-top: 6px;
+        letter-spacing: 2px;
+      }
+      .btn-print {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 24px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        margin-right: 8px;
+        transition: all 0.2s;
+      }
+      .btn-print:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+      }
+      .btn-close-modal {
+        background: #f5f0eb;
+        color: #6b7280;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: all 0.2s;
+      }
+      .btn-close-modal:hover {
+        background: #e5e0db;
+      }
+      @media print {
+        body > *:not(.barcode-modal-overlay) {
+          display: none !important;
+        }
+        .barcode-modal-overlay {
+          position: fixed !important;
+          inset: 0 !important;
+          background: white !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        .barcode-modal {
+          box-shadow: none !important;
+        }
+        .btn-print,
+        .btn-close-modal {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ===== LOW STOCK ALERT STRIP (shows only if low stock exists) ===== -->
+    {% set low_stock_products = products | selectattr('stock', 'le', 10) | list
+    %} {% if low_stock_products | length > 0 %}
+    <div class="stock-alert-strip" onclick="toggleDrawer()">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span class="strip-count">{{ low_stock_products | length }}</span>
+      product(s) are running low on stock — Click to view
+      <i class="bi bi-chevron-down"></i>
+    </div>
+    {% endif %}
+
+    <header class="header">
+      <a href="{{ url_for('dashboard') }}" class="btn-icon"
+        ><i class="bi bi-arrow-left"></i
+      ></a>
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <button
+        class="btn-icon"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebar"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+    </header>
+
+    <div class="page-hero">
+      <div class="hero-content">
+        <div class="hero-tag">📦 Stock Management</div>
+        <div class="hero-title">
+          {% if filter == 'low-stock' %}LOW STOCK ITEMS {% elif filter ==
+          'stock-value' %}STOCK VALUE {% else %}MANAGE INVENTORY{% endif %}
+        </div>
+        <div class="hero-sub">
+          {% if filter == 'low-stock' %}Items with stock 10 or below {% elif
+          filter == 'stock-value' %}Total inventory value breakdown {% else
+          %}Update and manage your product stock{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="page">
+      {% if filter == 'stock-value' %}
+      <div
+        class="card-white fade-in d1"
+        style="
+          background: linear-gradient(
+            135deg,
+            var(--orange),
+            var(--orange-dark)
+          );
+          color: white;
+          border: none;
+        "
+      >
+        <div
+          style="
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            opacity: 0.75;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+          "
+        >
+          Total Inventory Value
+        </div>
+        <div
+          style="
+            font-family: &quot;Bebas Neue&quot;, sans-serif;
+            font-size: 3rem;
+            letter-spacing: 2px;
+          "
+        >
+          Rs{{ total_value }}
+        </div>
+        <div style="opacity: 0.65; font-size: 0.8rem">
+          Across {{ products|length }} products
+        </div>
+      </div>
+      {% endif %} {% if filter == 'low-stock' %}
+      <div class="alert-banner fade-in d1">
+        <span style="font-weight: 600; font-size: 0.85rem; color: #9a3412">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>Showing {{
+          products|length }} low stock item(s)
+        </span>
+        <a href="/inventory">View All Products →</a>
+      </div>
+      {% endif %}
+
+      <!-- Low stock summary cards (always visible if low stock exists) -->
+      {% if low_stock_products | length > 0 and filter != 'low-stock' %}
+      <div
+        class="card-white fade-in d1"
+        style="border: 1.5px solid #fed7aa; background: #fffbf5"
+      >
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <div
+              style="
+                background: #fff7ed;
+                border: 1px solid #fed7aa;
+                border-radius: 10px;
+                padding: 8px 10px;
+                font-size: 1.2rem;
+              "
+            >
+              ⚠️
+            </div>
+            <div>
+              <div style="font-weight: 700; font-size: 0.9rem; color: #9a3412">
+                Low Stock Alert
+              </div>
+              <div style="font-size: 0.75rem; color: #c2410c">
+                {{ low_stock_products | length }} product(s) need restocking
+              </div>
+            </div>
+          </div>
+          <a
+            href="/inventory?filter=low-stock"
+            style="
+              background: #f97316;
+              color: white;
+              border-radius: 10px;
+              padding: 6px 14px;
+              font-size: 0.78rem;
+              font-weight: 700;
+              text-decoration: none;
+            "
+          >
+            View All →
+          </a>
+        </div>
+        <div class="row g-2">
+          {% for p in low_stock_products[:4] %}
+          <div class="col-6 col-md-3">
+            <div
+              style="
+                background: white;
+                border: 1px solid #fed7aa;
+                border-radius: 12px;
+                padding: 12px;
+                text-align: center;
+              "
+            >
+              <div
+                style="
+                  font-weight: 700;
+                  font-size: 0.82rem;
+                  color: #1a1a1a;
+                  margin-bottom: 4px;
+                "
+              >
+                {{ p.name }}
+              </div>
+              <div
+                style="font-size:1.4rem; font-weight:800; color:{% if p.stock <= 3 %}#dc2626{% else %}#f97316{% endif %};"
+              >
+                {{ p.stock }}
+              </div>
+              <div style="font-size: 0.68rem; color: #9ca3af">units left</div>
+              {% if p.stock <= 3 %}
+              <div
+                style="
+                  font-size: 0.68rem;
+                  color: #dc2626;
+                  font-weight: 700;
+                  margin-top: 3px;
+                "
+              >
+                🔴 Critical
+              </div>
+              {% else %}
+              <div
+                style="
+                  font-size: 0.68rem;
+                  color: #f97316;
+                  font-weight: 700;
+                  margin-top: 3px;
+                "
+              >
+                🟡 Low
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %} {% if low_stock_products | length > 4 %}
+          <div class="col-6 col-md-3">
+            <div
+              style="
+                background: #fff7ed;
+                border: 1px dashed #fed7aa;
+                border-radius: 12px;
+                padding: 12px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+              "
+            >
+              <div>
+                <div
+                  style="font-size: 1.4rem; font-weight: 800; color: #f97316"
+                >
+                  +{{ low_stock_products | length - 4 }}
+                </div>
+                <div style="font-size: 0.72rem; color: #9ca3af">more items</div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="card-white fade-in d2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="section-title mb-0">
+            {% if filter == 'low-stock' %}⚠ Low Stock Items ({{ products|length
+            }}) {% elif filter == 'stock-value' %}₹ Stock Value Breakdown {%
+            else %}📦 Product Stock List ({{ products|length }}){% endif %}
+          </div>
+          <a
+            href="{{ url_for('add_product') }}"
+            style="
+              background: var(--orange);
+              color: white;
+              border: none;
+              border-radius: 10px;
+              padding: 8px 16px;
+              font-size: 0.8rem;
+              font-weight: 700;
+              text-decoration: none;
+              letter-spacing: 0.5px;
+            "
+            >+ Add Product</a
+          >
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Current Stock</th>
+                {% if filter == 'stock-value' %}
+                <th>Stock Value</th>
+                {% endif %}
+                <th class="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in products %}
+              <tr
+                class="{% if p.stock <= 10 %}low-stock-row{% endif %}"
+                id="row-{{ p.id }}"
+              >
+                <td>
+                  <span style="font-weight: 600">{{ p.name }}</span>
+                  {% if p.stock == 0 %}
+                  <span
+                    style="
+                      background: #fef2f2;
+                      color: #dc2626;
+                      padding: 2px 8px;
+                      border-radius: 100px;
+                      font-size: 0.68rem;
+                      font-weight: 700;
+                      border: 1px solid #fecaca;
+                      margin-left: 6px;
+                    "
+                    >OUT OF STOCK</span
+                  >
+                  {% elif p.stock <= 3 %}
+                  <span
+                    style="
+                      background: #fef2f2;
+                      color: #dc2626;
+                      padding: 2px 8px;
+                      border-radius: 100px;
+                      font-size: 0.68rem;
+                      font-weight: 700;
+                      border: 1px solid #fecaca;
+                      margin-left: 6px;
+                    "
+                    >🔴 Critical</span
+                  >
+                  {% elif p.stock <= 10 %}
+                  <span class="badge-warn ms-2">🟡 Low</span>
+                  {% endif %}
+                </td>
+                <td>Rs{{ p.price }}</td>
+                <td>
+                  <input
+                    type="number"
+                    id="stock-{{ p.id }}"
+                    value="{{ p.stock }}"
+                    class="stock-input"
+                    min="0"
+                    style="{% if p.stock <= 3 %}border-color:#fca5a5;{% elif p.stock <= 10 %}border-color:#fed7aa;{% endif %}"
+                  />
+                </td>
+                {% if filter == 'stock-value' %}
+                <td style="font-weight: 700; color: var(--orange)">
+                  Rs{{ (p.price * p.stock)|round(2) }}
+                </td>
+                {% endif %}
+                <td class="text-center">
+                  <button
+                    class="btn-save me-1"
+                    onclick="updateStock('{{ p.id }}')"
+                  >
+                    <i class="bi bi-save me-1"></i>Update
+                  </button>
+                  <button
+                    class="btn-barcode me-1"
+                    onclick="showBarcode('{{ p.id }}', '{{ p.name }}', '{{ p.price }}')"
+                  >
+                    <i class="bi bi-upc-scan me-1"></i>Barcode
+                  </button>
+                  <button class="btn-del" onclick="deleteProduct('{{ p.id }}')">
+                    <i class="bi bi-trash me-1"></i>Delete
+                  </button>
+                </td>
+              </tr>
+              {% endfor %} {% if not products %}
+              <tr>
+                <td colspan="5" class="text-center py-5 text-muted">
+                  No products found.
+                </td>
+              </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== FLOATING BELL BUTTON ===== -->
+    {% if low_stock_products | length > 0 %}
+    <button
+      class="alert-bell-btn bell-ring"
+      onclick="toggleDrawer()"
+      title="Low Stock Alerts"
+    >
+      <i class="bi bi-bell-fill"></i>
+      <span class="bell-badge">{{ low_stock_products | length }}</span>
+    </button>
+
+    <!-- ===== ALERT DRAWER ===== -->
+    <div class="alert-drawer" id="alertDrawer">
+      <div class="drawer-header">
+        <div class="title">
+          🔔 Low Stock Alert ({{ low_stock_products | length }})
+        </div>
+        <button class="close-btn" onclick="toggleDrawer()">×</button>
+      </div>
+      <div class="drawer-body">
+        {% for p in low_stock_products %}
+        <div class="drawer-item">
+          <div>
+            <div class="item-name">{{ p.name }}</div>
+            <div style="font-size: 0.72rem; color: #9ca3af">
+              {{ p.category if p.category else 'General' }}
+            </div>
+          </div>
+          <span
+            class="item-stock {% if p.stock <= 3 %}stock-critical{% else %}stock-low{% endif %}"
+          >
+            {{ p.stock }} left
+          </span>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="drawer-footer">
+        <a href="/inventory?filter=low-stock">View Low Stock Page →</a>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- ===== AUTO POPUP NOTIFICATION (shows on page load) ===== -->
+    {% if low_stock_products | length > 0 %}
+    <div class="stock-popup" id="stockPopup">
+      <div class="popup-header">
+        <div class="popup-icon">⚠️</div>
+        <div>
+          <div class="popup-title">Low Stock Warning!</div>
+          <div class="popup-subtitle">
+            {{ low_stock_products | length }} item(s) need your attention
+          </div>
+        </div>
+      </div>
+      <div class="popup-body">
+        {% for p in low_stock_products[:5] %}
+        <div class="popup-row">
+          <span class="pname">{{ p.name }}</span>
+          <span class="pstock">{{ p.stock }} left</span>
+        </div>
+        {% endfor %} {% if low_stock_products | length > 5 %}
+        <div
+          style="
+            text-align: center;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            padding-top: 4px;
+          "
+        >
+          + {{ low_stock_products | length - 5 }} more items
+        </div>
+        {% endif %}
+      </div>
+      <div class="popup-footer">
+        <a href="/inventory?filter=low-stock">Restock Now →</a>
+        <button class="popup-close" onclick="closePopup()">✕</button>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Toast -->
+    <div class="toast-box">
+      <div
+        id="myToast"
+        class="toast align-items-center text-white border-0"
+        role="alert"
+      >
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+      <div
+        class="offcanvas-header border-bottom"
+        style="border-color: #f0ece6 !important; padding: 1.2rem 1.5rem"
+      >
+        <div class="sidebar-brand">BHAVYA'S <span>GROCERY</span></div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0 pt-2">
+        <a href="/" class="nav-item"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+        <a href="/add-product" class="nav-item"
+          ><i class="bi bi-plus-circle"></i> Add New Product</a
+        >
+        <a href="/inventory" class="nav-item"
+          ><i class="bi bi-boxes"></i> Manage Inventory</a
+        >
+        <a href="/sales" class="nav-item"
+          ><i class="bi bi-receipt"></i> Sales Records</a
+        >
+        <a href="/customers" class="nav-item"
+          ><i class="bi bi-people"></i> Customers</a
+        >
+        <a href="/suppliers" class="nav-item"
+          ><i class="bi bi-truck"></i> Suppliers</a
+        >
+        <a href="/discounts" class="nav-item"
+          ><i class="bi bi-tag"></i> Discounts</a
+        >
+        <a href="/purchase-orders" class="nav-item"
+          ><i class="bi bi-cart"></i> Purchase Orders</a
+        >
+        <a href="/returns" class="nav-item"
+          ><i class="bi bi-arrow-return-left"></i> Returns</a
+        >
+        <a href="/expenses" class="nav-item"
+          ><i class="bi bi-wallet2"></i> Expenses</a
+        >
+        <a href="/invoice/preview" class="nav-item"
+          ><i class="bi bi-file-earmark-text"></i> Invoice</a
+        >
+        <hr class="nav-divider" />
+        <a href="/logout" class="nav-item danger"
+          ><i class="bi bi-box-arrow-right"></i> Logout</a
+        >
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ===== Existing functions =====
+      function showToast(msg, type) {
+        const t = document.getElementById("myToast");
+        t.className = `toast align-items-center text-white border-0 bg-${type === "success" ? "success" : "danger"}`;
+        document.getElementById("toastMsg").innerText = msg;
+        new bootstrap.Toast(t).show();
+      }
+
+      async function updateStock(id) {
+        const v = document.getElementById(`stock-${id}`).value;
+        const r = await fetch("/update-stock", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, stock: v }),
+        });
+        const d = await r.json();
+        if (d.success) {
+          showToast("Stock updated!", "success");
+          const row = document.getElementById(`row-${id}`);
+          if (parseInt(v) <= 10) row.classList.add("low-stock-row");
+          else row.classList.remove("low-stock-row");
+        } else alert("Error: " + d.error);
+      }
+
+      async function deleteProduct(id) {
+        if (!confirm("Delete this product?")) return;
+        const r = await fetch("/delete-product", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
+        const d = await r.json();
+        if (d.success) {
+          document.getElementById(`row-${id}`).remove();
+          showToast("Deleted!", "danger");
+        } else alert("Error: " + d.error);
+      }
+
+      // ===== Low Stock Alert functions =====
+      let drawerOpen = false;
+
+      function toggleDrawer() {
+        const drawer = document.getElementById("alertDrawer");
+        if (!drawer) return;
+        drawerOpen = !drawerOpen;
+        if (drawerOpen) {
+          drawer.classList.add("open");
+        } else {
+          drawer.classList.remove("open");
+        }
+      }
+
+      function closePopup() {
+        const popup = document.getElementById("stockPopup");
+        if (popup) {
+          popup.style.transform = "translateX(340px)";
+          setTimeout(() => (popup.style.display = "none"), 400);
+        }
+      }
+
+      // Auto show popup after 1.2 seconds on page load
+      window.addEventListener("load", () => {
+        const popup = document.getElementById("stockPopup");
+        if (popup) {
+          setTimeout(() => popup.classList.add("show"), 1200);
+          // Auto hide after 6 seconds
+          setTimeout(() => closePopup(), 7000);
+        }
+      });
+    </script>
+
+    <!-- ===== BARCODE MODAL ===== -->
+    <div
+      class="barcode-modal-overlay"
+      id="barcodeOverlay"
+      onclick="closeBarcodeModal(event)"
+    >
+      <div class="barcode-modal" id="barcodeModalBox">
+        <div
+          style="
+            font-size: 0.65rem;
+            color: #9ca3af;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+          "
+        >
+          BHAVYA'S GROCERY
+        </div>
+        <div class="barcode-product-name" id="bc-name">Product Name</div>
+        <div class="barcode-price" id="bc-price">Rs 0.00</div>
+        <canvas id="barcodeCanvas"></canvas>
+        <div class="barcode-code-text" id="bc-code">BG-00000000</div>
+        <div style="font-size: 0.65rem; color: #9ca3af; margin-top: 4px">
+          Scan at checkout
+        </div>
+        <div>
+          <button class="btn-print" onclick="printBarcode()">
+            <i class="bi bi-printer me-1"></i>Print Barcode
+          </button>
+          <button
+            class="btn-close-modal"
+            onclick="
+              document.getElementById('barcodeOverlay').classList.remove('open')
+            "
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script>
+      function showBarcode(id, name, price) {
+        const code =
+          "BG" + String(id).substring(0, 8).toUpperCase().replace(/-/g, "");
+        document.getElementById("bc-name").textContent = name;
+        document.getElementById("bc-price").textContent =
+          "Rs " + parseFloat(price).toFixed(2);
+        document.getElementById("bc-code").textContent = code;
+        try {
+          JsBarcode("#barcodeCanvas", code, {
+            format: "CODE128",
+            width: 2.2,
+            height: 65,
+            displayValue: false,
+            background: "#ffffff",
+            lineColor: "#1a1a1a",
+            margin: 10,
+          });
+        } catch (e) {
+          // fallback plain barcode value
+          document.getElementById("barcodeCanvas").style.display = "none";
+        }
+        document.getElementById("barcodeOverlay").classList.add("open");
+      }
+
+      function closeBarcodeModal(event) {
+        if (event && event.target !== document.getElementById("barcodeOverlay"))
+          return;
+        document.getElementById("barcodeOverlay").classList.remove("open");
+      }
+
+      function printBarcode() {
+        window.print();
+      }
+    </script>
+  </body>
+</html>

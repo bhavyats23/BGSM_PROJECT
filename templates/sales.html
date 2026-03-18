@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sales - Bhavya's Grocery</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+      :root {
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --cream: #fffbf5;
+        --warm-gray: #f5f0eb;
+        --text-dark: #1a1a1a;
+        --text-mid: #6b7280;
+        --border: #f0ece6;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
+      }
+      .header {
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(249, 115, 22, 0.08);
+      }
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .brand span {
+        color: var(--orange);
+      }
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
+      .hdr-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1.5px solid var(--border);
+        color: var(--text-mid);
+        background: white;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .hdr-btn:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+        background: #fff7ed;
+      }
+      .hdr-btn.active {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+      }
+      .hero {
+        position: relative;
+        height: 220px;
+        background-image: url("https://images.unsplash.com/photo-1542838132-92c53300491e?w=1400&q=80");
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.9),
+          rgba(234, 88, 12, 0.8),
+          rgba(0, 0, 0, 0.5)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding: 2rem 2.5rem;
+        gap: 3rem;
+      }
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 100px;
+        margin-bottom: 0.6rem;
+      }
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 3rem;
+        color: white;
+        letter-spacing: 3px;
+        line-height: 1;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+      .hero-stats {
+        display: flex;
+        gap: 1.2rem;
+        margin-left: auto;
+      }
+      .hero-stat {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 16px;
+        padding: 1rem 1.4rem;
+        text-align: center;
+      }
+      .hero-stat-val {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.8rem;
+        color: white;
+        letter-spacing: 1px;
+      }
+      .hero-stat-lbl {
+        font-size: 0.65rem;
+        color: rgba(255, 255, 255, 0.7);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      .card-white {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+      }
+      .card-pad {
+        padding: 1.5rem;
+      }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 1.2rem;
+      }
+      .form-label {
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: var(--text-dark);
+        margin-bottom: 0.4rem;
+        letter-spacing: 0.3px;
+        display: block;
+      }
+      .form-control,
+      .form-select {
+        border-radius: 12px;
+        padding: 0.7rem 1rem;
+        border: 1.5px solid var(--border);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0.88rem;
+        transition: border-color 0.2s;
+        width: 100%;
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        outline: none;
+      }
+      .total-pill {
+        background: linear-gradient(135deg, #fff7ed, #ffedd5);
+        border: 2px solid #fed7aa;
+        border-radius: 14px;
+        padding: 0.8rem 1.2rem;
+      }
+      .total-val {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.8rem;
+        color: var(--orange);
+        letter-spacing: 1px;
+      }
+      .total-lbl {
+        font-size: 0.65rem;
+        color: var(--text-mid);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+      .btn-cash {
+        background: white;
+        border: 2px solid #d1d5db;
+        color: var(--text-dark);
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+      }
+      .btn-cash:hover {
+        border-color: #6b7280;
+        background: var(--warm-gray);
+      }
+      .btn-online {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 20px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+      }
+      .btn-online:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+      }
+      .chart-wrap {
+        position: relative;
+        height: 260px;
+      }
+      .chart-tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 1rem;
+      }
+      .ctab {
+        padding: 5px 14px;
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid var(--border);
+        color: var(--text-mid);
+        background: white;
+        transition: all 0.2s;
+      }
+      .ctab.active,
+      .ctab:hover {
+        background: var(--orange);
+        color: white;
+        border-color: var(--orange);
+      }
+      .search-wrap {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+      .search-wrap input {
+        padding-left: 2.5rem;
+        border-radius: 12px;
+        border: 1.5px solid var(--border);
+        font-size: 0.85rem;
+        width: 100%;
+        padding-top: 0.7rem;
+        padding-bottom: 0.7rem;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .search-wrap input:focus {
+        outline: none;
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+      }
+      .search-wrap .si {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-mid);
+      }
+      .sales-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      .sales-table thead th {
+        background: var(--warm-gray);
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-mid);
+        padding: 10px 14px;
+        border: none;
+      }
+      .sales-table thead th:first-child {
+        border-radius: 10px 0 0 10px;
+      }
+      .sales-table thead th:last-child {
+        border-radius: 0 10px 10px 0;
+      }
+      .sales-table tbody tr {
+        transition: background 0.15s;
+      }
+      .sales-table tbody tr:hover {
+        background: #fff7ed;
+      }
+      .sales-table tbody td {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.85rem;
+        vertical-align: middle;
+      }
+      .sales-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .prod-badge {
+        background: #fff7ed;
+        color: var(--orange);
+        border: 1px solid #fed7aa;
+        border-radius: 8px;
+        padding: 3px 10px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .amount-text {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.1rem;
+        color: var(--orange);
+        letter-spacing: 0.5px;
+      }
+      .pay-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 100px;
+        font-size: 0.72rem;
+        font-weight: 700;
+      }
+      .pay-cash {
+        background: #f3f4f6;
+        color: #374151;
+      }
+      .pay-paid {
+        background: #dcfce7;
+        color: #166534;
+      }
+      .pay-pending {
+        background: #fef9c3;
+        color: #854d0e;
+      }
+      .btn-view {
+        background: white;
+        border: 1.5px solid var(--border);
+        color: var(--text-dark);
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .btn-view:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+        background: #fff7ed;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-mid);
+      }
+      .flash-success {
+        background: #d1fae5;
+        border: 1px solid #6ee7b7;
+        color: #065f46;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 0.88rem;
+      }
+      .flash-danger {
+        background: #fee2e2;
+        border: 1px solid #fca5a5;
+        color: #991b1b;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        font-size: 0.88rem;
+      }
+      .pay-modal-header {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+      }
+      .nav-tabs .nav-link {
+        color: #6b7280;
+        font-weight: 600;
+        border: none;
+        border-bottom: 2px solid transparent;
+        font-size: 0.85rem;
+      }
+      .nav-tabs .nav-link.active {
+        color: #f97316;
+        border-bottom: 2px solid #f97316;
+        background: none;
+      }
+      .nav-tabs {
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .bank-option {
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+      .bank-option:hover {
+        background: #fff7ed;
+        border-color: #f97316 !important;
+        color: #f97316;
+      }
+      .bank-option.selected {
+        background: #f97316;
+        color: white;
+        border-color: #f97316 !important;
+      }
+      .upi-chip {
+        cursor: pointer;
+        padding: 6px 12px;
+        border-radius: 20px;
+        border: 1px solid #e5e7eb;
+        font-size: 0.8rem;
+        font-weight: 600;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .upi-chip:hover {
+        border-color: #f97316;
+        color: #f97316;
+        background: #fff7ed;
+      }
+      .pay-btn {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        transition: all 0.2s;
+      }
+      .pay-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+      }
+      .modal-content {
+        border-radius: 16px;
+        overflow: hidden;
+        border: none;
+      }
+      .processing-spinner {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-width: 4px;
+      }
+      .success-icon {
+        font-size: 4rem;
+        animation: popIn 0.5s ease;
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0);
+        }
+        70% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      .txn-badge {
+        background: #f0fdf4;
+        border: 1px solid #86efac;
+        color: #166534;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .fade-in {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: fadeIn 0.5s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .d1 {
+        animation-delay: 0.05s;
+      }
+      .d2 {
+        animation-delay: 0.15s;
+      }
+      .d3 {
+        animation-delay: 0.25s;
+      }
+      .d4 {
+        animation-delay: 0.35s;
+      }
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+      }
+      @media (max-width: 900px) {
+        .two-col {
+          grid-template-columns: 1fr;
+        }
+        .hero-stats {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <div class="header-actions">
+        <a
+          href="/sales"
+          class="hdr-btn {% if filter != 'today' %}active{% endif %}"
+          ><i class="bi bi-list-ul"></i> All Sales</a
+        >
+        <a
+          href="/sales?filter=today"
+          class="hdr-btn {% if filter == 'today' %}active{% endif %}"
+          ><i class="bi bi-calendar-check"></i> Today</a
+        >
+        <a href="/" class="hdr-btn"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="hero-content">
+        <div>
+          <div class="hero-tag">📊 Sales Management</div>
+          <div class="hero-title">
+            {% if filter == 'today' %}TODAY'S<br />SALES{% else %}ALL<br />SALES{%
+            endif %}
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-val">{{ sales|length }}</div>
+            <div class="hero-stat-lbl">Total Bills</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">
+              ₹{{ sales|sum(attribute='total_price')|round(0)|int }}
+            </div>
+            <div class="hero-stat-lbl">Revenue</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-val">
+              {{ sales|selectattr('payment_status','equalto','paid')|list|length
+              }}
+            </div>
+            <div class="hero-stat-lbl">Paid</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}{% for category, message in messages %}
+      <div class="flash-{{ category }}">{{ message }}</div>
+      {% endfor %}{% endif %} {% endwith %} {% if filter != 'today' %}
+      <div class="card-white fade-in d1">
+        <div class="card-pad">
+          <div class="section-title">🧾 Record New Sale</div>
+          <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+              <label class="form-label">Product *</label>
+              <select id="productSelect" class="form-select">
+                <option value="" disabled selected>Select a product...</option>
+                {% for p in products %}
+                <option
+                  value="{{ p.id }}"
+                  data-price="{{ p.price }}"
+                  data-stock="{{ p.stock }}"
+                  data-name="{{ p.name }}"
+                >
+                  {{ p.name }} — ₹{{ p.price }} (Stock: {{ p.stock }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Quantity *</label>
+              <input
+                type="number"
+                id="qtyInput"
+                class="form-control"
+                value="1"
+                min="1"
+              />
+            </div>
+            <div class="col-md-2">
+              <div class="total-pill">
+                <div class="total-lbl">Total</div>
+                <div class="total-val" id="totalDisplay">₹0</div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <button class="btn-cash" onclick="recordSale('cash')">
+                <i class="bi bi-cash-coin"></i> Cash
+              </button>
+            </div>
+            <div class="col-md-2">
+              <button class="btn-online" onclick="openPaymentModal()">
+                <i class="bi bi-credit-card"></i> Pay Online
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Analytics -->
+      <div class="two-col fade-in d2">
+        <div class="card-white">
+          <div class="card-pad">
+            <div class="section-title">📈 Sales Analytics</div>
+            <div class="chart-tabs">
+              <button
+                class="ctab active"
+                onclick="switchChart('revenue', this)"
+              >
+                Revenue
+              </button>
+              <button class="ctab" onclick="switchChart('quantity', this)">
+                Qty Sold
+              </button>
+            </div>
+            <div class="chart-wrap"><canvas id="salesChart"></canvas></div>
+          </div>
+        </div>
+        <div class="card-white">
+          <div class="card-pad">
+            <div class="section-title">🏆 Top Products Sold</div>
+            <div id="topProductsList">
+              <div class="empty-state" style="padding: 1rem">
+                <i
+                  class="bi bi-bar-chart"
+                  style="
+                    font-size: 2rem;
+                    color: #d1d5db;
+                    display: block;
+                    margin-bottom: 0.5rem;
+                  "
+                ></i>
+                <span style="font-size: 0.82rem">No sales data yet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sales Table -->
+      <div class="card-white fade-in d3">
+        <div class="card-pad">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="section-title mb-0">
+              {% if filter == 'today' %}📅 Today's Sales{% else %}📋 All Sales
+              Records{% endif %}
+            </div>
+            {% if filter == 'today' %}<a
+              href="/sales"
+              class="hdr-btn"
+              style="font-size: 0.75rem"
+              >View All →</a
+            >{% endif %}
+          </div>
+          <div class="search-wrap">
+            <i class="bi bi-search si"></i>
+            <input
+              type="text"
+              id="searchBox"
+              placeholder="Search by product, amount, date..."
+            />
+          </div>
+          <div class="table-responsive">
+            <table class="sales-table" id="salesTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date & Time</th>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Amount</th>
+                  <th>Payment</th>
+                  <th>Invoice</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for s in sales %}
+                <tr>
+                  <td style="color: var(--text-mid); font-size: 0.8rem">
+                    {{ loop.index }}
+                  </td>
+                  <td style="color: var(--text-mid); font-size: 0.8rem">
+                    {{ s.created_at[:16].replace('T',' ') if s.created_at else
+                    '-' }}
+                  </td>
+                  <td><span class="prod-badge">{{ s.product_id }}</span></td>
+                  <td><strong>{{ s.quantity }}</strong></td>
+                  <td><span class="amount-text">₹{{ s.total_price }}</span></td>
+                  <td>
+                    {% if s.payment_method == 'cash' or s.payment_method ==
+                    'Cash' %}
+                    <span class="pay-badge pay-cash">💵 Cash</span>
+                    {% elif s.payment_status == 'paid' %}
+                    <span class="pay-badge pay-paid">✅ Paid Online</span>
+                    {% else %}
+                    <span class="pay-badge pay-pending">⏳ Pending</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <a href="/invoice/{{ s.id }}" class="btn-view"
+                      ><i class="bi bi-file-earmark-text"></i> View</a
+                    >
+                  </td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td colspan="7">
+                    <div class="empty-state">
+                      <i
+                        class="bi bi-receipt"
+                        style="
+                          font-size: 2.5rem;
+                          color: #d1d5db;
+                          display: block;
+                          margin-bottom: 0.8rem;
+                        "
+                      ></i
+                      >No sales recorded yet!
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+      <div
+        id="myToast"
+        class="toast align-items-center text-white border-0"
+        role="alert"
+      >
+        <div class="d-flex">
+          <div class="toast-body" id="toastMsg"></div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div
+      class="modal fade"
+      id="paymentModal"
+      tabindex="-1"
+      data-bs-backdrop="static"
+    >
+      <div class="modal-dialog modal-dialog-centered" style="max-width: 420px">
+        <div class="modal-content">
+          <div class="modal-header pay-modal-header text-white py-3 px-4">
+            <div class="d-flex align-items-center gap-3">
+              <div
+                style="
+                  background: rgba(255, 255, 255, 0.2);
+                  border-radius: 10px;
+                  padding: 8px 10px;
+                  font-size: 1.4rem;
+                "
+              >
+                🛒
+              </div>
+              <div>
+                <div class="fw-bold" style="font-size: 1rem">
+                  Bhavya's Grocery
+                </div>
+                <div style="font-size: 0.75rem; opacity: 0.85">
+                  🔒 Secure Checkout
+                </div>
+              </div>
+            </div>
+            <div class="ms-auto text-end">
+              <div style="font-size: 0.72rem; opacity: 0.85">Total Amount</div>
+              <div class="fw-bold" style="font-size: 1.3rem" id="modal-amount">
+                ₹0.00
+              </div>
+            </div>
+          </div>
+          <div class="modal-body p-0">
+            <ul class="nav nav-tabs px-3 pt-3">
+              <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#upiTab"
+                  >📱 UPI</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#cardTab"
+                  >💳 Card</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#netbankingTab"
+                  >🏦 NetBanking</a
+                >
+              </li>
+            </ul>
+            <div class="tab-content px-4 py-3">
+              <div class="tab-pane fade show active" id="upiTab">
+                <p class="text-muted small mb-2">Enter UPI ID or choose app</p>
+                <div class="input-group mb-3">
+                  <span class="input-group-text bg-white">📱</span
+                  ><input
+                    type="text"
+                    class="form-control"
+                    id="upiInput"
+                    value="customer@okaxis"
+                  />
+                </div>
+                <div class="d-flex gap-2 flex-wrap mb-3">
+                  <span class="upi-chip" onclick="setUPI('gpay')">🟢 GPay</span>
+                  <span class="upi-chip" onclick="setUPI('phonepe')"
+                    >💜 PhonePe</span
+                  >
+                  <span class="upi-chip" onclick="setUPI('paytm')"
+                    >💙 Paytm</span
+                  >
+                  <span class="upi-chip" onclick="setUPI('bhim')">🇮🇳 BHIM</span>
+                </div>
+                <button
+                  class="btn pay-btn text-white w-100 py-2"
+                  onclick="processPayment('upi')"
+                >
+                  <i class="bi bi-phone me-2"></i>Pay via UPI
+                </button>
+              </div>
+              <div class="tab-pane fade" id="cardTab">
+                <p class="text-muted small mb-2">Enter card details</p>
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  value="4111 1111 1111 1111"
+                  maxlength="19"
+                />
+                <input
+                  type="text"
+                  class="form-control mb-2"
+                  value="BHAVYA PALLAVI"
+                />
+                <div class="row g-2 mb-3">
+                  <div class="col-6">
+                    <input
+                      type="text"
+                      class="form-control"
+                      value="12/27"
+                      maxlength="5"
+                    />
+                  </div>
+                  <div class="col-6">
+                    <input
+                      type="password"
+                      class="form-control"
+                      value="123"
+                      maxlength="3"
+                    />
+                  </div>
+                </div>
+                <button
+                  class="btn pay-btn text-white w-100 py-2"
+                  onclick="processPayment('card')"
+                >
+                  <i class="bi bi-credit-card me-2"></i>Pay via Card
+                </button>
+              </div>
+              <div class="tab-pane fade" id="netbankingTab">
+                <p class="text-muted small mb-2">Select your bank</p>
+                <div class="row g-2 mb-3">
+                  <div class="col-6">
+                    <div
+                      class="bank-option border rounded p-2 text-center"
+                      onclick="selectBank(this)"
+                    >
+                      🏦 SBI
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div
+                      class="bank-option border rounded p-2 text-center"
+                      onclick="selectBank(this)"
+                    >
+                      🏦 HDFC
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div
+                      class="bank-option border rounded p-2 text-center"
+                      onclick="selectBank(this)"
+                    >
+                      🏦 ICICI
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div
+                      class="bank-option border rounded p-2 text-center"
+                      onclick="selectBank(this)"
+                    >
+                      🏦 Axis
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="btn pay-btn text-white w-100 py-2"
+                  onclick="processPayment('netbanking')"
+                >
+                  <i class="bi bi-bank me-2"></i>Pay via NetBanking
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="modal-footer justify-content-between py-2 px-4"
+            style="background: #f9fafb; font-size: 0.75rem; color: #9ca3af"
+          >
+            <span>🔒 256-bit SSL &nbsp;|&nbsp; ✅ Encrypted</span>
+            <button
+              class="btn btn-sm btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="processingModal"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content text-center p-4" style="border-radius: 16px">
+          <div
+            class="spinner-border text-warning processing-spinner mx-auto mb-3"
+          ></div>
+          <h6 class="fw-bold mb-1">Processing Payment...</h6>
+          <small class="text-muted">Please do not close this window</small>
+          <div
+            class="mt-2"
+            style="font-size: 0.75rem; color: #f97316"
+            id="processingMethod"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="successModal"
+      tabindex="-1"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content text-center p-4" style="border-radius: 16px">
+          <div class="success-icon">✅</div>
+          <h5 class="fw-bold text-success mt-2 mb-1">Payment Successful!</h5>
+          <p class="text-muted small mb-2" id="successAmountText"></p>
+          <div class="txn-badge mx-auto mb-3" id="txnBadge"></div>
+          <button
+            class="btn pay-btn text-white w-100 py-2"
+            onclick="goToInvoice()"
+          >
+            <i class="bi bi-file-earmark-text me-2"></i>View Invoice
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const salesRaw = [{% for s in sales %}{id:"{{ s.id }}",product_id:"{{ s.product_id }}",quantity:{{ s.quantity }},total_price:{{ s.total_price }},payment_method:"{{ s.payment_method or '' }}",payment_status:"{{ s.payment_status or '' }}"}{% if not loop.last %},{% endif %}{% endfor %}];
+      const productsRaw = [{% for p in products %}{id:"{{ p.id }}",name:"{{ p.name|replace('"','') }}",price:{{ p.price }}}{% if not loop.last %},{% endif %}{% endfor %}];
+      const prodMap = {};
+      productsRaw.forEach(p => prodMap[p.id] = p.name);
+
+      const productRevenue = {}, productQty = {};
+      salesRaw.forEach(s => {
+        const name = prodMap[s.product_id] || ('Product ' + String(s.product_id).slice(0,4));
+        productRevenue[name] = (productRevenue[name]||0) + parseFloat(s.total_price);
+        productQty[name] = (productQty[name]||0) + parseInt(s.quantity);
+      });
+
+      const sortedByRevenue = Object.entries(productRevenue).sort((a,b)=>b[1]-a[1]).slice(0,6);
+      const sortedByQty = Object.entries(productQty).sort((a,b)=>b[1]-a[1]).slice(0,6);
+      const colors = ['#f97316','#fb923c','#fbbf24','#34d399','#60a5fa','#a78bfa'];
+
+      const ctx = document.getElementById('salesChart').getContext('2d');
+      let chartMode = 'revenue';
+
+      function getChartData(mode) {
+        const data = mode === 'revenue' ? sortedByRevenue : sortedByQty;
+        if (!data.length) return {labels:['No data yet'],datasets:[{data:[1],backgroundColor:['#f0ece6'],borderRadius:8,borderWidth:0}]};
+        return {
+          labels: data.map(d=>d[0]),
+          datasets:[{data:data.map(d=>d[1]),backgroundColor:colors.slice(0,data.length),borderWidth:0,borderRadius:8}]
+        };
+      }
+
+      const myChart = new Chart(ctx, {
+        type:'bar', data:getChartData('revenue'),
+        options:{
+          responsive:true, maintainAspectRatio:false,
+          plugins:{
+            legend:{display:false},
+            tooltip:{callbacks:{label:(c)=>chartMode==='revenue'?' ₹'+c.raw.toFixed(2):' '+c.raw+' units'}}
+          },
+          scales:{
+            x:{grid:{display:false},ticks:{font:{family:'Plus Jakarta Sans',size:11},color:'#6b7280'}},
+            y:{grid:{color:'#f5f0eb'},ticks:{font:{family:'Plus Jakarta Sans',size:11},color:'#6b7280',callback:(v)=>chartMode==='revenue'?'₹'+v:v}}
+          }
+        }
+      });
+
+      function switchChart(mode, btn) {
+        chartMode = mode;
+        document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        myChart.data = getChartData(mode);
+        myChart.options.scales.y.ticks.callback = (v)=>mode==='revenue'?'₹'+v:v;
+        myChart.update();
+      }
+
+      // Top products list
+      const topList = document.getElementById('topProductsList');
+      if (sortedByRevenue.length > 0) {
+        const maxRev = sortedByRevenue[0][1];
+        topList.innerHTML = sortedByRevenue.map((item,i)=>`
+          <div style="margin-bottom:0.9rem;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:24px;height:24px;background:${colors[i]};border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:white;">${i+1}</div>
+                <span style="font-size:0.85rem;font-weight:600;color:#1a1a1a;">${item[0]}</span>
+              </div>
+              <span style="font-family:'Bebas Neue',serif;font-size:1rem;color:${colors[i]};">₹${item[1].toFixed(0)}</span>
+            </div>
+            <div style="background:#f5f0eb;border-radius:100px;height:6px;overflow:hidden;">
+              <div style="background:${colors[i]};height:100%;border-radius:100px;width:${(item[1]/maxRev*100).toFixed(0)}%;"></div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Form
+      const sel = document.getElementById('productSelect');
+      const qty = document.getElementById('qtyInput');
+      const tot = document.getElementById('totalDisplay');
+      function calcTotal() {
+        if (!sel||sel.selectedIndex<=0) return;
+        const opt = sel.options[sel.selectedIndex];
+        tot.textContent = '₹'+(parseFloat(opt.dataset.price||0)*parseInt(qty.value||1)).toFixed(2);
+      }
+      if (sel) sel.addEventListener('change',calcTotal);
+      if (qty) qty.addEventListener('input',calcTotal);
+
+      function showToast(msg,type) {
+        const el=document.getElementById('myToast');
+        el.className=`toast align-items-center text-white border-0 bg-${type==='success'?'success':'danger'}`;
+        document.getElementById('toastMsg').textContent=msg;
+        new bootstrap.Toast(el).show();
+      }
+
+      async function recordSale(method='cash') {
+        if (!sel) return;
+        const pid=sel.value, q=parseInt(qty.value);
+        if (!pid){showToast('Please select a product!','error');return;}
+        if (!q||q<1){showToast('Please enter a valid quantity!','error');return;}
+        const stock=parseInt(sel.options[sel.selectedIndex].dataset.stock||0);
+        if (q>stock){showToast(`Only ${stock} units in stock!`,'error');return;}
+        try {
+          const r=await fetch('/sales',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:pid,quantity:q,payment_method:method})});
+          const d=await r.json();
+          if(d.success){showToast('✅ Sale recorded!','success');setTimeout(()=>location.reload(),1000);}
+          else showToast('Error: '+(d.error||'Unknown'),'error');
+        }catch(e){showToast('Network error!','error');}
+      }
+
+      let currentSaleId=null,currentAmount=0;
+      function openPaymentModal() {
+        if(!sel||sel.selectedIndex<=0){showToast('Please select a product first!','error');return;}
+        const opt=sel.options[sel.selectedIndex];
+        const q=parseInt(qty.value||1),stock=parseInt(opt.dataset.stock||0);
+        if(!q||q<1){showToast('Please enter a valid quantity!','error');return;}
+        if(q>stock){showToast(`Only ${stock} units in stock!`,'error');return;}
+        currentAmount=parseFloat(opt.dataset.price||0)*q;
+        document.getElementById('modal-amount').textContent='₹'+currentAmount.toFixed(2);
+        new bootstrap.Modal(document.getElementById('paymentModal')).show();
+      }
+
+      function setUPI(p){const m={gpay:'customer@okicici',phonepe:'customer@ybl',paytm:'customer@paytm',bhim:'customer@upi'};document.getElementById('upiInput').value=m[p];}
+      function selectBank(el){document.querySelectorAll('.bank-option').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');}
+
+      async function processPayment(method) {
+        const pid=sel.value,q=parseInt(qty.value);
+        bootstrap.Modal.getInstance(document.getElementById('paymentModal')).hide();
+        const labels={upi:'📱 Processing UPI...',card:'💳 Verifying Card...',netbanking:'🏦 Connecting to Bank...'};
+        document.getElementById('processingMethod').textContent=labels[method]||'Processing...';
+        await new Promise(r=>setTimeout(r,300));
+        new bootstrap.Modal(document.getElementById('processingModal')).show();
+        try {
+          const sr=await fetch('/sales',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product_id:pid,quantity:q,payment_method:method,payment_status:'pending'})});
+          const sd=await sr.json();
+          if(!sd.success){bootstrap.Modal.getInstance(document.getElementById('processingModal')).hide();showToast('Error: '+(sd.error||'Unknown'),'error');return;}
+          currentSaleId=sd.sale_id;
+          await new Promise(r=>setTimeout(r,2500));
+          const pr=await fetch('/simulate-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sale_id:currentSaleId,payment_method:method})});
+          const pd=await pr.json();
+          bootstrap.Modal.getInstance(document.getElementById('processingModal')).hide();
+          await new Promise(r=>setTimeout(r,300));
+          if(pd.status==='success'){
+            document.getElementById('successAmountText').textContent='₹'+currentAmount.toFixed(2)+' paid via '+method.toUpperCase();
+            document.getElementById('txnBadge').textContent='TXN ID: BG'+Date.now().toString().slice(-10);
+            new bootstrap.Modal(document.getElementById('successModal')).show();
+          } else showToast('Payment failed!','error');
+        }catch(e){bootstrap.Modal.getInstance(document.getElementById('processingModal')).hide();showToast('Network error!','error');}
+      }
+
+      function goToInvoice(){if(currentSaleId)window.location.href='/invoice/'+currentSaleId;else location.reload();}
+
+      document.getElementById('searchBox').addEventListener('input',function(){
+        const q=this.value.toLowerCase();
+        document.querySelectorAll('#salesTable tbody tr').forEach(r=>{r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';});
+      });
+    </script>
+  </body>
+</html>

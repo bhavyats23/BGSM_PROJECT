@@ -1,0 +1,1398 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice {{ invoice.invoice_number }} - Bhavya's Grocery</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --orange: #f97316;
+        --orange-dark: #ea580c;
+        --cream: #fffbf5;
+        --warm-gray: #f5f0eb;
+        --border: #f0ece6;
+        --text-dark: #1a1a1a;
+        --text-mid: #6b7280;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
+      }
+
+      /* ── HEADER ── */
+      .header {
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 20px rgba(249, 115, 22, 0.08);
+      }
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .brand span {
+        color: var(--orange);
+      }
+      .btn-icon {
+        background: var(--warm-gray);
+        border: none;
+        border-radius: 12px;
+        padding: 8px 14px;
+        color: var(--text-dark);
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .btn-icon:hover {
+        background: #f0ece6;
+        color: var(--orange);
+      }
+
+      /* ── HERO ── */
+      .page-hero {
+        position: relative;
+        height: 180px;
+        background-image: url("https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1400&q=80");
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+      .page-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(249, 115, 22, 0.88),
+          rgba(239, 68, 68, 0.75),
+          rgba(0, 0, 0, 0.5)
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2rem 2.5rem;
+      }
+      .hero-tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        padding: 4px 14px;
+        border-radius: 100px;
+        margin-bottom: 0.6rem;
+        width: fit-content;
+      }
+      .hero-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 2.2rem;
+        color: white;
+        letter-spacing: 3px;
+        line-height: 1;
+        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+      }
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 0.8rem;
+        margin-top: 0.4rem;
+      }
+
+      /* ── LAYOUT ── */
+      .page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      /* ── TABS ── */
+      .tab-bar {
+        display: flex;
+        gap: 0.5rem;
+        background: white;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 6px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+        width: fit-content;
+      }
+      .tab-btn {
+        padding: 8px 22px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        color: var(--text-mid);
+        transition: all 0.2s;
+      }
+      .tab-btn.active {
+        background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+        color: white;
+        box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+      }
+      .tab-btn:hover:not(.active) {
+        background: var(--warm-gray);
+        color: var(--text-dark);
+      }
+
+      /* ── INVOICE CARD ── */
+      .invoice-wrap {
+        display: flex;
+        gap: 1.5rem;
+      }
+      .invoice-main {
+        flex: 1;
+        min-width: 0;
+      }
+      .invoice-sidebar {
+        width: 280px;
+        flex-shrink: 0;
+      }
+
+      .invoice-paper {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1rem;
+      }
+
+      /* Invoice Header */
+      .inv-header {
+        background: linear-gradient(
+          135deg,
+          var(--orange),
+          var(--orange-dark),
+          #dc2626
+        );
+        padding: 2rem 2rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .inv-header::before {
+        content: "";
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 50%;
+        top: -80px;
+        right: -50px;
+      }
+      .inv-header::after {
+        content: "";
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        bottom: -40px;
+        right: 80px;
+      }
+      .inv-store-name {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+        color: white;
+      }
+      .inv-store-sub {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.78rem;
+        margin-top: 2px;
+      }
+      .inv-number-badge {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        padding: 10px 16px;
+        text-align: right;
+      }
+      .inv-number {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 2px;
+        color: white;
+      }
+      .inv-date {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.75rem;
+        margin-top: 2px;
+      }
+
+      /* Invoice Meta */
+      .inv-meta {
+        display: flex;
+        gap: 1rem;
+        padding: 1.2rem 2rem;
+        background: var(--warm-gray);
+        border-bottom: 1px solid var(--border);
+      }
+      .inv-meta-item {
+        flex: 1;
+      }
+      .inv-meta-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-mid);
+        margin-bottom: 3px;
+      }
+      .inv-meta-value {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      /* Items Table */
+      .inv-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .inv-table th {
+        background: var(--warm-gray);
+        padding: 10px 16px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--text-mid);
+        text-align: left;
+        border-bottom: 2px solid var(--border);
+      }
+      .inv-table th:last-child,
+      .inv-table td:last-child {
+        text-align: right;
+      }
+      .inv-table th:nth-child(2),
+      .inv-table td:nth-child(2),
+      .inv-table th:nth-child(3),
+      .inv-table td:nth-child(3),
+      .inv-table th:nth-child(4),
+      .inv-table td:nth-child(4) {
+        text-align: center;
+      }
+      .inv-table td {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.88rem;
+        color: var(--text-dark);
+      }
+      .inv-table tr:last-child td {
+        border-bottom: none;
+      }
+      .inv-table tbody tr:hover {
+        background: #fff7ed;
+      }
+      .item-name {
+        font-weight: 600;
+      }
+      .item-num {
+        color: var(--text-mid);
+        font-size: 0.8rem;
+      }
+
+      /* Totals */
+      .inv-totals {
+        padding: 1.2rem 2rem;
+        border-top: 2px solid var(--border);
+        background: var(--warm-gray);
+      }
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        font-size: 0.88rem;
+      }
+      .total-row .label {
+        color: var(--text-mid);
+        font-weight: 500;
+      }
+      .total-row .value {
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+      .total-row.discount .value {
+        color: #16a34a;
+      }
+      .total-row.grand {
+        border-top: 2px solid var(--border);
+        margin-top: 8px;
+        padding-top: 12px;
+        font-size: 1rem;
+      }
+      .total-row.grand .label {
+        font-weight: 700;
+        color: var(--text-dark);
+        font-size: 1rem;
+      }
+      .total-row.grand .value {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.6rem;
+        letter-spacing: 1px;
+        color: var(--orange);
+      }
+      .total-row.change .value {
+        color: #2563eb;
+      }
+
+      /* Footer */
+      .inv-footer {
+        padding: 1.2rem 2rem;
+        text-align: center;
+        border-top: 1px solid var(--border);
+      }
+      .thank-you {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+        color: var(--orange);
+      }
+      .inv-footer p {
+        font-size: 0.75rem;
+        color: var(--text-mid);
+        margin-top: 4px;
+      }
+
+      /* Action Buttons */
+      .btn-orange {
+        background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 700;
+        color: white;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+        cursor: pointer;
+        width: 100%;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        margin-bottom: 0.6rem;
+      }
+      .btn-orange:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(249, 115, 22, 0.35);
+        color: white;
+      }
+      .btn-outline-action {
+        border: 1.5px solid var(--border);
+        border-radius: 12px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        cursor: pointer;
+        width: 100%;
+        display: block;
+        text-align: center;
+        text-decoration: none;
+        margin-bottom: 0.6rem;
+        background: white;
+      }
+      .btn-outline-action:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+
+      /* Sidebar Quick Info */
+      .side-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.3rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+        margin-bottom: 1rem;
+      }
+      .side-card-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 7px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.85rem;
+      }
+      .info-row:last-child {
+        border-bottom: none;
+      }
+      .info-label {
+        color: var(--text-mid);
+      }
+      .info-val {
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+      .info-val.orange {
+        color: var(--orange);
+      }
+      .info-val.green {
+        color: #16a34a;
+      }
+
+      /* ── BILLS LIST TAB ── */
+      .bills-wrap {
+        display: none;
+      }
+      .bills-wrap.active {
+        display: block;
+      }
+      .inv-wrap {
+        display: block;
+      }
+      .inv-wrap.hidden {
+        display: none;
+      }
+
+      .card-white {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        margin-bottom: 1.2rem;
+      }
+      .section-title {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.1rem;
+        letter-spacing: 2px;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+      }
+
+      /* Bills stats row */
+      .stat-pill {
+        background: white;
+        border-radius: 14px;
+        padding: 1rem 1.2rem;
+        border: 1px solid var(--border);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        text-align: center;
+      }
+      .stat-value {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+        color: var(--text-dark);
+      }
+      .stat-label {
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--text-mid);
+        margin-top: 2px;
+      }
+
+      /* Bills table */
+      .table thead th {
+        background: var(--warm-gray);
+        color: var(--text-dark);
+        font-weight: 700;
+        font-size: 0.72rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        border-bottom: 2px solid var(--border);
+        padding: 0.8rem 1rem;
+      }
+      .table tbody td {
+        padding: 0.8rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.87rem;
+      }
+      .table tbody tr:hover {
+        background: #fff7ed;
+      }
+      .badge-orange {
+        background: #fff7ed;
+        color: var(--orange);
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border: 1px solid #fed7aa;
+      }
+      .badge-green {
+        background: #f0fdf4;
+        color: #16a34a;
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border: 1px solid #bbf7d0;
+      }
+      .btn-view {
+        background: #eff6ff;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .btn-view:hover {
+        background: #2563eb;
+        color: white;
+      }
+      .search-input {
+        border-radius: 12px;
+        border: 1.5px solid var(--border);
+        padding: 0.6rem 1rem;
+        width: 100%;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        margin-bottom: 1rem;
+        font-size: 0.88rem;
+      }
+      .search-input:focus {
+        outline: none;
+        border-color: var(--orange);
+      }
+
+      /* Sidebar nav */
+      .offcanvas {
+        width: 280px !important;
+        background: white !important;
+        border-right: 1px solid var(--border) !important;
+      }
+      .sidebar-brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        color: var(--text-dark);
+      }
+      .sidebar-brand span {
+        color: var(--orange);
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0.75rem 1.5rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 500;
+        transition: all 0.2s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item i {
+        width: 18px;
+        font-size: 1rem;
+      }
+      .nav-item:hover {
+        color: var(--orange);
+        background: #fff7ed;
+        border-left-color: var(--orange);
+      }
+      .nav-item.danger {
+        color: #dc2626;
+      }
+      .nav-item.danger:hover {
+        background: #fef2f2;
+        border-left-color: #dc2626;
+      }
+      .nav-divider {
+        border-color: var(--border);
+        margin: 0.5rem 0;
+      }
+
+      /* Animations */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: fadeIn 0.5s ease forwards;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .d1 {
+        animation-delay: 0.05s;
+      }
+      .d2 {
+        animation-delay: 0.15s;
+      }
+      .d3 {
+        animation-delay: 0.25s;
+      }
+
+      /* Print styles */
+      @media print {
+        .header,
+        .tab-bar,
+        .invoice-sidebar,
+        .page-hero,
+        .offcanvas,
+        .btn-orange,
+        .btn-outline-action {
+          display: none !important;
+        }
+        .invoice-main {
+          width: 100% !important;
+        }
+        .invoice-wrap {
+          display: block !important;
+        }
+        body {
+          background: white !important;
+        }
+        .invoice-paper {
+          box-shadow: none !important;
+          border: 1px solid #ddd !important;
+        }
+        .inv-wrap {
+          display: block !important;
+        }
+        .bills-wrap {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .invoice-wrap {
+          flex-direction: column;
+        }
+        .invoice-sidebar {
+          width: 100%;
+        }
+        .inv-header {
+          padding: 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <a href="/sales" class="btn-icon"><i class="bi bi-arrow-left"></i></a>
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <button
+        class="btn-icon"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sidebar"
+      >
+        <i class="bi bi-list"></i>
+      </button>
+    </header>
+
+    <!-- Hero -->
+    <div class="page-hero">
+      <div class="hero-content">
+        <div class="hero-tag">🧾 Billing System</div>
+        <div class="hero-title">INVOICE & BILLS</div>
+        <div class="hero-sub">View, print and manage all customer bills</div>
+      </div>
+    </div>
+
+    <div class="page">
+      <!-- Tab Bar -->
+      <div class="tab-bar fade-in d1">
+        <button class="tab-btn active" onclick="showTab('invoice')">
+          <i class="bi bi-file-earmark-text me-1"></i> Invoice
+        </button>
+        <button class="tab-btn" onclick="showTab('bills')">
+          <i class="bi bi-receipt-cutoff me-1"></i> All Bills
+        </button>
+      </div>
+
+      <!-- ════ INVOICE TAB ════ -->
+      <div class="inv-wrap" id="invoiceTab">
+        <div class="invoice-wrap fade-in d2">
+          <!-- Invoice Paper -->
+          <div class="invoice-main">
+            <div class="invoice-paper">
+              <!-- Invoice Header -->
+              <div class="inv-header">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <div class="inv-store-name">BHAVYA'S GROCERY</div>
+                    <div class="inv-store-sub">
+                      <i class="bi bi-geo-alt me-1"></i>Bengaluru, Karnataka<br />
+                      <i class="bi bi-telephone me-1"></i>+91 98765 43210
+                      &nbsp;|&nbsp;
+                      <i class="bi bi-envelope me-1"></i
+                      >bhavya.grocery@email.com
+                    </div>
+                  </div>
+                  <div class="inv-number-badge">
+                    <div class="inv-number">{{ invoice.invoice_number }}</div>
+                    <div class="inv-date">{{ invoice.datetime }}</div>
+                    <div style="margin-top: 6px">
+                      <span
+                        style="
+                          background: rgba(255, 255, 255, 0.2);
+                          color: white;
+                          border-radius: 100px;
+                          padding: 2px 10px;
+                          font-size: 0.7rem;
+                          font-weight: 600;
+                        "
+                      >
+                        {{ invoice.payment_method or 'Cash' }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Meta Row -->
+              <div class="inv-meta">
+                <div class="inv-meta-item">
+                  <div class="inv-meta-label">Bill To</div>
+                  <div class="inv-meta-value">Walk-in Customer</div>
+                </div>
+                <div class="inv-meta-item">
+                  <div class="inv-meta-label">Items</div>
+                  <div class="inv-meta-value">
+                    {{ invoice.sale_items | length }} product(s)
+                  </div>
+                </div>
+                <div class="inv-meta-item">
+                  <div class="inv-meta-label">Status</div>
+                  <div class="inv-meta-value" style="color: #16a34a">
+                    <i class="bi bi-check-circle-fill me-1"></i>Paid
+                  </div>
+                </div>
+                <div class="inv-meta-item">
+                  <div class="inv-meta-label">GST No.</div>
+                  <div class="inv-meta-value">29XXXXX1234Z1Z5</div>
+                </div>
+              </div>
+
+              <!-- Items Table -->
+              <div style="overflow-x: auto">
+                <table class="inv-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 40px">#</th>
+                      <th>Product</th>
+                      <th>Unit</th>
+                      <th>Qty</th>
+                      <th>Rate (Rs)</th>
+                      <th>Total (Rs)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in invoice.sale_items %}
+                    <tr>
+                      <td class="item-num">{{ loop.index }}</td>
+                      <td><span class="item-name">{{ item.name }}</span></td>
+                      <td>{{ item.unit }}</td>
+                      <td>{{ item.qty }}</td>
+                      <td>{{ "%.2f" | format(item.rate) }}</td>
+                      <td>
+                        <strong style="color: var(--orange)"
+                          >{{ "%.2f" | format(item.total) }}</strong
+                        >
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Totals -->
+              <div class="inv-totals">
+                <div class="total-row">
+                  <span class="label">Subtotal</span>
+                  <span class="value"
+                    >Rs {{ "%.2f" | format(invoice.subtotal) }}</span
+                  >
+                </div>
+                <div class="total-row">
+                  <span class="label">Tax (5% GST)</span>
+                  <span class="value"
+                    >Rs {{ "%.2f" | format(invoice.tax) }}</span
+                  >
+                </div>
+                {% if invoice.discount and invoice.discount > 0 %}
+                <div class="total-row discount">
+                  <span class="label">Discount</span>
+                  <span class="value"
+                    >- Rs {{ "%.2f" | format(invoice.discount) }}</span
+                  >
+                </div>
+                {% endif %}
+                <div class="total-row grand">
+                  <span class="label">GRAND TOTAL</span>
+                  <span class="value"
+                    >Rs {{ "%.2f" | format(invoice.grand) }}</span
+                  >
+                </div>
+                <div class="total-row" style="padding-top: 8px">
+                  <span class="label">Amount Paid</span>
+                  <span class="value"
+                    >Rs {{ "%.2f" | format(invoice.amount_paid) }}</span
+                  >
+                </div>
+                {% if invoice.change and invoice.change > 0 %}
+                <div class="total-row change">
+                  <span class="label">Change Returned</span>
+                  <span class="value"
+                    >Rs {{ "%.2f" | format(invoice.change) }}</span
+                  >
+                </div>
+                {% endif %}
+              </div>
+
+              <!-- Footer -->
+              <div class="inv-footer">
+                <div class="thank-you">✦ THANK YOU FOR SHOPPING! ✦</div>
+                <p>
+                  Items once sold are non-returnable without a receipt
+                  &nbsp;|&nbsp; Valid for exchange within 3 days
+                </p>
+                <p style="margin-top: 4px; font-size: 0.7rem; color: #d1d5db">
+                  Powered by Bhavya's Grocery Management System
+                </p>
+              </div>
+            </div>
+            <!-- /invoice-paper -->
+          </div>
+          <!-- /invoice-main -->
+
+          <!-- Invoice Sidebar -->
+          <div class="invoice-sidebar">
+            <!-- Actions -->
+            <div class="side-card fade-in d3">
+              <div class="side-card-title">
+                <i
+                  class="bi bi-lightning-fill"
+                  style="color: var(--orange)"
+                ></i>
+                QUICK ACTIONS
+              </div>
+              <button class="btn-orange" onclick="window.print()">
+                <i class="bi bi-printer me-2"></i>Print Invoice
+              </button>
+              <button
+                class="btn-orange"
+                onclick="downloadPDF()"
+                style="margin-top: 0.3rem"
+              >
+                <i class="bi bi-download me-2"></i>Save as PDF
+              </button>
+              <a
+                href="/sales"
+                class="btn-outline-action"
+                style="margin-top: 0.3rem"
+              >
+                <i class="bi bi-receipt me-2"></i>Back to Sales
+              </a>
+              <a href="/invoice/preview" class="btn-outline-action">
+                <i class="bi bi-eye me-2"></i>Preview Sample
+              </a>
+            </div>
+
+            <!-- Bill Summary -->
+            <div class="side-card fade-in d3">
+              <div class="side-card-title">
+                <i
+                  class="bi bi-bar-chart-fill"
+                  style="color: var(--orange)"
+                ></i>
+                BILL SUMMARY
+              </div>
+              <div class="info-row">
+                <span class="info-label">Invoice No.</span>
+                <span class="info-val">{{ invoice.invoice_number }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Items</span>
+                <span class="info-val">{{ invoice.sale_items | length }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Subtotal</span>
+                <span class="info-val"
+                  >Rs {{ "%.2f" | format(invoice.subtotal) }}</span
+                >
+              </div>
+              <div class="info-row">
+                <span class="info-label">GST (5%)</span>
+                <span class="info-val"
+                  >Rs {{ "%.2f" | format(invoice.tax) }}</span
+                >
+              </div>
+              {% if invoice.discount and invoice.discount > 0 %}
+              <div class="info-row">
+                <span class="info-label">Discount</span>
+                <span class="info-val green"
+                  >- Rs {{ "%.2f" | format(invoice.discount) }}</span
+                >
+              </div>
+              {% endif %}
+              <div class="info-row">
+                <span class="info-label"><strong>Grand Total</strong></span>
+                <span class="info-val orange"
+                  ><strong
+                    >Rs {{ "%.2f" | format(invoice.grand) }}</strong
+                  ></span
+                >
+              </div>
+              <div class="info-row">
+                <span class="info-label">Payment</span>
+                <span class="info-val"
+                  >{{ invoice.payment_method or 'Cash' }}</span
+                >
+              </div>
+              <div class="info-row">
+                <span class="info-label">Status</span>
+                <span class="info-val green">✓ Paid</span>
+              </div>
+            </div>
+
+            <!-- Store Info -->
+            <div class="side-card fade-in d3">
+              <div class="side-card-title">
+                <i class="bi bi-shop" style="color: var(--orange)"></i> STORE
+                INFO
+              </div>
+              <div class="info-row">
+                <span class="info-label">Store</span>
+                <span class="info-val">Bhavya's Grocery</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">City</span>
+                <span class="info-val">Bengaluru</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Phone</span>
+                <span class="info-val">+91 98765 43210</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">GST No.</span>
+                <span class="info-val">29XXXXX1234Z1Z5</span>
+              </div>
+            </div>
+          </div>
+          <!-- /invoice-sidebar -->
+        </div>
+        <!-- /invoice-wrap -->
+      </div>
+      <!-- /inv-wrap -->
+
+      <!-- ════ BILLS TAB ════ -->
+      <div class="bills-wrap" id="billsTab">
+        <!-- Stats -->
+        <div class="row g-3 mb-3 fade-in d1">
+          <div class="col-6 col-md-3">
+            <div class="stat-pill">
+              <div class="stat-value" id="totalBillsCount">—</div>
+              <div class="stat-label">Total Bills</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-pill">
+              <div
+                class="stat-value"
+                style="color: var(--orange)"
+                id="totalRevenue"
+              >
+                —
+              </div>
+              <div class="stat-label">Total Revenue</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-pill">
+              <div class="stat-value" style="color: #16a34a" id="todayBills">
+                —
+              </div>
+              <div class="stat-label">Today's Bills</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stat-pill">
+              <div class="stat-value" style="color: #2563eb" id="avgBill">
+                —
+              </div>
+              <div class="stat-label">Avg Bill Value</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bills Table -->
+        <div class="card-white fade-in d2">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="section-title mb-0">
+              <i
+                class="bi bi-receipt-cutoff me-2"
+                style="color: var(--orange)"
+              ></i
+              >ALL BILLS & INVOICES
+            </div>
+            <div class="d-flex gap-2">
+              <select
+                class="form-select form-select-sm"
+                id="filterDate"
+                style="
+                  border-radius: 10px;
+                  border: 1.5px solid var(--border);
+                  font-size: 0.82rem;
+                "
+                onchange="filterBills()"
+              >
+                <option value="all">All Time</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
+            </div>
+          </div>
+          <input
+            type="text"
+            class="search-input"
+            id="billSearch"
+            placeholder="🔍 Search by invoice number, product, amount..."
+            oninput="filterBills()"
+          />
+
+          <div class="table-responsive">
+            <table class="table" id="billsTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Invoice No.</th>
+                  <th>Date & Time</th>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Subtotal</th>
+                  <th>GST</th>
+                  <th>Grand Total</th>
+                  <th>Payment</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="billsBody">
+                <!-- Loaded dynamically from /sales API -->
+              </tbody>
+            </table>
+            <div
+              id="billsEmpty"
+              class="text-center py-4 text-muted"
+              style="display: none"
+            >
+              <i
+                class="bi bi-receipt"
+                style="
+                  font-size: 2.5rem;
+                  display: block;
+                  margin-bottom: 0.8rem;
+                  color: #d1d5db;
+                "
+              ></i>
+              No bills found matching your search.
+            </div>
+            <div id="billsLoading" class="text-center py-4 text-muted">
+              <div
+                class="spinner-border spinner-border-sm"
+                style="color: var(--orange)"
+              ></div>
+              <span class="ms-2">Loading bills...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /bills-wrap -->
+    </div>
+    <!-- /page -->
+
+    <!-- Sidebar -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
+      <div
+        class="offcanvas-header border-bottom"
+        style="border-color: #f0ece6 !important; padding: 1.2rem 1.5rem"
+      >
+        <div class="sidebar-brand">BHAVYA'S <span>GROCERY</span></div>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-0 pt-2">
+        <a href="/" class="nav-item"
+          ><i class="bi bi-speedometer2"></i> Dashboard</a
+        >
+        <a href="/add-product" class="nav-item"
+          ><i class="bi bi-plus-circle"></i> Add New Product</a
+        >
+        <a href="/inventory" class="nav-item"
+          ><i class="bi bi-boxes"></i> Manage Inventory</a
+        >
+        <a href="/sales" class="nav-item"
+          ><i class="bi bi-receipt"></i> Sales Records</a
+        >
+        <a href="/customers" class="nav-item"
+          ><i class="bi bi-people"></i> Customers</a
+        >
+        <a href="/suppliers" class="nav-item"
+          ><i class="bi bi-truck"></i> Suppliers</a
+        >
+        <a href="/discounts" class="nav-item"
+          ><i class="bi bi-tag"></i> Discounts</a
+        >
+        <a href="/purchase-orders" class="nav-item"
+          ><i class="bi bi-cart"></i> Purchase Orders</a
+        >
+        <a href="/returns" class="nav-item"
+          ><i class="bi bi-arrow-return-left"></i> Returns</a
+        >
+        <a href="/expenses" class="nav-item"
+          ><i class="bi bi-wallet2"></i> Expenses</a
+        >
+        <a href="/invoice/preview" class="nav-item"
+          ><i class="bi bi-file-earmark-text"></i> Invoice</a
+        >
+        <hr class="nav-divider" />
+        <a href="/logout" class="nav-item danger"
+          ><i class="bi bi-box-arrow-right"></i> Logout</a
+        >
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ── TAB SWITCHING ──
+      function showTab(tab) {
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        event.target.classList.add("active");
+
+        if (tab === "invoice") {
+          document.getElementById("invoiceTab").classList.remove("hidden");
+          document.getElementById("billsTab").classList.remove("active");
+        } else {
+          document.getElementById("invoiceTab").classList.add("hidden");
+          document.getElementById("billsTab").classList.add("active");
+          loadBills();
+        }
+      }
+
+      // ── LOAD ALL BILLS ──
+      let allBills = [];
+      let billsLoaded = false;
+
+      async function loadBills() {
+        if (billsLoaded) return;
+        try {
+          const r = await fetch("/api/bills");
+          if (!r.ok) {
+            // fallback: fetch sales page and parse, or show message
+            document.getElementById("billsLoading").innerHTML =
+              '<i class="bi bi-info-circle me-2" style="color:var(--orange)"></i>Add <code>/api/bills</code> route to app.py to load all bills here.';
+            return;
+          }
+          allBills = await r.json();
+          billsLoaded = true;
+          renderBills(allBills);
+          updateStats(allBills);
+        } catch (e) {
+          // Try loading from /sales endpoint directly
+          loadBillsFromSales();
+        }
+      }
+
+      async function loadBillsFromSales() {
+        try {
+          document.getElementById("billsLoading").style.display = "block";
+          // Fetch sales data via the existing route
+          const r = await fetch("/api/sales-list");
+          if (r.ok) {
+            allBills = await r.json();
+            billsLoaded = true;
+            renderBills(allBills);
+            updateStats(allBills);
+          } else {
+            showFallbackBills();
+          }
+        } catch (e) {
+          showFallbackBills();
+        }
+      }
+
+      function showFallbackBills() {
+        document.getElementById("billsLoading").innerHTML = `
+        <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:1rem 1.5rem;text-align:left;max-width:500px;margin:0 auto;">
+            <div style="font-weight:700;color:#f97316;margin-bottom:0.5rem;">📋 Add API route to see all bills here</div>
+            <p style="font-size:0.82rem;color:#6b7280;margin:0;">Add this to your <strong>app.py</strong>:</p>
+            <pre style="background:#f5f0eb;border-radius:8px;padding:0.8rem;margin-top:0.5rem;font-size:0.75rem;overflow-x:auto;">@app.route('/api/sales-list')
+@login_required
+def api_sales_list():
+    sales = supabase.table('sales').select('*').order('created_at', desc=True).execute().data or []
+    products = supabase.table('products').select('*').execute().data or []
+    prod_map = {p['id']: p for p in products}
+    result = []
+    for s in sales:
+        p = prod_map.get(s['product_id'], {})
+        sub = float(s.get('total_price', 0))
+        tax = round(sub * 0.05, 2)
+        result.append({
+            'id': s['id'],
+            'invoice_number': f"INV-{str(s['id'])[:8].upper()}",
+            'created_at': s.get('created_at', ''),
+            'product_name': p.get('name', 'Unknown'),
+            'quantity': s.get('quantity', 0),
+            'subtotal': sub,
+            'tax': tax,
+            'grand': round(sub + tax, 2),
+            'payment_method': s.get('payment_method', 'Cash')
+        })
+    return jsonify(result)</pre>
+            <a href="/sales" style="color:#f97316;font-size:0.82rem;font-weight:600;">← View sales page instead</a>
+        </div>`;
+      }
+
+      function renderBills(bills) {
+        document.getElementById("billsLoading").style.display = "none";
+        const tbody = document.getElementById("billsBody");
+
+        if (!bills || bills.length === 0) {
+          document.getElementById("billsEmpty").style.display = "block";
+          return;
+        }
+
+        tbody.innerHTML = bills
+          .map(
+            (b, i) => `
+        <tr data-date="${b.created_at || ""}" data-search="${(b.invoice_number + b.product_name + b.grand).toLowerCase()}">
+            <td class="text-muted">${i + 1}</td>
+            <td><span style="font-family:'Bebas Neue',sans-serif;letter-spacing:1px;font-size:0.95rem;">${b.invoice_number}</span></td>
+            <td style="font-size:0.8rem;color:#6b7280;">${b.created_at ? b.created_at.slice(0, 16).replace("T", " ") : "-"}</td>
+            <td><span style="font-weight:600;">${b.product_name || "-"}</span></td>
+            <td><span class="badge-orange">${b.quantity}</span></td>
+            <td>Rs ${parseFloat(b.subtotal).toFixed(2)}</td>
+            <td style="color:#16a34a;">Rs ${parseFloat(b.tax || 0).toFixed(2)}</td>
+            <td><strong style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:1px;color:#f97316;">Rs ${parseFloat(b.grand).toFixed(2)}</strong></td>
+            <td><span class="badge-green">${b.payment_method || "Cash"}</span></td>
+            <td class="text-center">
+                <a href="/invoice/${b.id}" class="btn-view"><i class="bi bi-file-earmark-text me-1"></i>View</a>
+            </td>
+        </tr>
+    `,
+          )
+          .join("");
+      }
+
+      function updateStats(bills) {
+        const today = new Date().toISOString().slice(0, 10);
+        const todayBills = bills.filter(
+          (b) => b.created_at && b.created_at.startsWith(today),
+        );
+        const totalRev = bills.reduce(
+          (s, b) => s + parseFloat(b.grand || 0),
+          0,
+        );
+        const avg = bills.length ? totalRev / bills.length : 0;
+
+        document.getElementById("totalBillsCount").innerText = bills.length;
+        document.getElementById("totalRevenue").innerText =
+          "Rs" + totalRev.toFixed(0);
+        document.getElementById("todayBills").innerText = todayBills.length;
+        document.getElementById("avgBill").innerText = "Rs" + avg.toFixed(0);
+      }
+
+      function filterBills() {
+        const q = document.getElementById("billSearch").value.toLowerCase();
+        const period = document.getElementById("filterDate").value;
+        const today = new Date().toISOString().slice(0, 10);
+        const rows = document.querySelectorAll("#billsBody tr");
+
+        let visible = 0;
+        rows.forEach((r) => {
+          const dateStr = r.dataset.date || "";
+          const searchStr = r.dataset.search || "";
+
+          let show = searchStr.includes(q);
+          if (show && period !== "all") {
+            if (period === "today") show = dateStr.startsWith(today);
+            if (period === "week") {
+              const d = new Date(dateStr);
+              const weekAgo = new Date();
+              weekAgo.setDate(weekAgo.getDate() - 7);
+              show = d >= weekAgo;
+            }
+            if (period === "month") {
+              show = dateStr.startsWith(today.slice(0, 7));
+            }
+          }
+          r.style.display = show ? "" : "none";
+          if (show) visible++;
+        });
+        document.getElementById("billsEmpty").style.display =
+          visible === 0 ? "block" : "none";
+      }
+
+      // ── PDF DOWNLOAD ──
+      function downloadPDF() {
+        const originalTitle = document.title;
+        document.title = "{{ invoice.invoice_number }}";
+        window.print();
+        document.title = originalTitle;
+      }
+    </script>
+  </body>
+</html>
