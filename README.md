@@ -180,10 +180,10 @@ Open `http://127.0.0.1:5000` in your browser!
 
 ### 📦 Inventory
 
-![Inventory](<screenshots/inventory(1).png>)
+![Inventory](screenshots/inventory.png)
 
 ### 👤 Store Profile
-
+ 
 ![Profile](screenshots/profile.png)
 
 ### 📄 Invoice
