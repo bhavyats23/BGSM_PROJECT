@@ -1,11 +1,9 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from supabase import create_client, Client
 from dotenv import load_dotenv
-from functools import wraps
 import os
-import base64, uuid
-from datetime import datetime, timedelta
+from datetime import datetime
 
 load_dotenv()
 
@@ -23,60 +21,67 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
 class User(UserMixin):
-    def __init__(self, user_id, email, role='cashier'):
+    def __init__(self, user_id, email, role='user'):
         self.id = user_id
         self.email = email
         self.role = role
-
-    def is_admin(self):
-        return self.role == 'admin'
-
-    def is_cashier(self):
-        return self.role == 'cashier'
 
 @login_manager.user_loader
 def load_user(user_id):
     try:
         role_data = supabase.table('users').select('role').eq('id', user_id).single().execute().data
-        role = role_data.get('role', 'cashier') if role_data else 'cashier'
+        role = role_data.get('role', 'user') if role_data else 'user'
         return User(user_id, "loaded-from-supabase", role)
     except:
         return None
 
-def admin_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        if not current_user.is_authenticated or not current_user.is_admin():
-            flash('⛔ Admin access required.', 'danger')
-            return redirect(url_for('dashboard'))
-        return f(*args, **kwargs)
-    return decorated
-
 CATEGORIES = ["Fruits", "Vegetables", "Dairy", "Snacks", "Grains", "Beverages"]
 
 
-# ─── Auth ────────────────────────────────────────────────────────
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')
+        email    = request.form.get('email')
         password = request.form.get('password')
         try:
             auth_response = supabase.auth.sign_in_with_password({'email': email, 'password': password})
             if auth_response.user:
                 user_id = auth_response.user.id
-                role_response = supabase.table('users').select('role').eq('id', user_id).single().execute()
-                role = role_response.data.get('role', 'cashier') if role_response.data else 'cashier'
-                if role not in ('admin', 'cashier'):
-                    flash('Access denied: Insufficient privileges', 'danger')
-                    return redirect(url_for('login'))
+                # Try to get role, default to 'admin' so any registered user can access
+                try:
+                    role_response = supabase.table('users').select('role').eq('id', user_id).single().execute()
+                    role = role_response.data.get('role', 'admin') if role_response.data else 'admin'
+                except:
+                    role = 'admin'
                 user = User(user_id, email, role)
                 login_user(user, remember=True)
-                flash(f'Welcome! Logged in as {role.capitalize()}', 'success')
                 return redirect(url_for('dashboard'))
         except Exception as e:
             flash(f'Login failed: {str(e)}', 'danger')
     return render_template('login.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email    = request.form.get('email')
+        password = request.form.get('password')
+        try:
+            # Sign up with Supabase — email confirm is disabled so login works immediately
+            res = supabase.auth.sign_up({'email': email, 'password': password})
+            if res.user:
+                # Save user to users table
+                try:
+                    supabase.table('users').insert({'id': res.user.id, 'email': email, 'role': 'admin'}).execute()
+                except:
+                    pass  # Already exists, no problem
+                flash('Registration successful! You can now login.', 'success')
+                return redirect(url_for('login'))
+            else:
+                flash('Registration failed. Please try again.', 'danger')
+        except Exception as e:
+            flash(f'Registration failed: {str(e)}', 'danger')
+    return render_template('register.html')
 
 
 @app.route('/logout')
@@ -88,7 +93,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-# ─── Dashboard ───────────────────────────────────────────────────
 @app.route('/')
 @login_required
 def dashboard():
@@ -112,10 +116,8 @@ def dashboard():
         return render_template('dashboard.html', total_products=0, total_stock_value=0, low_stock_count=0, today_sales=0)
 
 
-# ─── Add Product ─────────────────────────────────────────────────
 @app.route('/add-product', methods=['GET', 'POST'])
 @login_required
-@admin_required
 def add_product():
     if request.method == 'POST':
         data = request.form
@@ -130,10 +132,8 @@ def add_product():
     return render_template('add_product.html', categories=CATEGORIES)
 
 
-# ─── Inventory ───────────────────────────────────────────────────
 @app.route('/inventory')
 @login_required
-@admin_required
 def inventory():
     filter_type = request.args.get('filter', '')
     if filter_type == 'low-stock':
@@ -150,7 +150,6 @@ def inventory():
 
 @app.route('/update-stock', methods=['POST'])
 @login_required
-@admin_required
 def update_stock():
     try:
         data = request.get_json()
@@ -162,7 +161,6 @@ def update_stock():
 
 @app.route('/delete-product', methods=['POST'])
 @login_required
-@admin_required
 def delete_product():
     try:
         data = request.get_json()
@@ -175,7 +173,6 @@ def delete_product():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
-# ─── Sales ───────────────────────────────────────────────────────
 @app.route('/sales', methods=['GET', 'POST'])
 @login_required
 def sales():
@@ -186,21 +183,14 @@ def sales():
             quantity = int(data['quantity'])
             if product and product['stock'] >= quantity:
                 total_price = product['price'] * quantity
-                payment_method = data.get('payment_method', 'cash')
-                payment_status = data.get('payment_status', 'pending')
-                result = supabase.table('sales').insert({
+                supabase.table('sales').insert({
                     'product_id': product['id'],
                     'quantity': quantity,
-                    'total_price': total_price,
-                    'payment_method': payment_method,
-                    'payment_status': payment_status
+                    'total_price': total_price
                 }).execute()
                 supabase.table('products').update({'stock': product['stock'] - quantity}).eq('id', product['id']).execute()
                 if request.is_json:
-                    sale_id = result.data[0]['id'] if result.data else None
-                    if payment_method == 'cash':
-                        supabase.table('sales').update({'payment_status': 'paid'}).eq('id', sale_id).execute()
-                    return jsonify({"success": True, "sale_id": sale_id})
+                    return jsonify({"success": True})
                 flash('Sale recorded successfully', 'success')
             else:
                 if request.is_json:
@@ -211,8 +201,7 @@ def sales():
                 return jsonify({"success": False, "error": str(e)}), 500
             flash(f'Error: {str(e)}', 'danger')
         return redirect(url_for('sales'))
-
-    products = supabase.table('products').select('*').execute().data or []
+    products  = supabase.table('products').select('*').execute().data or []
     filter_type = request.args.get('filter')
     if filter_type == 'today':
         today_str = datetime.now().strftime('%Y-%m-%d')
@@ -223,41 +212,25 @@ def sales():
     return render_template('sales.html', products=products, sales=sales_list, filter=filter_type, customers=customers_list)
 
 
-# ─── Simulate Payment ────────────────────────────────────────────
-@app.route('/simulate-payment', methods=['POST'])
-@login_required
-def simulate_payment():
-    try:
-        data = request.get_json()
-        sale_id = data.get('sale_id')
-        payment_method = data.get('payment_method', 'online')
-        if not sale_id:
-            return jsonify({"status": "error", "message": "No sale_id provided"}), 400
-        supabase.table('sales').update({
-            'payment_status': 'paid',
-            'payment_method': payment_method
-        }).eq('id', sale_id).execute()
-        return jsonify({"status": "success"})
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-
-# ─── Invoice ─────────────────────────────────────────────────────
 @app.route('/invoice/preview')
 @login_required
 def invoice_preview():
-    subtotal = 364.0
-    tax = round(subtotal * 0.05, 2)
-    discount = 20.0
-    grand = round(subtotal + tax - discount, 2)
+    subtotal    = 364.0
+    tax         = round(subtotal * 0.05, 2)
+    discount    = 20.0
+    grand       = round(subtotal + tax - discount, 2)
     amount_paid = 400.0
-    change = round(max(amount_paid - grand, 0), 2)
+    change      = round(max(amount_paid - grand, 0), 2)
     invoice_data = {
         'invoice_number': 'INV-PREVIEW',
         'datetime': datetime.now().strftime('%d %b %Y, %I:%M %p'),
         'payment_method': 'Cash',
-        'subtotal': subtotal, 'tax': tax, 'discount': discount,
-        'grand': grand, 'amount_paid': amount_paid, 'change': change,
+        'subtotal': subtotal,
+        'tax': tax,
+        'discount': discount,
+        'grand': grand,
+        'amount_paid': amount_paid,
+        'change': change,
         'sale_items': [
             {'name': 'Tomatoes',      'qty': 2, 'unit': 'kg',  'rate': 40,  'total': 80},
             {'name': 'Basmati Rice',  'qty': 1, 'unit': 'kg',  'rate': 120, 'total': 120},
@@ -278,20 +251,19 @@ def invoice(sale_id):
             flash('Invoice not found.', 'danger')
             return redirect(url_for('sales'))
         product = supabase.table('products').select('*').eq('id', sale['product_id']).single().execute().data
-        qty = int(sale['quantity'])
-        rate = float(product['price']) if product else 0
-        total = float(sale['total_price'])
-        subtotal = total
-        tax = round(subtotal * 0.05, 2)
-        discount = float(sale.get('discount', 0))
-        grand = round(subtotal + tax - discount, 2)
+        qty     = int(sale['quantity'])
+        rate    = float(product['price']) if product else 0
+        total   = float(sale['total_price'])
+        subtotal    = total
+        tax         = round(subtotal * 0.05, 2)
+        discount    = float(sale.get('discount', 0))
+        grand       = round(subtotal + tax - discount, 2)
         amount_paid = float(sale.get('amount_paid', grand))
-        change = round(max(amount_paid - grand, 0), 2)
+        change      = round(max(amount_paid - grand, 0), 2)
         invoice_data = {
             'invoice_number': f"INV-{str(sale_id)[:8].upper()}",
             'datetime': sale.get('created_at', datetime.now().isoformat()),
             'payment_method': sale.get('payment_method', 'Cash'),
-            'payment_status': sale.get('payment_status', 'pending'),
             'subtotal': subtotal, 'tax': tax, 'discount': discount,
             'grand': grand, 'amount_paid': amount_paid, 'change': change,
             'sale_items': [{
@@ -305,6 +277,7 @@ def invoice(sale_id):
     except Exception as e:
         flash(f'Error: {str(e)}', 'danger')
         return redirect(url_for('sales'))
+
 
 
 @app.route('/api/sales-list')
@@ -327,59 +300,16 @@ def api_sales_list():
                 'created_at': s.get('created_at', ''),
                 'product_name': p.get('name', 'Unknown'),
                 'quantity': s.get('quantity', 0),
-                'subtotal': sub, 'tax': tax, 'discount': disc, 'grand': grand,
-                'payment_method': s.get('payment_method', 'Cash'),
-                'payment_status': s.get('payment_status', 'pending')
+                'subtotal': sub,
+                'tax': tax,
+                'discount': disc,
+                'grand': grand,
+                'payment_method': s.get('payment_method', 'Cash')
             })
         return jsonify(result)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
-# ─── Bills API ───────────────────────────────────────────────────
-@app.route('/api/bills')
-@login_required
-def api_bills():
-    try:
-        filter_type = request.args.get('filter', 'month')
-        now = datetime.now()
-        if filter_type == 'today':
-            from_date = now.strftime('%Y-%m-%d')
-        elif filter_type == 'week':
-            from_date = (now - timedelta(days=7)).strftime('%Y-%m-%d')
-        elif filter_type == 'month':
-            from_date = now.strftime('%Y-%m-01')
-        else:
-            from_date = None
-        query = supabase.table('sales').select('*').order('created_at', desc=True)
-        if from_date:
-            query = query.gte('created_at', from_date)
-        sales = query.execute().data or []
-        products = supabase.table('products').select('*').execute().data or []
-        prod_map = {p['id']: p for p in products}
-        result = []
-        for s in sales:
-            p = prod_map.get(s['product_id'], {})
-            sub = float(s.get('total_price', 0))
-            tax = round(sub * 0.05, 2)
-            disc = float(s.get('discount', 0) or 0)
-            grand = round(sub + tax - disc, 2)
-            result.append({
-                'id': s['id'],
-                'invoice_number': f"INV-{str(s['id'])[:8].upper()}",
-                'created_at': s.get('created_at', ''),
-                'product_name': p.get('name', 'Unknown'),
-                'quantity': s.get('quantity', 0),
-                'subtotal': sub, 'tax': tax, 'discount': disc, 'grand': grand,
-                'payment_method': s.get('payment_method', 'cash'),
-                'payment_status': s.get('payment_status', 'pending')
-            })
-        return jsonify(result)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-
-# ─── Customers ───────────────────────────────────────────────────
 @app.route('/customers', methods=['GET', 'POST'])
 @login_required
 def customers():
@@ -403,7 +333,6 @@ def customers():
 
 @app.route('/customers/delete', methods=['POST'])
 @login_required
-@admin_required
 def delete_customer():
     try:
         data = request.get_json()
@@ -413,10 +342,8 @@ def delete_customer():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-# ─── Discounts ───────────────────────────────────────────────────
 @app.route('/discounts', methods=['GET', 'POST'])
 @login_required
-@admin_required
 def discounts():
     if request.method == 'POST':
         data = request.form
@@ -440,7 +367,6 @@ def discounts():
 
 @app.route('/discounts/delete', methods=['POST'])
 @login_required
-@admin_required
 def delete_discount():
     try:
         data = request.get_json()
@@ -452,7 +378,6 @@ def delete_discount():
 
 @app.route('/discounts/toggle', methods=['POST'])
 @login_required
-@admin_required
 def toggle_discount():
     try:
         data = request.get_json()
@@ -462,10 +387,8 @@ def toggle_discount():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-# ─── Purchase Orders ─────────────────────────────────────────────
 @app.route('/purchase-orders', methods=['GET', 'POST'])
 @login_required
-@admin_required
 def purchase_orders():
     if request.method == 'POST':
         data = request.form
@@ -482,14 +405,14 @@ def purchase_orders():
         except Exception as e:
             flash(f'Error: {str(e)}', 'danger')
         return redirect(url_for('purchase_orders'))
-    raw_orders = supabase.table('purchase_orders').select('*').order('created_at', desc=True).execute().data or []
-    products = supabase.table('products').select('id, name, stock').execute().data or []
-    suppliers = supabase.table('suppliers').select('id, name').execute().data or []
-    product_map = {p['id']: p['name'] for p in products}
+    raw_orders   = supabase.table('purchase_orders').select('*').order('created_at', desc=True).execute().data or []
+    products     = supabase.table('products').select('id, name, stock').execute().data or []
+    suppliers    = supabase.table('suppliers').select('id, name').execute().data or []
+    product_map  = {p['id']: p['name'] for p in products}
     supplier_map = {s['id']: s['name'] for s in suppliers}
     orders = []
     for o in raw_orders:
-        o['product_name'] = product_map.get(o.get('product_id'), '-')
+        o['product_name']  = product_map.get(o.get('product_id'), '-')
         o['supplier_name'] = supplier_map.get(o.get('supplier_id'), '-')
         orders.append(o)
     today = datetime.now().strftime('%Y-%m-%d')
@@ -498,14 +421,13 @@ def purchase_orders():
 
 @app.route('/purchase-orders/status', methods=['POST'])
 @login_required
-@admin_required
 def update_order_status():
     try:
-        data = request.get_json()
+        data   = request.get_json()
         status = data['status']
         supabase.table('purchase_orders').update({'status': status}).eq('id', data['id']).execute()
         if status == 'Received':
-            order = supabase.table('purchase_orders').select('*').eq('id', data['id']).single().execute().data
+            order   = supabase.table('purchase_orders').select('*').eq('id', data['id']).single().execute().data
             product = supabase.table('products').select('stock').eq('id', order['product_id']).single().execute().data
             if product:
                 new_stock = int(product['stock']) + int(order['quantity'])
@@ -517,7 +439,6 @@ def update_order_status():
 
 @app.route('/purchase-orders/delete', methods=['POST'])
 @login_required
-@admin_required
 def delete_order():
     try:
         data = request.get_json()
@@ -527,10 +448,11 @@ def delete_order():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
-# ─── Suppliers ───────────────────────────────────────────────────
+
+
+
 @app.route('/suppliers', methods=['GET', 'POST'])
 @login_required
-@admin_required
 def suppliers():
     if request.method == 'POST':
         data = request.form
@@ -552,7 +474,6 @@ def suppliers():
 
 @app.route('/suppliers/delete', methods=['POST'])
 @login_required
-@admin_required
 def delete_supplier():
     try:
         data = request.get_json()
@@ -561,8 +482,6 @@ def delete_supplier():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
-
-# ─── Returns ─────────────────────────────────────────────────────
 @app.route('/returns', methods=['GET', 'POST'])
 @login_required
 def returns():
@@ -581,9 +500,10 @@ def returns():
         except Exception as e:
             flash(f'Error: {str(e)}', 'danger')
         return redirect(url_for('returns'))
+
     raw_returns = supabase.table('returns').select('*').order('created_at', desc=True).execute().data or []
-    products = supabase.table('products').select('id, name').execute().data or []
-    sales = supabase.table('sales').select('id, total_price, created_at').order('created_at', desc=True).execute().data or []
+    products    = supabase.table('products').select('id, name').execute().data or []
+    sales       = supabase.table('sales').select('id, total_price, created_at').order('created_at', desc=True).execute().data or []
     product_map = {p['id']: p['name'] for p in products}
     for r in raw_returns:
         r['product_name'] = product_map.get(r.get('product_id'), '-')
@@ -592,14 +512,13 @@ def returns():
 
 @app.route('/returns/status', methods=['POST'])
 @login_required
-@admin_required
 def update_return_status():
     try:
-        data = request.get_json()
+        data   = request.get_json()
         status = data['status']
         supabase.table('returns').update({'status': status}).eq('id', data['id']).execute()
         if status == 'Approved':
-            ret = supabase.table('returns').select('*').eq('id', data['id']).single().execute().data
+            ret     = supabase.table('returns').select('*').eq('id', data['id']).single().execute().data
             product = supabase.table('products').select('stock').eq('id', ret['product_id']).single().execute().data
             if product:
                 new_stock = int(product['stock']) + int(ret['quantity'])
@@ -611,7 +530,6 @@ def update_return_status():
 
 @app.route('/returns/delete', methods=['POST'])
 @login_required
-@admin_required
 def delete_return():
     try:
         data = request.get_json()
@@ -620,11 +538,8 @@ def delete_return():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
-
-# ─── Expenses ────────────────────────────────────────────────────
 @app.route('/expenses', methods=['GET', 'POST'])
 @login_required
-@admin_required
 def expenses():
     if request.method == 'POST':
         data = request.form
@@ -640,19 +555,25 @@ def expenses():
         except Exception as e:
             flash(f'Error: {str(e)}', 'danger')
         return redirect(url_for('expenses'))
+
     expenses_list = supabase.table('expenses').select('*').order('expense_date', desc=True).execute().data or []
+
     total_expenses = round(sum(float(e.get('amount', 0)) for e in expenses_list), 2)
+
     current_month = datetime.now().strftime('%Y-%m')
     monthly_expenses = round(sum(
         float(e.get('amount', 0)) for e in expenses_list
         if e.get('expense_date', '').startswith(current_month)
     ), 2)
+
     category_totals = {}
     for e in expenses_list:
         cat = e.get('category', 'General')
         category_totals[cat] = round(category_totals.get(cat, 0) + float(e.get('amount', 0)), 2)
+
     categories = list(category_totals.keys())
     today = datetime.now().strftime('%Y-%m-%d')
+
     return render_template('expenses.html',
         expenses=expenses_list,
         total_expenses=total_expenses,
@@ -661,52 +582,5 @@ def expenses():
         categories=categories,
         today=today)
 
-
-# ─── Store Profile ────────────────────────────────────────────────
-@app.route('/profile', methods=['GET', 'POST'])
-@login_required
-@admin_required
-def profile():
-    if request.method == 'POST':
-        try:
-            data = request.form
-            logo_url = None
-            logo_file = request.files.get('logo')
-            remove_logo = data.get('remove_logo', '0')
-            if remove_logo == '1':
-                logo_url = None
-            elif logo_file and logo_file.filename:
-                file_data = logo_file.read()
-                b64 = base64.b64encode(file_data).decode('utf-8')
-                mime = logo_file.content_type or 'image/png'
-                logo_url = f"data:{mime};base64,{b64}"
-            payload = {
-                'store_name': data.get('store_name', '').strip(),
-                'owner_name': data.get('owner_name', '').strip(),
-                'phone': data.get('phone', '').strip() or None,
-                'address': data.get('address', '').strip() or None,
-                'gst_number': data.get('gst_number', '').strip() or None,
-                'updated_at': datetime.now().isoformat()
-            }
-            if logo_url is not None or remove_logo == '1':
-                payload['logo_url'] = logo_url
-            existing = supabase.table('store_settings').select('id').limit(1).execute().data
-            if existing:
-                supabase.table('store_settings').update(payload).eq('id', existing[0]['id']).execute()
-            else:
-                supabase.table('store_settings').insert(payload).execute()
-            flash('✅ Store settings saved successfully!', 'success')
-        except Exception as e:
-            flash(f'Error saving settings: {str(e)}', 'danger')
-        return redirect(url_for('profile'))
-    try:
-        result = supabase.table('store_settings').select('*').limit(1).execute().data
-        settings = result[0] if result else None
-    except:
-        settings = None
-    return render_template('profile.html', settings=settings)
-
-
-# ─── Run ─────────────────────────────────────────────────────────
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

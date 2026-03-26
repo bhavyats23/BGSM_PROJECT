@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Bhavya's Grocery</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #1a1a1a 0%,
+          #2d1810 50%,
+          #1a1a1a 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .card {
+        background: white;
+        border-radius: 24px;
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+      }
+      .brand {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+        text-align: center;
+        margin-bottom: 0.2rem;
+      }
+      .brand span {
+        color: #f97316;
+      }
+      .subtitle {
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.88rem;
+        margin-bottom: 1.8rem;
+      }
+      .form-label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #374151;
+        margin-bottom: 0.4rem;
+      }
+      .form-control {
+        border: 1.5px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+      .form-control:focus {
+        border-color: #f97316;
+        box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+      }
+      .btn-register {
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        border: none;
+        border-radius: 12px;
+        padding: 0.8rem;
+        font-weight: 700;
+        font-size: 1rem;
+        color: white;
+        width: 100%;
+        margin-top: 0.5rem;
+        transition: all 0.3s;
+      }
+      .btn-register:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+        color: white;
+      }
+      .login-link {
+        text-align: center;
+        margin-top: 1.2rem;
+        font-size: 0.88rem;
+        color: #6b7280;
+      }
+      .login-link a {
+        color: #f97316;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+      .alert-custom {
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        font-size: 0.88rem;
+        margin-bottom: 1rem;
+      }
+      .divider {
+        height: 3px;
+        background: linear-gradient(90deg, #f97316, #ea580c);
+        border-radius: 2px;
+        margin-bottom: 1.5rem;
+      }
+      .icon-wrap {
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+      }
+      .icon-wrap i {
+        font-size: 1.8rem;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <!-- Icon -->
+      <div class="icon-wrap">
+        <i class="bi bi-person-plus-fill"></i>
+      </div>
+
+      <!-- Brand -->
+      <div class="brand">BHAVYA'S <span>GROCERY</span></div>
+      <div class="subtitle">Create your account to get started</div>
+      <div class="divider"></div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div
+        class="alert alert-{{ 'success' if category == 'success' else 'danger' }} alert-custom alert-dismissible"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- Register Form -->
+      <form method="POST" action="/register">
+        <div class="mb-3">
+          <label class="form-label"
+            ><i class="bi bi-envelope me-1"></i> Email Address</label
+          >
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            placeholder="you@example.com"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label class="form-label"
+            ><i class="bi bi-lock me-1"></i> Password</label
+          >
+          <div class="position-relative">
+            <input
+              type="password"
+              name="password"
+              id="passInput"
+              class="form-control"
+              placeholder="Min. 6 characters"
+              required
+              minlength="6"
+            />
+            <button
+              type="button"
+              class="btn btn-link position-absolute end-0 top-50 translate-middle-y pe-3"
+              onclick="togglePass()"
+              style="color: #9ca3af; text-decoration: none"
+            >
+              <i class="bi bi-eye" id="eyeIcon"></i>
+            </button>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label"
+            ><i class="bi bi-lock-fill me-1"></i> Confirm Password</label
+          >
+          <input
+            type="password"
+            name="confirm_password"
+            id="confirmInput"
+            class="form-control"
+            placeholder="Re-enter password"
+            required
+          />
+          <div id="matchMsg" style="font-size: 0.78rem; margin-top: 4px"></div>
+        </div>
+        <button type="submit" class="btn-register" id="submitBtn">
+          <i class="bi bi-person-check me-2"></i>Create Account
+        </button>
+      </form>
+
+      <div class="login-link">
+        Already have an account? <a href="/login">Sign in here</a>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function togglePass() {
+        const input = document.getElementById("passInput");
+        const icon = document.getElementById("eyeIcon");
+        if (input.type === "password") {
+          input.type = "text";
+          icon.className = "bi bi-eye-slash";
+        } else {
+          input.type = "password";
+          icon.className = "bi bi-eye";
+        }
+      }
+
+      // Password match check
+      const confirm = document.getElementById("confirmInput");
+      const pass = document.getElementById("passInput");
+      const msg = document.getElementById("matchMsg");
+      const btn = document.getElementById("submitBtn");
+
+      function checkMatch() {
+        if (confirm.value === "") {
+          msg.innerText = "";
+          return;
+        }
+        if (pass.value === confirm.value) {
+          msg.innerText = "✅ Passwords match";
+          msg.style.color = "#16a34a";
+          btn.disabled = false;
+        } else {
+          msg.innerText = "❌ Passwords do not match";
+          msg.style.color = "#dc2626";
+          btn.disabled = true;
+        }
+      }
+      confirm.addEventListener("input", checkMatch);
+      pass.addEventListener("input", checkMatch);
+    </script>
+  </body>
+</html>
